@@ -5,44 +5,39 @@ $db = new DatabaseHandler();
 // var_dump($_POST);
 if(isset($_POST['plotProf'])){
 
+    // Insert data for schedule in weeks 
     foreach ($_POST['plotProf'] as $key => $value) {
-        $data = array(
-            'sy' => $_POST["plotYear"],
-            'semester' => $_POST["plotSem"],
-            'section' => $_POST["plotSection"],
-            'subject' => $_POST["plotSubj"][$key],
-            'prof' => $_POST["plotProf"][$key],
-            'room' => $_POST["plotRoom"][$key],
-            'sMonday' => $_POST["tsMon"][$key+1],
-            'eMonday' => $_POST["teMon"][$key+1],
-            'sTuesday' => $_POST["tsTue"][$key+1],
-            'eTuesday' => $_POST["teTue"][$key+1],
-            'sWednesday' => $_POST["tsWed"][$key+1],
-            'eWednesday' => $_POST["teWed"][$key+1],
-            'sThursday' => $_POST["tsThu"][$key+1],
-            'eThursday' => $_POST["teThu"][$key+1],
-            'sFriday' => $_POST["tsFri"][$key+1],
-            'eFriday' => $_POST["teFri"][$key+1],
-            'sSaturday' => $_POST["tsSat"][$key+1],
-            'eSaturday' => $_POST["teSat"][$key+1],
-            'sSunday' => $_POST["tsSun"][$key+1],
-            'eSunday' => $_POST["teSun"][$key+1],
-            'course' => $_SESSION['program']
-        );
-        if($db->insertData('tb_scheduled',$data)){
-            echo "<script>
-            alert('Schedule Added')
-            window.location.href='../schedule_index.php'
-            </script>
-            ";
-        }else{
-            echo "<script>
-            alert('Schedule Error')
-            window.location.href='../schedule_index.php'
-            </script>
-            ";
-        }    
-        
+        foreach ($_POST['day'] as $dayKey => $day) { // Add the schedule for days
+            $data = array(
+                'school_yr' => $_POST["plotYear"],
+                'semester' => $_POST["plotSem"],
+                'section_id' => $_POST["plotSection"],
+                'subject_id' => $_POST["plotSubj"][$key],
+                'prof_id' => $_POST["plotProf"][$key],
+                'room_id' => $_POST["plotRoom"][$key],
+                'start_time' => $_POST["start_time"][$dayKey], // Start Time
+                'end_time' => $_POST["end_time"][$dayKey], // End Time
+                'course' => $_SESSION['program'],
+                'status' => 1, // Status means active sched - 1 Actvie 0 Not Active Okay? 
+                'day' => $day // Days of the week
+            );
+
+            if (!empty($_POST["start_time"][$dayKey]) && !empty($_POST["end_time"][$dayKey])) { // check if the day is not empty! okay?
+                if($db->insertData('tb_scheduled_2',$data)){ // Successful Insert
+                    echo "<script>
+                    alert('Schedule Added')
+                    window.location.href='../schedule_index.php'
+                    </script>
+                    ";
+                }else{
+                    echo "<script>
+                    alert('Schedule Error')
+                    window.location.href='../schedule_index.php'
+                    </script>
+                    ";
+                }    
+            }
+        }
     }
 
 

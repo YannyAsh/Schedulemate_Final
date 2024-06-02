@@ -198,174 +198,18 @@ class DatabaseHandler {
 
     public function insertData($tableName, $data)
     {
-        try {
-            // Extracting data from the input array
-            $prof = $data['prof'];
-            $section = $data['section'];
-            $room = $data['room'];
-            $sy = $data['sy']; // academic year
-            $semester = $data['semester'];
-            $sMonday = $data['sMonday'];
-            $eMonday = $data['eMonday'];
-            $sTuesday = $data['sTuesday'];
-            $eTuesday = $data['eTuesday'];
-            $sWednesday = $data['sWednesday'];
-            $eWednesday = $data['eWednesday'];
-            $sThursday = $data['sThursday'];
-            $eThursday = $data['eThursday'];
-            $sFriday = $data['sFriday'];
-            $eFriday = $data['eFriday'];
-            $sSaturday = $data['sSaturday'];
-            $eSaturday = $data['eSaturday'];
-            $sSunday = $data['sSunday'];
-            $eSunday = $data['eSunday'];
+        $columns = implode(', ', array_keys($data));
+        $placeholders = ':' . implode(', :', array_keys($data));
 
-            // Base query for checking time conflicts
-            $timeConflictConditions = "
-            (:sMonday BETWEEN sMonday AND eMonday) OR 
-            (:eMonday BETWEEN sMonday AND eMonday) OR 
-            (sMonday BETWEEN :sMonday AND :eMonday) OR 
-            (eMonday BETWEEN :sMonday AND :eMonday) OR
-            (:sTuesday BETWEEN sTuesday AND eTuesday) OR 
-            (:eTuesday BETWEEN sTuesday AND eTuesday) OR 
-            (sTuesday BETWEEN :sTuesday AND :eTuesday) OR 
-            (eTuesday BETWEEN :sTuesday AND :eTuesday) OR
-            (:sWednesday BETWEEN sWednesday AND eWednesday) OR 
-            (:eWednesday BETWEEN sWednesday AND eWednesday) OR 
-            (sWednesday BETWEEN :sWednesday AND :eWednesday) OR 
-            (eWednesday BETWEEN :sWednesday AND :eWednesday) OR
-            (:sThursday BETWEEN sThursday AND eThursday) OR 
-            (:eThursday BETWEEN sThursday AND eThursday) OR 
-            (sThursday BETWEEN :sThursday AND :eThursday) OR 
-            (eThursday BETWEEN :sThursday AND :eThursday) OR
-            (:sFriday BETWEEN sFriday AND eFriday) OR 
-            (:eFriday BETWEEN sFriday AND eFriday) OR 
-            (sFriday BETWEEN :sFriday AND :eFriday) OR 
-            (eFriday BETWEEN :sFriday AND :eFriday) OR
-            (:sSaturday BETWEEN sSaturday AND eSaturday) OR 
-            (:eSaturday BETWEEN sSaturday AND eSaturday) OR 
-            (sSaturday BETWEEN :sSaturday AND :eSaturday) OR 
-            (eSaturday BETWEEN :sSaturday AND :eSaturday) OR
-            (:sSunday BETWEEN sSunday AND eSunday) OR 
-            (:eSunday BETWEEN sSunday AND eSunday) OR 
-            (sSunday BETWEEN :sSunday AND :eSunday) OR 
-            (eSunday BETWEEN :sSunday AND :eSunday)
-        ";
+        $sql = "INSERT INTO $tableName ($columns) VALUES ($placeholders)";
+        $stmt = $this->pdo->prepare($sql);
 
-            // Check for conflicts with the professor
-            $qry = "SELECT * FROM tb_scheduled 
-            WHERE prof = :prof 
-            AND sy = :sy 
-            AND semester = :semester 
-            AND ($timeConflictConditions)";
-            $stmt = $this->pdo->prepare($qry);
-            $stmt->bindParam(':prof', $prof);
-            $stmt->bindParam(':sy', $sy);
-            $stmt->bindParam(':semester', $semester);
-            $stmt->bindParam(':sMonday', $sMonday);
-            $stmt->bindParam(':eMonday', $eMonday);
-            $stmt->bindParam(':sTuesday', $sTuesday);
-            $stmt->bindParam(':eTuesday', $eTuesday);
-            $stmt->bindParam(':sWednesday', $sWednesday);
-            $stmt->bindParam(':eWednesday', $eWednesday);
-            $stmt->bindParam(':sThursday', $sThursday);
-            $stmt->bindParam(':eThursday', $eThursday);
-            $stmt->bindParam(':sFriday', $sFriday);
-            $stmt->bindParam(':eFriday', $eFriday);
-            $stmt->bindParam(':sSaturday', $sSaturday);
-            $stmt->bindParam(':eSaturday', $eSaturday);
-            $stmt->bindParam(':sSunday', $sSunday);
-            $stmt->bindParam(':eSunday', $eSunday);
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-                // Professor has a conflicting schedule, do not insert
-                return false;
-            }
-
-            // Check for conflicts with the section
-            $qry = "SELECT * FROM tb_scheduled 
-            WHERE section = :section 
-            AND sy = :sy 
-            AND semester = :semester 
-            AND ($timeConflictConditions)";
-            $stmt = $this->pdo->prepare($qry);
-            $stmt->bindParam(':section', $section);
-            $stmt->bindParam(':sy', $sy);
-            $stmt->bindParam(':semester', $semester);
-            $stmt->bindParam(':sMonday', $sMonday);
-            $stmt->bindParam(':eMonday', $eMonday);
-            $stmt->bindParam(':sTuesday', $sTuesday);
-            $stmt->bindParam(':eTuesday', $eTuesday);
-            $stmt->bindParam(':sWednesday', $sWednesday);
-            $stmt->bindParam(':eWednesday', $eWednesday);
-            $stmt->bindParam(':sThursday', $sThursday);
-            $stmt->bindParam(':eThursday', $eThursday);
-            $stmt->bindParam(':sFriday', $sFriday);
-            $stmt->bindParam(':eFriday', $eFriday);
-            $stmt->bindParam(':sSaturday', $sSaturday);
-            $stmt->bindParam(':eSaturday', $eSaturday);
-            $stmt->bindParam(':sSunday', $sSunday);
-            $stmt->bindParam(':eSunday', $eSunday);
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-                // Section has a conflicting schedule, do not insert
-                return false;
-            }
-
-            // Check for conflicts with the room
-            $qry = "SELECT * FROM tb_scheduled 
-            WHERE room = :room 
-            AND sy = :sy 
-            AND semester = :semester 
-            AND ($timeConflictConditions)";
-            $stmt = $this->pdo->prepare($qry);
-            $stmt->bindParam(':room', $room);
-            $stmt->bindParam(':sy', $sy);
-            $stmt->bindParam(':semester', $semester);
-            $stmt->bindParam(':sMonday', $sMonday);
-            $stmt->bindParam(':eMonday', $eMonday);
-            $stmt->bindParam(':sTuesday', $sTuesday);
-            $stmt->bindParam(':eTuesday', $eTuesday);
-            $stmt->bindParam(':sWednesday', $sWednesday);
-            $stmt->bindParam(':eWednesday', $eWednesday);
-            $stmt->bindParam(':sThursday', $sThursday);
-            $stmt->bindParam(':eThursday', $eThursday);
-            $stmt->bindParam(':sFriday', $sFriday);
-            $stmt->bindParam(':eFriday', $eFriday);
-            $stmt->bindParam(':sSaturday', $sSaturday);
-            $stmt->bindParam(':eSaturday', $eSaturday);
-            $stmt->bindParam(':sSunday', $sSunday);
-            $stmt->bindParam(':eSunday', $eSunday);
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-                // Room has a conflicting schedule, do not insert
-                return false;
-            }
-
-            // Proceed with the insertion
-            foreach ($data as $key => $value) {
-                $data[$key] = trim(htmlentities($value));
-            }
-
-            $columns = implode(', ', array_keys($data));
-            $placeholders = ':' . implode(', :', array_keys($data));
-
-            $sql = "INSERT INTO $tableName ($columns) VALUES ($placeholders)";
-            $stmt = $this->pdo->prepare($sql);
-
-            foreach ($data as $key => $value) {
-                $stmt->bindValue(':' . $key, $value);
-            }
-
-            $stmt->execute();
-            return true;
-        } catch (PDOException $e) {
-            echo "Error inserting data: " . $e->getMessage();
-            return false;
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(':' . $key, $value);
         }
+
+        $stmt->execute();
+        return true;
     }
 
     
