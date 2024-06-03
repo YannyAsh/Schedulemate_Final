@@ -40,8 +40,8 @@ $count=0;
 
 
     foreach ($sql as $row ) {
-$currentLowestTime='';
-$currentHighestTime='';
+    $currentLowestTime='';
+    $currentHighestTime='';
 
     $start_time = date('h:i A', strtotime($row['start_time']));
     $end_time = date('h:i A', strtotime($row['end_time']));
@@ -63,7 +63,6 @@ $currentHighestTime='';
     }
 
     // GET START & END
-
     $profName = $profFName.' '.$profMname.' '.$profLname;
     if($row['prof']=="TBA"){
         $profName ="TBA";
@@ -87,8 +86,9 @@ $currentHighestTime='';
     ";
     
     $count++;
-   
+
 }
+
 $row1.="  </tbody></table>";
 $row2 .="</tbody></table>";
 

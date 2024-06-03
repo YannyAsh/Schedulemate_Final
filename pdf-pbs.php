@@ -74,11 +74,11 @@ $pdf->SetFont('helvetica', '', 8);
 
 
 $conditions = [
-    'sy = "' . $ay . '"',
+    'school_yr = "' . $ay . '"',
     'semester = "' . $semester . '"',
-    'section = "' . $section . '"',
+    'section_id = "' . $section . '"',
 ];
-$sql = $db->getAllRowsFromTableWhere('tb_scheduled', $conditions);
+$sql = $db->getAllDataCourse('tb_scheduled_2', $conditions);
 // echo '<pre>';
 // var_dump($sql);
 $dayMon = [];
@@ -92,43 +92,43 @@ $subjectArr = [];
 $descriptionArr = [];
 
 foreach ($sql as $row) {
-    $profFName = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof'], 'profFName');
-    $profMname = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof'], 'profMname');
-    $profLname = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof'], 'profLname');
-    $subDesc = $db->getIdByColumnValue('tb_subjects', 'subCode', $row['subject'], 'subDesc');
+    $profFName = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof_id'], 'profFName');
+    $profMname = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof_id'], 'profMname');
+    $profLname = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof_id'], 'profLname');
+    $subDesc = $db->getIdByColumnValue('tb_subjects', 'subCode', $row['subject_id'], 'subDesc');
     $fullname = ucwords($profFName . ' ' . $profMname . ' ' . $profLname);
 
 
-    if ($row['prof'] == "TBA") {
+    if ($row['prof_id'] == 0) {
         $fullname = "TBA";
     }
 
-    $subjectArr[] = $row['subject'];
+    $subjectArr[] = $row['subject_id'];
     $descriptionArr[] = $subDesc;
 
-    $room = strtoupper($row['room']);
-    $subject = strtoupper($row['subject']);
+    $room = strtoupper($row['roomBuild']." ".$row['roomNum']);
+    $subject = strtoupper($row['subCode']);
     $appendedDetails = '<br>' . $subject . '<br>' . $fullname . '<br>' . $room;
-    if ($row['sMonday'] !== "" && $row['eMonday'] !== "") {
-        $dayMon[] = $row['sMonday'] . '-' . $row['eMonday'] . $appendedDetails;
+    if ($row['day'] == 1) {
+        $dayMon[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sTuesday'] !== "" && $row['eTuesday'] !== "") {
-        $dayTues[] = $row['sTuesday'] . '-' . $row['eTuesday'] . $appendedDetails;
+    if ($row['day'] == 2) {
+        $dayTues[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sWednesday'] !== "" && $row['eWednesday'] !== "") {
-        $dayWed[] = $row['sWednesday'] . '-' . $row['eWednesday'] . $appendedDetails;
+    if ($row['day'] == 3) {
+        $dayWed[] =$row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sThursday'] !== "" && $row['eThursday'] !== "") {
-        $dayThurs[] = $row['sThursday'] . '-' . $row['eThursday'] . $appendedDetails;
+    if ($row['day'] == 4) {
+        $dayThurs[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sFriday'] !== "" && $row['eFriday'] !== "") {
-        $dayFri[] = $row['sFriday'] . '-' . $row['eFriday'] . $appendedDetails;
+    if ($row['day'] == 5) {
+        $dayFri[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sSaturday'] !== "" && $row['eSaturday'] !== "") {
-        $daySat[] = $row['sSaturday'] . '-' . $row['eSaturday'] . $appendedDetails;
+    if ($row['day'] == 6) {
+        $daySat[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sSunday'] !== "" && $row['eSunday'] !== "") {
-        $daySun[] = $row['sSunday'] . '-' . $row['eSunday'] . $appendedDetails;
+    if ($row['day'] == 7) {
+        $daySun[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
 }
 $maxCount = max(

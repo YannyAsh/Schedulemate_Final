@@ -29,20 +29,21 @@ $db = new DatabaseHandler();
                         <tbody>
                             <?php
                             $conditions = [];
-                            $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled', $conditions, ' sy,semester,section');
+                            $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled_2', $conditions, ' school_yr,semester,section_id');
                             $i = 0;
-
+    
                             foreach ($sql as $row) {
-                                $section = $row['section'];
-                                $sy = $row['sy'];
+                                $section = $row['section_id'];
+                                $sy = $row['school_yr'];
                                 $semester = $row['semester'];
-
+                            
                                 $conditions = [
-                                    'section = "' . $section . '"',
+                                    'section_id = "' . $section . '"',
                                     'semester = "' . $semester . '"',
-                                    'sy = "' . $sy . '"',
+                                    'school_yr = "' . $sy . '"',
                                 ];
-                                $sql2 = $db->getAllRowsFromTableWhere('tb_scheduled', $conditions);
+
+                                $sql2 = $db->getAllRowsFromTableWhere('tb_scheduled_2', $conditions);
                                 $TBA = 0;
                                 $totalSubjects = count($sql2); // count total subjects for this section, semester, and school year
                                 $insertedSubjects = 0; // count inserted subjects for this section, semester, and school year
@@ -51,7 +52,7 @@ $db = new DatabaseHandler();
                                     $status = "<span class='text-warning'>NO MINOR SUBJECTS</span>";
                                 } else {
                                     foreach ($sql2 as $row2) {
-                                        if ($row2['prof'] == "TBA") {
+                                        if ($row2['prof_id'] == "TBA") {
                                             $TBA += 1;
                                         } else {
                                             $insertedSubjects++;
@@ -67,14 +68,14 @@ $db = new DatabaseHandler();
 
                             ?>
                                 <tr>
-                                    <td><?= $row['sy'] ?></td>
+                                    <td><?= $row['school_yr'] ?></td>
                                     <td><?= $row['semester'] ?></td>
-                                    <td><?= $row['section'] ?></td>
+                                    <td><?= $row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName'] ?></td>
                                     <td><?= $status ?></td>
                                     <td>
                                         <!-- <a href="#editSubj" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a> -->
                                         <!-- <a href="#statusSubj" class="status" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a> -->
-                                        <a href="pdf-pbs.php?ay=<?= $row['sy'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['section'] ?>" target="_blank" class="status text-warning"><i class="material-icons" title="Status">&#xe415;</i></a>
+                                        <a href="pdf-pbs.php?ay=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['section_id'] ?>" target="_blank" class="status text-warning"><i class="material-icons" title="Status">&#xe415;</i></a>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -147,5 +148,5 @@ $db = new DatabaseHandler();
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.min.css">
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.min.js"></script>
 <script>
-    $('#myTable').DataTable();
+   $('#myTable').DataTable();
 </script>

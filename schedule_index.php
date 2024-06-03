@@ -332,6 +332,7 @@ $programType = json_encode($programType);
                                                             <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control">
                                                     </div>
                                                 <?php endforeach;?>
+                                                
                                             </div>
                                             <button type="button" class="btn btn-danger remove-btn" disabled>Remove</button>
                                             <button type="button" id="addbtn" class="btn btn-primary mt-1 add-btn">Add rows</button>

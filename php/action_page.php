@@ -31,7 +31,7 @@ if(isset($_POST['plotProf'])){
                     ";
                 }else{
                     echo "<script>
-                    alert('Schedule Schedule Has Been Used')
+                    alert('Schedule Has Been Used')
                     window.location.href='../schedule_index.php'
                     </script>
                     ";
@@ -41,91 +41,9 @@ if(isset($_POST['plotProf'])){
     }
 
 
-}else if(isset($_POST['prof_add_new'])){
-    $data = [
-        'profEmployID' => $_POST['profEmployID'],
-        'profFname' => $_POST['profFname'],
-        'profMname' => $_POST['profMname'],
-        'profLname' => $_POST['profLname'],
-        'profMobile' => $_POST['profMobile'],
-        'profAddress' => $_POST['profAddress'],
-        'profEduc' => $_POST['profEduc'],
-        'profExpert' => $_POST['profExpert'],
-        'profRank' => $_POST['profRank'],
-        'profHrs' => $_POST['profHrs'],
-        'profMax' => $_POST['profHrs'],
-        'profEmployStatus' => $_POST['profEmployStatus'],
-    ];
-
-    if($db->insertData('tb_professor',$data)){
-        echo "<script>
-        alert('Proffessor Added')
-        window.location.href='../prof_index.php'
-        </script>
-        ";
-    }
-}else if(isset($_POST['prof_update'])){
-    $data = array(
-        'profEmployID' => $_POST['profEmployID'],
-        'profFname' => $_POST['profFname'],
-        'profMname' => $_POST['profMname'],
-        'profLname' => $_POST['profLname'],
-        'profMobile' => $_POST['profMobile'],
-        'profAddress' => $_POST['profAddress'],
-        'profEduc' => $_POST['profEduc'],
-        'profExpert' => $_POST['profExpert'],
-        'profRank' => $_POST['profRank'],
-        'profHrs' => $_POST['profHrs'],
-        'profEmployStatus' => $_POST['profEmployStatus'],
-        );
-    
-        $whereClause = array(
-            'profID' => $_POST['profID'],
-            'status' => 0
-        );
-    if($db->updateData('tb_professor',$data,$whereClause)){
-    }   
-
-        echo "<script>
-        alert('Proffessor Updated')
-        window.location.href='../prof_index.php'
-        </script>
-        ";
-}else if(isset($_POST['del_profID'])){
-    $data = array(
-        'status' => 1,
-        
-        );
-    
-        $whereClause = array(
-            'profID' => $_POST['del_profID'],
-            'status' => 0
-        );
-    if($db->updateData('tb_professor',$data,$whereClause)){
-    }   
-
-        echo "<script>
-        alert('Proffessor Deleted')
-        window.location.href='../prof_index.php'
-        </script>
-        ";
-}else if(isset($_POST['room_add_new'])){
-    $data = [
-        'roomBuild' => $_POST['roomBuild'],
-        'roomFloornum' => $_POST['roomFloornum'],
-        'roomNum' => $_POST['roomNum'],
-    ];
-
-    if($db->insertData('tb_room',$data)){
-        echo "<script>
-        alert('Room Added')
-        window.location.href='../room_index.php'
-        </script>
-        ";
-    }
 }else if(isset($_POST['deactivate_schedule'])){
     $data = array(
-        'status' => 1,
+        'status' => 0,
         );
     
         $whereClause = array(
@@ -133,7 +51,7 @@ if(isset($_POST['plotProf'])){
             'semester' => $_POST['deac_semester'],
             'section' => $_POST['deac_section'],
         );
-    if($db->updateData('tb_scheduled',$data,$whereClause)){
+    if($db->updateData('tb_scheduled_2',$data,$whereClause)){
     }   
 
         echo "<script>
@@ -192,7 +110,7 @@ foreach ($schedule as $key => $value) {
         $whereClause = array(
             'id' => $schedule_edit_id,
         );
-    if($db->updateData('tb_scheduled',$data,$whereClause)){
+    if($db->updateData('tb_scheduled_2',$data,$whereClause)){
     }   
 }
 echo "<script>

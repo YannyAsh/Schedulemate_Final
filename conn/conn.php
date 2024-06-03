@@ -138,7 +138,7 @@ class DatabaseHandler {
     public function getAllRowsFromTableWhereGroup($tableName, array $additionalConditions = [], $groupBy = null) {
         try {
             // Construct the WHERE clause with status = 0 and additional conditions
-            $whereClause = "status = 0";
+            $whereClause = "$tableName.status = 1 OR $tableName.status = 0";
     
             if (!empty($additionalConditions)) {
                 $whereClause .= " AND " . implode(' AND ', $additionalConditions);
@@ -151,7 +151,7 @@ class DatabaseHandler {
             }
     
             // Prepare the SQL statement with the dynamic WHERE and GROUP BY clauses
-            $sql = "SELECT * FROM $tableName WHERE $whereClause $groupByClause";
+            $sql = "SELECT * FROM $tableName LEFT JOIN tb_section as sec ON $tableName.section_id = sec.secID WHERE $whereClause $groupByClause";
             $stmt = $this->pdo->prepare($sql);
     
             // Execute the query
