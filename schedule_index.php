@@ -99,7 +99,7 @@ $programType = json_encode($programType);
                         </thead>
                         <tbody>
                             <?php
-                            $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled', $conditions, ' sy,semester,section ');
+                            $sql = $db->getAllRowsFromTableWhereGroup2('tb_scheduled_2', $conditions, 'school_yr');
                             $i = 0;
                             ?>
                             <?php
@@ -117,20 +117,20 @@ $programType = json_encode($programType);
                                 $i++;
                                 if ($_SESSION['college'] == "cas") {
                                     $yrs = array("first year", "second year", "third year", "fourth year");
-                                    $year = $yrs[explode("-", $row['section'])[1] - 1];
-                                    if ($db->getMajorCountsOfPlot($row['semester'], $row['section'], $row['course']) == $db->getMajorCountsByYearSem($year, $row['semester'], $row['course'])) {
+                                    $year = $yrs[explode("-", $row['secID'])[1] - 1];
+                                    if ($db->getMajorCountsOfPlot($row['semester'], $row['secID'], $row['course']) == $db->getMajorCountsByYearSem($year, $row['semester'], $row['course'])) {
                             ?>
                                         <tr>
                                             <td><?= $i ?></td>
-                                            <td><?= $row['sy'] ?></td>
+                                            <td><?= $row['school_yr'] ?></td>
                                             <td><?= $row['semester'] ?></td>
-                                            <td><?= strtoupper($row['course'] . '/' . $row['section']) ?></td>
+                                            <td><?= strtoupper($row['course'] . '/' . $row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
                                             <td>
-                                                <a href="#viewSchedule" class="view viewbtn text-primary" data-bs-toggle="modal" data-sy="<?= $row['sy'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['section'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
+                                                <a href="#viewSchedule" class="view viewbtn text-primary" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
 
-                                                <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['sy'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['section'] ?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
+                                                <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['secID'] ?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
 
-                                                <a <?= $casCondition ?> <?= $hidden ?> href="#statusSchedule" class="status deac" data-bs-toggle="modal" data-sy="<?= $row['sy'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['section'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
+                                                <a <?= $casCondition ?> <?= $hidden ?> href="#statusSchedule" class="status deac" data-bs-toggle="modal" data-sy="<?= $row['sy'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
 
                                             </td>
                                         </tr>
@@ -141,15 +141,15 @@ $programType = json_encode($programType);
                                     ?>
                                     <tr>
                                         <td><?= $i ?></td>
-                                        <td><?= $row['sy'] ?></td>
+                                        <td><?= $row['school_yr'] ?></td>
                                         <td><?= $row['semester'] ?></td>
-                                        <td><?= strtoupper($row['course'] . '/' . $row['section']) ?></td>
+                                        <td><?= strtoupper($row['course'] . '/' . $row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
                                         <td>
-                                            <a href="#viewSchedule" class="view viewbtn text-primary" data-bs-toggle="modal" data-sy="<?= $row['sy'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['section'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
+                                            <a href="#viewSchedule" class="view viewbtn text-primary" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
 
-                                            <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['sy'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['section'] ?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
+                                            <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['secID'] ?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
 
-                                            <a <?= $casCondition ?> <?= $hidden ?> href="#statusSchedule" class="status deac" data-bs-toggle="modal" data-sy="<?= $row['sy'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['section'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
+                                            <a <?= $casCondition ?> <?= $hidden ?> href="#statusSchedule" class="status deac" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
 
                                         </td>
                                     </tr>
@@ -158,7 +158,7 @@ $programType = json_encode($programType);
                             } ?>
 
                             <?php
-                            $sql = $db->getAllRowsFromTableWhereGroup2('tb_scheduled', $conditions, ' sy,semester,section');
+                            $sql = $db->getAllRowsFromTableWhereGroup2('tb_scheduled_2', $conditions, ' school_yr');
                             ?>
                             <?php
                             foreach ($sql as $row) {
@@ -166,11 +166,11 @@ $programType = json_encode($programType);
                             ?>
                                 <tr>
                                     <td class="text-danger"><?= $i ?></td>
-                                    <td class="text-danger"><?= $row['sy'] ?></td>
+                                    <td class="text-danger"><?= $row['school_yr'] ?></td>
                                     <td class="text-danger"><?= $row['semester'] ?></td>
-                                    <td class="text-danger"><?= strtoupper($row['course'] . '/' . $row['section']) ?></td>
+                                    <td class="text-danger"><?= strtoupper($row['course'] . '/' . $row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
                                     <td class="text-danger">
-                                        <a href="#viewSchedule" class="view viewbtn" data-bs-toggle="modal" data-sy="<?= $row['sy'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['section'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
+                                        <a href="#viewSchedule" class="view viewbtn" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
                                     </td>
                                 </tr>
                             <?php
@@ -313,7 +313,7 @@ $programType = json_encode($programType);
                                             </div>
                                             <!-- Days of the weeks -->
                                             <?php $day = array(1 => 'Monday', 
-                                                    2 => 'Tuesnday',
+                                                    2 => 'Tuesday',
                                                     3 => 'Wednesday',
                                                     4 => 'Thursday',
                                                     5 => 'Friday',

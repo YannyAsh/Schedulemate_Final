@@ -7,12 +7,12 @@ $sy = $_POST['sy'];
 $semester = $_POST['semester'];
 $section = $_POST['section'];
 
-$conditions = ['sy= "'.$sy.'"',
-'semester= "'.$semester.'"',
-'section= "'.$section.'"',
+$conditions = [
+    'school_yr = "'.$sy.'"',
+    'semester = "'.$semester.'"',
+    'section_id = "'.$section.'"'
 ];
-$sql = $db->getAllRowsFromTableWhere('tb_scheduled',$conditions);
-// var_dump($sql);
+$sql = $db->getAllDataCourse('tb_scheduled_2',$conditions);
 $row1='<table  class="table table-hover">
 <thead>
     <tr>
@@ -43,85 +43,24 @@ $count=0;
 $currentLowestTime='';
 $currentHighestTime='';
 
-    $profFName = $db->getIdByColumnValue('tb_professor','profID',$row['prof'],'profFName');
-    $profMname = $db->getIdByColumnValue('tb_professor','profID',$row['prof'],'profMname');
-    $profLname = $db->getIdByColumnValue('tb_professor','profID',$row['prof'],'profLname');
-  
-    $timeDetails = '';
+    $start_time = date('h:i A', strtotime($row['start_time']));
+    $end_time = date('h:i A', strtotime($row['end_time']));
+    $timeDetails = $start_time . ' - ' . $end_time;
     $dayDetails = '';
 
-    if($row['sMonday']!=""){
-        if($timeDetails!=""){
-            $dayDetails.=' / M';
-            $timeDetails.= ' / '.$row['sMonday'].'-'.$row['eMonday'];
-        }else{
-            $dayDetails.='M';
-            $timeDetails.= $row['sMonday'].'-'.$row['eMonday'];
-        }
+    $day = array(1 => 'Monday', 
+        2 => 'Tuesday',
+        3 => 'Wednesday',
+        4 => 'Thursday',
+        5 => 'Friday',
+        6 => 'Saturday',
+        7 => 'Sunday'
+    );
+
+    // Get the specific day
+    if(array_key_exists($row['day'], $day)){
+        $dayDetails = $day[$row['day']];
     }
-    if($row['sTuesday']!=""){
-        if($timeDetails!=""){
-            $dayDetails.=' / T';
-            $timeDetails.= ' / '.$row['sTuesday'].'-'.$row['eTuesday'];
-        }else{
-            $dayDetails.='T';
-            $timeDetails.= $row['sTuesday'].'-'.$row['eTuesday'];
-        }
-        
-    }
-    if($row['sWednesday']!=""){
-        if($timeDetails!=""){
-            $dayDetails.=' / W';
-            $timeDetails.= ' / '.$row['sWednesday'].'-'.$row['eWednesday'];
-        }else{
-            $dayDetails.='W';
-            $timeDetails.= $row['sWednesday'].'-'.$row['eWednesday'];
-        }
-    }
-    if($row['sThursday']!=""){
-        if($timeDetails!=""){
-            $dayDetails.=' / Th';
-            $timeDetails.= ' / '.$row['sThursday'].'-'.$row['eThursday'];
-        }else{
-            $dayDetails.='Th';
-            $timeDetails.= $row['sThursday'].'-'.$row['eThursday'];
-        }
-    }
-    if($row['sFriday']!=""){
-        if($timeDetails!=""){
-            $dayDetails.=' / Fri';
-            $timeDetails.= ' / '.$row['sFriday'].'-'.$row['eFriday'];
-        }else{
-            $dayDetails.='Fri';
-            $timeDetails.= $row['sFriday'].'-'.$row['eFriday'];
-        }
-    }
-    if($row['sSaturday']!=""){
-        if($timeDetails!=""){
-            $dayDetails.=' / Sat';
-            $timeDetails.= ' / '.$row['sSaturday'].'-'.$row['eSaturday'];
-        }else{
-            $dayDetails.='Sat';
-            $timeDetails.= $row['sSaturday'].'-'.$row['eSaturday'];
-        }
-    }
-    if($row['sSunday']!=""){
-        if($timeDetails!=""){
-            $dayDetails.=' / Sun';
-            $timeDetails.= ' / '.$row['sSunday'].'-'.$row['eSunday'];
-        }else{
-            $dayDetails.='Sun';
-            $timeDetails.= $row['sSunday'].'-'.$row['eSunday'];
-        }
-    }
-
-
-
-
-
-
-
-
 
     // GET START & END
 
@@ -139,9 +78,9 @@ $currentHighestTime='';
     $row2 .="
         <tr>
             <td>".$row['id']."</td>
-            <td>".$row['subject']."</td>
-            <td>".$profName."</td>
-            <td>".$row['room']."</td>
+            <td>".$row['subCode']. "-". $row['subDesc'] ."</td>
+            <td>".$row['profLname']. ',' . $row['profFname'] . ' ' . $row['profMname'] . "</td>
+            <td>".$row['roomBuild']. " ". $row['roomNum'] ."</td>
             <td>".$dayDetails."</td>
             <td>". $timeDetails."</td>
         </tr>

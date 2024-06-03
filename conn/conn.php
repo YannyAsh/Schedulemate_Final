@@ -76,6 +76,38 @@ class DatabaseHandler {
         }
     }
 
+    // Get all data of the schedules with the additional conditions
+    public function getAllDataCourse($tableName, array $additionalConditions = []) {
+        try {
+            // Construct the WHERE clause with status = 0 and additional conditions
+            $whereClause = "$tableName.status = 1";
+    
+            if (!empty($additionalConditions)) {
+                $whereClause .= " AND " . implode(' AND ', $additionalConditions);
+            }
+    
+            // Prepare the SQL statement with the dynamic WHERE clause
+            $sql = "SELECT * FROM $tableName 
+            LEFT JOIN tb_section AS sec ON $tableName.section_id = sec.secID 
+            LEFT JOIN tb_room AS room ON $tableName.room_id = room.roomID 
+            LEFT JOIN tb_subjects AS subject ON $tableName.subject_id = subject.subID
+            LEFT JOIN tb_professor AS professor ON $tableName.prof_id = professor.profID
+            WHERE $whereClause";
+            $stmt = $this->pdo->prepare($sql);
+    
+            // Execute the query
+            $stmt->execute();
+    
+            // Fetch the results as an associative array
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch (PDOException $e) {
+            // Handle query errors
+            echo "Query failed: " . $e->getMessage();
+        }
+    }
+
     
     public function getAllRowsFromTableWhere2($tableName,$whereClause, array $additionalConditions = []) {
         try {
@@ -134,25 +166,24 @@ class DatabaseHandler {
             echo "Query failed: " . $e->getMessage();
         }
     }
-    public function getAllRowsFromTableWhereGroup2($tableName, array $additionalConditions = [], $groupBy = null) {
+
+    // Display for the schedules in the manage schedule
+    public function getAllRowsFromTableWhereGroup2($tableName, $additionalConditions = array(), $groupBy = null) {
         try {
-            // Construct the WHERE clause with status = 0 and additional conditions
-            $whereClause = "status = 1";
-    
+            // Construct the WHERE clause with status = 1 and additional conditions
+            $whereClause = "$tableName.status = 1";
+
             if (!empty($additionalConditions)) {
                 $whereClause .= " AND " . implode(' AND ', $additionalConditions);
             }
     
             // Construct the GROUP BY clause if $groupBy is provided
-            $groupByClause = "";
-            if (!empty($groupBy)) {
-                $groupByClause = " GROUP BY " . $groupBy;
-            }
+            $groupByClause = !empty($groupBy) ? " GROUP BY $groupBy" : "";
     
             // Prepare the SQL statement with the dynamic WHERE and GROUP BY clauses
-            $sql = "SELECT * FROM $tableName WHERE $whereClause $groupByClause";
+            $sql = "SELECT * FROM $tableName LEFT JOIN tb_section as sec ON $tableName.section_id = sec.secID WHERE $whereClause $groupByClause";
             $stmt = $this->pdo->prepare($sql);
-            //echo $sql;
+    
             // Execute the query
             $stmt->execute();
 

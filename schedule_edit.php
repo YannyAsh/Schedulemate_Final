@@ -340,71 +340,27 @@ $result_professor = mysqli_query($conn, $stmnt);
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <h6 class="day-heading">MONDAY</h6>
-                                            <label>Time Starts</label>
-                                            <input type="time" min="07:00" max="19:00" name="tsMon[]" class="form-control">
-                                            <label>Time Ends</label>
-                                            <input type="time" min="07:00" max="19:00" name="teMon[]" class="form-control">
+                                        <?php $day = array(1 => 'Monday', 
+                                                2 => 'Tuesnday',
+                                                3 => 'Wednesday',
+                                                4 => 'Thursday',
+                                                5 => 'Friday',
+                                                6 => 'Saturday',
+                                                7 => 'Sunday'
+                                            );
+                                        ?>
+                                        <div class="row">
+                                            <?php foreach($day as $key => $value):?>
+                                                <div class="col-sm-3">
+                                                    <h6 class="day-heading text-dark"><?php echo $value;?></h6>
+                                                        <input type="hidden" value="<?= $key?>" name="day[]">
+                                                    <label class="text-dark">Time Starts</label>
+                                                        <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control">
+                                                    <label class="text-dark">Time Ends</label>
+                                                        <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control">
+                                                </div>
+                                            <?php endforeach;?>
                                         </div>
-                                        <div class="col-sm-4">
-                                            <h6 class="day-heading">TUESDAY</h6>
-                                            <label>Time Starts</label>
-
-                                            <input type="time" min="07:00" max="19:00" name="tsTue[]" class="form-control">
-                                            <label>Time Ends</label>
-
-                                            <input type="time" min="07:00" max="19:00" name="teTue[]" class="form-control">
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <h6 class="day-heading">WEDNESDAY</h6>
-                                            <label>Time Starts</label>
-                                            <input type="time" min="07:00" max="19:00" name="tsWed[]" class="form-control">
-
-
-                                            <label>Time Ends</label>
-                                            <input type="time" min="07:00" max="19:00" name="teWed[]" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col">
-                                            <h6 class="day-heading">THURSDAY</h6>
-                                            <label>Time Starts</label>
-
-                                            <input type="time" min="07:00" max="19:00" name="tsThu[]" class="form-control">
-
-                                            <label>Time Ends</label>
-                                            <input type="time" min="07:00" max="19:00" name="teThu[]" class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <h6 class="day-heading">FRIDAY</h6>
-                                            <label>Time Starts</label>
-                                            <input type="time" min="07:00" max="19:00" name="tsFri[]" class="form-control">
-
-                                            <label>Time Ends</label>
-                                            <input type="time" min="07:00" max="19:00" name="teFri[]" class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <h6 class="day-heading">SATURDAY</h6>
-                                            <label>Time Starts</label>
-
-                                            <input type="time" min="07:00" max="19:00" name="tsSat[]" class="form-control">
-
-                                            <label>Time Ends</label>
-                                            <input type="time" min="07:00" max="19:00" name="teSat[]" class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <h6 class="day-heading">SUNDAY</h6>
-                                            <label>Time Starts</label>
-
-                                            <input type="time" min="07:00" max="19:00" name="tsSun[]" class="form-control">
-
-                                            <label>Time Ends</label>
-                                            <input type="time" min="07:00" max="19:00" name="teSun[]" class="form-control">
-                                        </div>
-                                    </div>
                                     <button type="button" class="btn btn-danger remove-btn" disabled>Remove</button>
                                     <button type="button" id="addbtn" class="btn btn-primary mt-1 add-btn">Add rows</button>
                                 </div>
