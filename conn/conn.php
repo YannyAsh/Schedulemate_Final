@@ -198,6 +198,13 @@ class DatabaseHandler {
 
     public function insertData($tableName, $data)
     {
+        $checker = $this->checkDataSchedule($data); // fetching data if there is a conflict schedule
+
+        // if there is a conflict schedule true return false;
+        if ($checker) {
+            return false;
+        }
+        // if there is no conflict it will insert the schedule
         $columns = implode(', ', array_keys($data));
         $placeholders = ':' . implode(', :', array_keys($data));
 
@@ -211,7 +218,24 @@ class DatabaseHandler {
         $stmt->execute();
         return true;
     }
-
+    
+    public function checkDataSchedule ($data = array()) {
+        try {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) as count FROM tb_scheduled_2 WHERE status = 1 AND room_id = :room_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day");
+            $stmt->bindParam(':room_id', $data['room_id'], PDO::PARAM_STR);
+            $stmt->bindParam(':semester', $data['semester'], PDO::PARAM_STR);
+            $stmt->bindParam(':school_yr', $data['school_yr'], PDO::PARAM_STR);
+            $stmt->bindParam(':start_time', $data['start_time'], PDO::PARAM_STR);
+            $stmt->bindParam(':end_time', $data['end_time'], PDO::PARAM_STR);
+            $stmt->bindParam(':day', $data['day'], PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['count'];
+        } catch (PDOException $e) {
+            // Handle query errors
+            echo "Query failed: " . $e->getMessage();
+        }
+    }
     
 
     public function updateData($tableName, $data, $whereConditions) {

@@ -31,7 +31,7 @@ if(isset($_POST['plotProf'])){
                     ";
                 }else{
                     echo "<script>
-                    alert('Schedule Error')
+                    alert('Schedule Schedule Has Been Used')
                     window.location.href='../schedule_index.php'
                     </script>
                     ";
