@@ -18,7 +18,7 @@ $row1='<table  class="table table-hover">
     <tr>
         <th>Academic Year</th>
         <th>Semester</th>
-        <th>Program & Section</th>
+        <th>Section</th>
     </tr>
 </thead>
 <tbody >';
@@ -37,7 +37,6 @@ $row2='
     <tbody>
 ';
 $count=0;
-
 
     foreach ($sql as $row ) {
     $currentLowestTime='';
@@ -63,15 +62,14 @@ $count=0;
     }
 
     // GET START & END
-    $profName = $profFName.' '.$profMname.' '.$profLname;
-    if($row['prof']=="TBA"){
-        $profName ="TBA";
+    if($row['prof_id'] == "TBA"){
+        $profName = "TBA";
     }
     if($count==0){
         $row1 .="<tr>
-                    <th>".$row['sy']."</th>
+                    <th>".$row['school_yr']."</th>
                     <th>".$row['semester']."</th>
-                    <th>".strtoupper($row['course']).'/'.$row['section']."</th>
+                    <th>".strtoupper($row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName'] )."</th>
                 </tr>";
     }
     $row2 .="

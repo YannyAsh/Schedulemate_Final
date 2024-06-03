@@ -6,7 +6,7 @@ include 'include/header.php';
 $db = new DatabaseHandler();
 
 // Display data for dropdown
-$stmnt = "SELECT subID, subCode,subYearlvl,SubCourse,subType,subSem FROM tb_subjects where status = 0 ";
+$stmnt = "SELECT subID, subCode, subDesc, subYearlvl,SubCourse,subType,subSem FROM tb_subjects where status = 0 ";
 $result_subject = mysqli_query($conn, $stmnt);
 
 $stmnt = "SELECT secID, secProgram, secYearlvl, secName,secCourse  FROM tb_section where status = 0 ";
@@ -93,22 +93,22 @@ $programType = json_encode($programType);
                                 <th>No.</th>
                                 <th>Academic Year</th>
                                 <th>Semester</th>
-                                <th>Program & Section</th>
+                                <th>Section</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            $sql = $db->getAllRowsFromTableWhereGroup2('tb_scheduled_2', $conditions, 'school_yr');
+                            $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled_2', $conditions, 'school_yr');
                             $i = 0;
                             ?>
                             <?php
                             foreach ($sql as $row) {
                                 //CONDITION ONLY FOR CAS CHAIRPERSON 
                                 $casCondition = '';
-                                if (strpos($program, 'CAS') !== false) {
+                                if (strpos($program, 'cas') !== false) {
                                     $courseRow = $row['course'];
-                                    if (!strpos($courseRow, 'CAS') !== false) {
+                                    if (!strpos($courseRow, 'cas') !== false) {
                                         $casCondition = 'hidden';
                                     }
                                 }
@@ -124,14 +124,11 @@ $programType = json_encode($programType);
                                             <td><?= $i ?></td>
                                             <td><?= $row['school_yr'] ?></td>
                                             <td><?= $row['semester'] ?></td>
-                                            <td><?= strtoupper($row['course'] . '/' . $row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
+                                            <td><?= strtoupper($row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
                                             <td>
                                                 <a href="#viewSchedule" class="view viewbtn text-primary" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
-
                                                 <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['secID'] ?>&scheduleID=<?= $row['id'] ?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
-
                                                 <a <?= $casCondition ?> <?= $hidden ?> href="#statusSchedule" class="status deac" data-bs-toggle="modal" data-sy="<?= $row['sy'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
-
                                             </td>
                                         </tr>
                                     <?php
@@ -143,7 +140,7 @@ $programType = json_encode($programType);
                                         <td><?= $i ?></td>
                                         <td><?= $row['school_yr'] ?></td>
                                         <td><?= $row['semester'] ?></td>
-                                        <td><?= strtoupper($row['course'] . '/' . $row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
+                                        <td><?= strtoupper($row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
                                         <td>
                                             <a href="#viewSchedule" class="view viewbtn text-primary" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
 
@@ -168,7 +165,7 @@ $programType = json_encode($programType);
                                     <td class="text-danger"><?= $i ?></td>
                                     <td class="text-danger"><?= $row['school_yr'] ?></td>
                                     <td class="text-danger"><?= $row['semester'] ?></td>
-                                    <td class="text-danger"><?= strtoupper($row['course'] . '/' . $row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
+                                    <td class="text-danger"><?= strtoupper($row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
                                     <td class="text-danger">
                                         <a href="#viewSchedule" class="view viewbtn" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
                                     </td>
@@ -252,16 +249,13 @@ $programType = json_encode($programType);
                                                     <select class="form-control" name="plotSubj[]" id="plotSubj">
                                                         <option value="" disabled selected>Select Subject </option>
                                                         <?php
-
                                                         if (mysqli_num_rows($result_subject) > 0) {
                                                             while ($row = mysqli_fetch_assoc($result_subject)) {
-                                                                
-
                                                                         if ($row['subType'] == "minor") {
                                                             ?>
                                                                             <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
                                                                                 <!-- DISPLAY -->
-                                                                                <?= $row['subCode'] ?> / / <?= $row['subType'] ?> //<?= $row['SubCourse'] ?>
+                                                                                <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
                                                                                 <!-- END DISPLAY -->
                                                                             </option>
                                                                         <?php
@@ -269,7 +263,7 @@ $programType = json_encode($programType);
                                                                         ?>
                                                                             <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
                                                                                 <!-- DISPLAY -->
-                                                                                <?= $row['subCode'] ?> / / <?= $row['subType'] ?> //<?= $row['SubCourse'] ?>
+                                                                                <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
                                                                                 <!-- END DISPLAY -->
                                                                             </option>
                                                         <?php
