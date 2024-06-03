@@ -59,66 +59,35 @@ if(isset($_POST['plotProf'])){
         window.location.href='../schedule_index.php'
         </script>
         ";
-}else if(isset($_POST['schedule_edit_id'])){
-    // EDITING THE SCHEDULE
-    
-$schedule = $_POST['schedule_edit_id'];
-// echo '<pre>';
-// var_dump($_POST);
-
-foreach ($schedule as $key => $value) {
-
-    $sec_edit = $_POST['sec_edit'][$key];
-    $prof_edit = $_POST['prof_edit'][$key];
-    $schedule_edit_id = $_POST['schedule_edit_id'][$key];
-
-    $sMonday = $_POST["sMonday"][$key];
-    $eMonday = $_POST["eMonday"][$key];
-    $sTuesday = $_POST["sTuesday"][$key];
-    $eTuesday = $_POST["eTuesday"][$key];
-    $sWednesday = $_POST["sWednesday"][$key];
-    $eWednesday = $_POST["eWednesday"][$key];
-    $sThursday = $_POST["sThursday"][$key];
-    $eThursday = $_POST["eThursday"][$key];
-    $sFriday = $_POST["sFriday"][$key];
-    $eFriday = $_POST["eFriday"][$key];
-    $sSaturday = $_POST["sSaturday"][$key];
-    $eSaturday = $_POST["eSaturday"][$key];
-    $sSunday = $_POST["sSunday"][$key];
-    $eSunday = $_POST["eSunday"][$key];
-
-
-    $data = array(
-        'section' => $sec_edit,
-        'prof' => $prof_edit,
-        'sMonday' => $sMonday,
-        'eMonday' => $eMonday,
-        'sTuesday' => $sTuesday,
-        'eTuesday' => $eTuesday,
-        'sWednesday' => $sWednesday,
-        'eWednesday' => $eWednesday,
-        'sThursday' => $sThursday,
-        'eThursday' => $eThursday,
-        'sFriday' => $sFriday,
-        'eFriday' => $eFriday,
-        'sSaturday' => $sSaturday,
-        'eSaturday' => $eSaturday,
-        'sSunday' => $sSunday,
-        'eSunday' => $eSunday,
+} else if(isset($_POST['sched_edit_new'])){
+        // EDITING THE SCHEDULE
+        
+    $day = $_POST['day'];
+    //echo '<pre>';
+    //var_dump($_POST);
+    $schedule_edit_ids = $_POST['schedID'];
+    foreach ($day as $key => $value) {
+        $subj_edit = $_POST['plotSubj2'][$key];
+        $room_edit = $_POST['plotRoom2'][$key];
+        $day = $_POST['day'][$key];
+        $data = array(
+            'subj_id' => $subj_edit,
+            'room_id' => $room_edit,
         );
-    
+
         $whereClause = array(
-            'id' => $schedule_edit_id,
+            'id' => $schedule_edit_ids,
         );
-    if($db->updateData('tb_scheduled_2',$data,$whereClause)){
-    }   
-}
-echo "<script>
-alert('Schedule Edited Successfully')
-window.location.href='../schedule_index.php'
-</script>
-";
-}else{
+        if($db->updateData('tb_scheduled_2',$data,$whereClause)){
+            echo "<script>
+            alert('Schedule Edited Successfully')
+            window.location.href='../schedule_index.php'
+            </script>
+            ";
+        }   
+    }
+    
+ } else {
     echo "<script>
     alert('it seems there is an empty in your forms, please verify your transaction again')
     window.location.href='../schedule_index.php'

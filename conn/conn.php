@@ -280,7 +280,7 @@ class DatabaseHandler {
     
             $whereClause = '';
             foreach ($whereConditions as $whereKey => $whereValue) {
-                $whereClause .= "$whereKey = :where_$whereKey AND ";
+                $whereClause .= "$whereKey = :$whereKey AND ";
             }
 
             // Remove the trailing "AND" from the whereClause
@@ -414,13 +414,14 @@ class DatabaseHandler {
     }
 
     public function getMajorToDisplay($year, $sem, $section){
-        $qry = "SELECT tb_scheduled.*, tb_subjects.* 
-                FROM tb_scheduled 
-                INNER JOIN tb_subjects 
-                ON tb_scheduled.id = tb_subjects.subID
-                WHERE tb_scheduled.sy = '$year' 
+        $qry = "SELECT * FROM tb_scheduled_2 as tb_scheduled
+                LEFT JOIN tb_subjects as tb_subject
+                ON tb_scheduled.subject_id = tb_subject.subID
+                LEFT JOIN tb_room as room ON 
+                tb_scheduled.room_id = room.roomID
+                WHERE tb_scheduled.school_yr = '$year' 
                 AND tb_scheduled.semester = '$sem' 
-                AND tb_scheduled.section = '$section'";
+                AND tb_scheduled.section_id = '$section'";
         $stmt = $this->pdo->prepare($qry);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

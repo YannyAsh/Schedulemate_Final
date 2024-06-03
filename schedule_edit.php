@@ -64,6 +64,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                 <th>Subject</th>
                                 <th>Room</th>
                                 <th>Time</th>
+                                <th>Day</th>
                                 <th>Edit</th>
                             </thead>
                             <tbody>
@@ -75,92 +76,39 @@ $result_professor = mysqli_query($conn, $stmnt);
                                 foreach ($sql as $row) {
                                 ?>
                                     <tr>
-                                        <td><?= $row['subject'] ?></td>`
-                                        <td><?= $row['room'] ?></td>
+                                        <td><?= $row['subCode'] . '-' . $row['subDesc'] ?></td>
+                                        <td><?= $row['roomBuild'] . '-' . $row['roomNum'] ?></td>
 
-                                        <!-- MONDAY -->
                                         <?php
-                                        $day;
-                                        $stime;
-                                        $etime;
-                                        if ($row['sMonday'] && $row['eMonday'] != null) {
-                                            $day = 'Monday';
-                                            $stime = $row['sMonday'];
-                                            $etime = $row['eMonday'];
-                                        ?>
-                                            <td>MONDAY <?= date_format(date_create($row['sMonday']), "h:i A") . '-' . date_format(date_create($row['eMonday']), "h:i A"); ?></td>
-                                        <?php } ?>
+                                            $start_time = date('h:i A', strtotime($row['start_time']));
+                                            $end_time = date('h:i A', strtotime($row['end_time']));
+                                            $timeDetails = $start_time . ' - ' . $end_time;
+                                            $day = array(1 => 'Monday', 
+                                                2 => 'Tuesday',
+                                                3 => 'Wednesday',
+                                                4 => 'Thursday',
+                                                5 => 'Friday',
+                                                6 => 'Saturday',
+                                                7 => 'Sunday'
+                                            );
 
-                                        <!-- TUESDAY -->
-                                        <?php
-                                        if ($row['sTuesday'] && $row['eTuesday'] != null) {
-                                            $day = 'Tuesday';
-                                            $stime = $row['sTuesday'];
-                                            $etime = $row['eTuesday'];
+                                            // Get the specific day
+                                            if(array_key_exists($row['day'], $day)){
+                                                $dayDetails = $day[$row['day']];
+                                            }
                                         ?>
-                                            <td>TUESDAY <?= date_format(date_create($row['sTuesday']), "h:i A") . '-' . date_format(date_create($row['eTuesday']), "h:i A"); ?></td>
-                                        <?php } ?>
-
-                                        <!-- WEDNESDAY -->
-                                        <?php
-                                        if ($row['sWednesday'] && $row['eWednesday'] != null) {
-                                            $day = 'Wednesday';
-                                            $stime = $row['sWednesday'];
-                                            $etime = $row['eWednesday'];
-                                        ?>
-                                            <td>WEDNESDAY <?= date_format(date_create($row['sWednesday']), "h:i A") . '-' . date_format(date_create($row['eWednesday']), "h:i A"); ?></td>
-                                        <?php } ?>
-
-                                        <!-- THURSDAY -->
-                                        <?php
-                                        if ($row['sThursday'] && $row['eThursday'] != null) {
-                                            $day = 'Thursday';
-                                            $stime = $row['sThursday'];
-                                            $etime = $row['eThursday'];
-                                        ?>
-                                            <td>THURSDAY <?= date_format(date_create($row['sThursday']), "h:i A") . '-' . date_format(date_create($row['eThursday']), "h:i A"); ?></td>
-                                        <?php } ?>
-
-                                        <!-- FRIDAY -->
-                                        <?php
-                                        if ($row['sFriday'] && $row['eFriday'] != null) {
-                                            $day = 'Friday';
-                                            $stime = $row['sFriday'];
-                                            $etime = $row['eFriday'];
-                                        ?>
-                                            <td>FRIDAY <?= date_format(date_create($row['sFriday']), "h:i A") . ' - ' . date_format(date_create($row['eFriday']), "h:i A"); ?></td>
-                                        <?php } ?>
-
-                                        <!-- SATURDAY -->
-                                        <?php
-                                        if ($row['sSaturday'] && $row['eSaturday'] != null) {
-                                            $day = 'Saturday';
-                                            $stime = $row['sSaturday'];
-                                            $etime = $row['eSaturday'];
-                                        ?>
-                                            <td>SATURDAY <?= date_format(date_create($row['sSaturday']), "h:i A") . '-' . date_format(date_create($row['eSaturday']), "h:i A"); ?></td>
-                                        <?php } ?>
-
-                                        <!-- SUNDAY -->
-                                        <?php
-                                        if ($row['sSunday'] && $row['eSunday'] != null) {
-                                            $day = 'Sunday';
-                                            $stime = $row['sSunday'];
-                                            $etime = $row['eSunday'];
-                                        ?>
-                                            <td>SUNDAY <?= date_format(date_create($row['sSunday']), "h:i A") . '-' . date_format(date_create($row['eSunday']), "h:i A"); ?></td>
-                                        <?php } ?>
-
+                                        <td><?= $timeDetails ?></td>
+                                        <td><?= $dayDetails ?></td>
                                         <td>
                                             <?php
                                             if ($_SESSION['college'] == 'cas' && $row['subType'] != 'major') {
 
                                             ?>
-                                                <a href="" onclick="openModal('<?= $day ?>', '<?= $stime ?>', '<?= $etime ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
+                                                <a href="" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
                                             <?php
                                             } else if ($_SESSION['college'] != 'cas' && $row['subType'] == 'major') {
                                             ?>
-                                                <a href="" onclick="openModal('<?= $day ?>', '<?= $stime ?>',' <?= $etime ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
+                                                <a href="" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
                                             <?php
                                             }
                                             ?>
@@ -341,7 +289,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                     </div>
 
                                         <?php $day = array(1 => 'Monday', 
-                                                2 => 'Tuesnday',
+                                                2 => 'Tuesday',
                                                 3 => 'Wednesday',
                                                 4 => 'Thursday',
                                                 5 => 'Friday',
@@ -401,138 +349,120 @@ $result_professor = mysqli_query($conn, $stmnt);
                             <div class="col">
                                 <label class="form-control" id="plotSection"><?php echo $_GET['section']; ?></label>
                             </div>
+                            <input type="hidden" name="schedID" id="schedID" value="<?php echo $_GET['scheduleID'];?>"/>
                         </div>
                         <div class="row">
                             <div class="col ">
                                 <select class="form-control" name="plotSubj2[]" id="plotSubj2">
                                     <option value="" disabled selected>Select Subject</option>
                                     <?php
-
+                                    $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled LEFT JOIN tb_subjects as subjects ON scheduled.subject_id = subjects.subID WHERE scheduled.status = 1 ";
+                                    $result_subject = mysqli_query($conn, $stmnt);
+                                    ?>
+                                       <?php if (mysqli_num_rows($result_subject) > 0) : ?>
+                                        <?php while ($row = mysqli_fetch_assoc($result_subject)) : ?>
+                                            <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?> " value="<?php $row['subject_id']?>" selected>
+                                                <!-- DISPLAY -->
+                                                <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
+                                                <!-- END DISPLAY -->
+                                            </option>
+                                        <?php endwhile; ?>
+                                    <?php endif; ?>
+                                    <?php
                                     $stmnt = "SELECT subID, subCode,subYearlvl,SubCourse,subDesc,subType,subSem FROM tb_subjects where status = 0 ";
                                     $result_subject = mysqli_query($conn, $stmnt);
-
-                                    if (mysqli_num_rows($result_subject) > 0) {
-                                        while ($row = mysqli_fetch_assoc($result_subject)) {
-                                            if ($_SESSION['userCollege'] == "cas" || $row['subType'] == "minor") {
-                                                $sec = explode("-", $_GET['section']);
-                                                $trimmed = trim($sec[0]);
-                                                $userSection = $trimmed;
-
-                                                $sec = explode("-", $row['SubCourse']);
-                                                $trimmed = trim($sec[0]);
-                                                $subCourses = $trimmed;
-
-                                                if ($row['subType'] == "minor" && $userSection == $subCourses) {
                                     ?>
-                                                    <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subCode'] ?> ">
-                                                        <!-- DISPLAY -->
-                                                        <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
-                                                        <!-- END DISPLAY -->
-                                                    </option>
-                                                <?php
-                                                }
-                                            } else if ($row['subType'] == "major" && $userSection == $subCourses) {
-                                                ?>
-                                                <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subCode'] ?> ">
+                                    <?php if (mysqli_num_rows($result_subject) > 0) : ?>
+                                        <?php while ($row = mysqli_fetch_assoc($result_subject)) : ?>
+                                            <?php if ($row['subType'] == "minor") : ?>
+                                                <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?> ">
+                                                <!-- DISPLAY -->
+                                                <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
+                                                <!-- END DISPLAY -->
+                                                </option>
+                                            <?php endif; ?>
+                                            <?php if ($row['subType'] == "major") : ?>
+                                                <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?> ">
                                                     <!-- DISPLAY -->
                                                     <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
                                                     <!-- END DISPLAY -->
-                                                </option>
-                                    <?php
-                                            }
-                                        }
-                                    }
-                                    ?>
+                                                <?php endif; ?>
+                                        <?php endwhile; ?>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                             <div class="col">
                                 <select class="form-control" name="plotRoom2[]" id="plotRoom2">
                                     <option value="" disabled selected>Select Room</option>
                                     <?php
-                                    $stmnt = "SELECT roomID, roomBuild, roomNum  FROM tb_room where status = 0";
-                                    $result_room = mysqli_query($conn, $stmnt);
-
-                                    if (mysqli_num_rows($result_room) > 0) {
-                                        while ($row = mysqli_fetch_assoc($result_room)) {
+                                        $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled LEFT JOIN tb_room as rooms ON scheduled.room_id = rooms.roomID where scheduled.status = 1";
+                                        $result_room = mysqli_query($conn, $stmnt);
                                     ?>
-                                    
-                                            <option value="<?= $row['roomBuild'] ?> <?= $row['roomNum'] ?>"><?= $row['roomBuild'] ?> <?= $row['roomNum'] ?></option>
+                                        <?php if (mysqli_num_rows($result_room) > 0) : ?>
+                                            <?php while ($row = mysqli_fetch_assoc($result_room)) : ?>
+                                                <option value="<?= $row['roomID'] ?>" selected><?= $row['roomBuild'] ?> <?= $row['roomNum'] ?></option>
+                                            <?php endwhile;?>
+                                        <?php endif;?>
                                     <?php
-                                        }
-                                    }
+                                        $stmnt = "SELECT roomID, roomBuild, roomNum  FROM tb_room where status = 0";
+                                        $result_room = mysqli_query($conn, $stmnt);
                                     ?>
+                                        <?php if (mysqli_num_rows($result_room) > 0) : ?>
+                                            <?php while ($row = mysqli_fetch_assoc($result_room)) : ?>
+                                                <option value="<?= $row['roomID'] ?>"><?= $row['roomBuild'] ?> <?= $row['roomNum'] ?></option>
+                                            <?php endwhile;?>
+                                        <?php endif;?>
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <h6 class="day-heading">MONDAY</h6>
-                                <label>Time Starts</label>
-                                <input type="time" id="mondayStime" min="07:00" max="19:00" name="tsMon[]" class="form-control">
-                                <label>Time Ends</label>
-                                <input type="time" id="mondayEtime" min="07:00" max="19:00" name="teMon[]" class="form-control">
-                            </div>
-                            <div class="col">
-                                <h6 class="day-heading">TUESDAY</h6>
-                                <label>Time Starts</label>
-
-                                <input type="time" id="tuesdayStime" min="07:00" max="19:00" name="tsTue[]" class="form-control">
-                                <label>Time Ends</label>
-
-                                <input type="time" id="tuesdayEtime" min="07:00" max="19:00" name="teTue[]" class="form-control">
-                            </div>
-                            <div class="col">
-                                <h6 class="day-heading">WEDNESDAY</h6>
-                                <label>Time Starts</label>
-                                <input type="time" id=wednesdayStime" min="07:00" max="19:00" name="tsWed[]" class="form-control">
-
-
-                                <label>Time Ends</label>
-                                <input type="time" id="wednesdayEtime" min="07:00" max="19:00" name="teWed[]" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <h6 class="day-heading">THURSDAY</h6>
-                            <label>Time Starts</label>
-
-                            <input type="time" id="thursdayStime" min="07:00" max="19:00" name="tsThu[]" class="form-control">
-
-                            <label>Time Ends</label>
-                            <input type="time" id="thursdayEtime" min="07:00" max="19:00" name="teThu[]" class="form-control">
-                        </div>
-                        <div class="col">
-                            <h6 class="day-heading">FRIDAY</h6>
-                            <label>Time Starts</label>
-                            <input type="time" id="fridayStime" min="07:00" max="19:00" name="tsFri[]" class="form-control">
-
-                            <label>Time Ends</label>
-                            <input type="time" id="fridayEtime" min="07:00" max="19:00" name="teFri[]" class="form-control">
-                        </div>
-                        <div class="col">
-                            <h6 class="day-heading">SATURDAY</h6>
-                            <label>Time Starts</label>
-
-                            <input type="time" id="saturdayStime" min="07:00" max="19:00" name="tsSat[]" class="form-control">
-
-                            <label>Time Ends</label>
-                            <input type="time" id="saturdayEtime" min="07:00" max="19:00" name="teSat[]" class="form-control">
-                        </div>
-                        <div class="col">
-                            <h6 class="day-heading">SUNDAY</h6>
-                            <label>Time Starts</label>
-
-                            <input type="time" id="sundayStime" min="07:00" max="19:00" name="tsSun[]" class="form-control">
-
-                            <label>Time Ends</label>
-                            <input type="time" id="sundayEtime" min="07:00" max="19:00" name="teSun[]" class="form-control">
-                        </div>
-                    </div>
+                        <?php
+                            $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled where scheduled.status = 1";
+                            $result_sched = mysqli_query($conn, $stmnt);
+                        ?>
+                            <?php if (mysqli_num_rows($result_sched) > 0) : ?>
+                                <?php while ($row = mysqli_fetch_assoc($result_sched)) : ?>
+                                    <?php $day = array(1 => 'Monday', 
+                                            2 => 'Tuesday',
+                                            3 => 'Wednesday',
+                                            4 => 'Thursday',
+                                            5 => 'Friday',
+                                            6 => 'Saturday',
+                                            7 => 'Sunday'
+                                        );
+                                    ?>
+                                    <?php 
+                                        if(array_key_exists($row['day'], $day)){
+                                            $dayDetails = $day[$row['day']];
+                                        }
+                                        $start_time = new DateTime($row['start_time']);
+                                        $end_time = new DateTime($row['end_time']);
+                                    ?>  
+                                <div class="row">
+                                    <?php foreach($day as $key => $value):?>
+                                        <div class="col-sm-3">
+                                            <h6 class="day-heading text-dark"><?php echo $value;?></h6>
+                                            <?php if ($dayDetails == $value): ?>
+                                                <input type="hidden" value="<?= $key?>" name="day[]" id="days">
+                                            <label class="text-dark">Time Starts</label>
+                                                <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['start_time']));?>">
+                                            <label class="text-dark">Time Ends</label>
+                                                <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['end_time']));?>">
+                                            <?php else: ?>
+                                                <input type="hidden" value="<?= $key?>" name="day[]">
+                                            <label class="text-dark">Time Starts</label>
+                                                <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control" >
+                                            <label class="text-dark">Time Ends</label>
+                                                <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control" >
+                                            <?php endif;?>
+                                        </div>
+                                    <?php endforeach;?>
+                                </div>
+                                <?php endwhile;?>
+                            <?php endif;?>
                 </div>
                 <div class="modal-footer">
                     <input type="button" class="btn" data-bs-dismiss="modal" value="Cancel">
-                    <input type="submit" name="sched_add_new" class="btn" value="Update">
+                    <input type="submit" name="sched_edit_new" class="btn" value="update">
                 </div>
             </form>
         </div>
@@ -833,22 +763,26 @@ $result_professor = mysqli_query($conn, $stmnt);
                 return $(this).text();
             }).get();
 
-            console.log(data);
-            $('#roomID').val(id);
-            $('#roomBuild').val(data[1]);
-            $('#roomFloornum').val(data[2]);
-            $('#roomNum').val(data[3]);
-            $('#roomStatus').val('Active');
+            data.forEach(function(results) {
+                $('#roomID').val(results[0]);
+                $('#roomBuild').val(results[1]);
+                $('#roomFloornum').val(results[2]);
+                $('#roomNum').val(results[3]);
+                $('#roomStatus').val('Active');
+            });
         });
 
     });
 // to display the time
     function openModal(day, stime, etime) {
+        var days = $("#days").val();
         $(".editListinputs").find('input').each(function() {
             $(this).val('');
         });
-        $("#" + day.toLowerCase() + "Stime").val(stime);
-        $("#" + day.toLowerCase() + "Etime").val(etime);
+        console.log(stime);
+        console.log(etime);
+        $("#start_time").text(stime);
+        $("#end_time").text(etime);
 
     }
 </script>
