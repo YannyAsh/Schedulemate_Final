@@ -498,7 +498,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                                 <!-- <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['start_time']));?>"> -->
                                                                 <select class="form-select select2">
                                                                     <?php if(!empty($row['start_time'])):?>
-                                                                            <option selected>
+                                                                            <option selected value="<?php echo $row['start_time'];?>">
                                                                                 <?= $date = date("h:i:s A", strtotime($row['start_time']));?>
                                                                             </option>
                                                                         <?php foreach ($time as $timedisplay):?>
@@ -510,7 +510,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                                         <?php endforeach;?>
                                                                     <?php else:?>
                                                                             <?php foreach ($time as $timedisplay):?>
-                                                                            <option>
+                                                                            <option value="<?php echo $row['start_time'];?>">
                                                                                 <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
                                                                             </option>
                                                                             <?php endforeach;?>
@@ -522,7 +522,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                                 <!-- <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['end_time']));?>"> -->
                                                                 <select class="form-select select2">
                                                                     <?php if(!empty($row['end_time'])):?>
-                                                                            <option selected>
+                                                                            <option selected value="<?php echo $row['end_time'];?>">
                                                                                 <?= $date = date("h:i:s A", strtotime($row['end_time']));?>
                                                                             </option>
                                                                         <?php foreach ($time as $timedisplay):?>
@@ -534,7 +534,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                                         <?php endforeach;?>
                                                                     <?php else:?>
                                                                             <?php foreach ($time as $timedisplay):?>
-                                                                            <option>
+                                                                            <option value="<?php echo $row['end_time'];?>">
                                                                                 <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
                                                                             </option>
                                                                             <?php endforeach;?>
