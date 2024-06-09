@@ -9,8 +9,13 @@ $room = $_GET['room'];
 $program = $_SESSION['program'];
 $college = strtoupper($_SESSION['college']);
 $course = $_SESSION['program'];
+
 $schoolyear = $ay;
 $SY = $semester . ' ' . $schoolyear;
+
+$roomBuild = $db->getIdByColumnValue('tb_room', 'roomID', $room, 'roomBuild');
+$roomNum = $db->getIdByColumnValue('tb_room', 'roomID', $room, 'roomNum');
+$fullroom = ucwords($roomBuild . ' ' . $roomNum);
 
 $pdf = new TCPDF('L', PDF_UNIT, 'A4', true, 'UTF-8', false);
 
@@ -43,7 +48,7 @@ $pdf->SetFont('helvetica', 'B', 8);
 $pdf->Cell(0, 15, $college, 0, false, 'C', 0, '', 0, false, 'M', 'N');
 $pdf->SetY($pdf->GetY() + 5);
 $pdf->SetFont('helvetica', 'B', 8);
-$pdf->Cell(0, 15, $title, 0, 1, 'C', 0, '', 0, false, 'M', 'M');
+$pdf->Cell(0, 10, $title, 0, 1, 'C', 0, '', 0, false, 'M', 'M');
 $pdf->Cell(0, 15, $SY, 0, 1, 'C', 0, '', 0, false, 'M', 'M');
 
 
@@ -54,7 +59,7 @@ $pdf->Ln(2);
 
 // ROOM DETAILS
 $pdf->SetFont('helvetica', 'B', 10);
-$pdf->Cell(0, 8, 'Room: ' . $room, 0, 1, '', 0, '', 0, false, 'M', 'M');
+$pdf->Cell(0, 8, 'Room: ' . $fullroom, 0, 1, '', 0, '', 0, false, 'M', 'M');
 
 
 
@@ -62,11 +67,11 @@ $pdf->SetFont('helvetica', '', 8);
 
 
 $conditions = [
-    'sy = "' . $ay . '"',
+    'school_yr = "' . $ay . '"',
     'semester = "' . $semester . '"',
-    'room = "' . $room . '"',
+    'room_id = "' . $room . '"',
 ];
-$sql = $db->getAllRowsFromTableWhere('tb_scheduled', $conditions);
+$sql = $db->getAllDataCourse('tb_scheduled_2', $conditions);
 // echo '<pre>';
 // var_dump($sql);
 $dayMon = [];
@@ -79,40 +84,43 @@ $daySun = [];
 
 
 foreach ($sql as $row) {
-    $profFName = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof'], 'profFName');
-    $profMname = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof'], 'profMname');
-    $profLname = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof'], 'profLname');
-    $subDesc = $db->getIdByColumnValue('tb_subjects', 'subCode', $row['subject'], 'subDesc');
+    $profFName = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof_id'], 'profFName');
+    $profMname = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof_id'], 'profMname');
+    $profLname = $db->getIdByColumnValue('tb_professor', 'profID', $row['prof_id'], 'profLname');
     $fullname = ucwords($profFName . ' ' . $profMname . ' ' . $profLname);
 
 
-    if ($row['prof'] == "TBA") {
+    if ($row['prof_id'] == "TBA") {
         $fullname = "TBA";
     }
-    $room = strtoupper($row['room']);
-    $subject = strtoupper($row['subject']);
-    $section = strtoupper($row['section']);
+
+    $section = strtoupper($row['secProgram'] . " " . $row['secYearlvl'] . " " . $row['secName'] . " " . $row['secSession']);
+    $subject = strtoupper($row['subCode']);
+
+    $subjectArr[] = $row['subCode'];
+    $descriptionArr[] = $row['subDesc'];
+
     $appendedDetails = '<br>' . $subject . '<br>' . $section . '<br>' . $fullname;
-    if ($row['sMonday'] !== "" && $row['eMonday'] !== "") {
-        $dayMon[] = $row['sMonday'] . '-' . $row['eMonday'] . $appendedDetails;
+    if ($row['day'] == 1) {
+        $dayMon[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sTuesday'] !== "" && $row['eTuesday'] !== "") {
-        $dayTues[] = $row['sTuesday'] . '-' . $row['eTuesday'] . $appendedDetails;
+    if ($row['day'] == 2) {
+        $dayTues[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sWednesday'] !== "" && $row['eWednesday'] !== "") {
-        $dayWed[] = $row['sWednesday'] . '-' . $row['eWednesday'] . $appendedDetails;
+    if ($row['day'] == 3) {
+        $dayWed[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sThursday'] !== "" && $row['eThursday'] !== "") {
-        $dayThurs[] = $row['sThursday'] . '-' . $row['eThursday'] . $appendedDetails;
+    if ($row['day'] == 4) {
+        $dayThurs[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sFriday'] !== "" && $row['eFriday'] !== "") {
-        $dayFri[] = $row['sFriday'] . '-' . $row['eFriday'] . $appendedDetails;
+    if ($row['day'] == 5) {
+        $dayFri[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sSaturday'] !== "" && $row['eSaturday'] !== "") {
-        $daySat[] = $row['sSaturday'] . '-' . $row['eSaturday'] . $appendedDetails;
+    if ($row['day'] == 6) {
+        $daySat[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sSunday'] !== "" && $row['eSunday'] !== "") {
-        $daySun[] = $row['sSunday'] . '-' . $row['eSunday'] . $appendedDetails;
+    if ($row['day'] == 7) {
+        $daySun[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
 }
 $maxCount = max(
@@ -224,6 +232,7 @@ EOD;
 
 
 $pdf->writeHTML($tbl1, true, false, false, false, '');
+$pdf->AddPage('L');
 
 // FOOTER DETAILS
 $pdf->SetFont('helvetica', 'B', 8);
@@ -240,7 +249,7 @@ $pdf->MultiCell(60, 5, "______________________________", 0, 'C', false, 0, '', '
 $pdf->Ln(); // Move to the next line
 
 $pdf->MultiCell(60, 5, "Program Coordinator/Chair", 0, 'C', false, 0, '55', '', true);
-$pdf->MultiCell(75, 5, "Dean, " . $program, 0, 'C', false, 0, '', '', true);
+$pdf->MultiCell(75, 5, "Dean, " . $college, 0, 'C', false, 0, '', '', true);
 $pdf->MultiCell(60, 5, "Campus Director", 0, 'C', false, 0, '', '', true);
 $pdf->Ln(10); // Move to the next line
 
@@ -250,10 +259,10 @@ $pdf->Ln(); // Move to the next line
 $pdf->MultiCell(195, 5, "Dean, CAS", 0, 'C', false, 0, '55', '', true);
 
 $img_file3 = K_PATH_IMAGES . 'footerlogo.png';
-$pdf->Image($img_file3, 60, 175, 185, 0, '', '', '', false, 300, '', false, false, 0);
+$pdf->Image($img_file3, 75, 175, 150, 0, '', '', '', false, 300, '', false, false, 0);
 
 $pdf->SetFont('helvetica', 'B', 8);
-$filename = $room . '_PBRU_' . date('Y-m-d') . '.pdf';
+$filename = $fullroom . '_PBRU_' . date('Y-m-d') . '.pdf';
 $pdf->Output($filename, 'I');
 
 function StartAndEnd($string)

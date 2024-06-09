@@ -1,4 +1,6 @@
 <?php
+include 'conn/conn.php';
+$db = new DatabaseHandler();
 include_once('db.php');
 
 $profFname = "";
@@ -11,6 +13,7 @@ $profExpert = "";
 $profRank = "";
 $profHrs = "";
 $profEmployStatus = "";
+$profEmployID="";
 $profStatus = 0;
 $profID = 0;
 $prof_edit_state = false;
@@ -30,10 +33,6 @@ if (isset($_POST["prof_add_new"])) {
     $profEmployStatus = $_POST["profEmployStatus"];
     $profStatus = $_POST["profStatus"];
 
-    // echo"<pre>";
-    // var_dump($_POST);
-    // echo"</pre>";
-    // die;
  
     // Validate required fields
     if (empty($profFname) || empty($profLname) || empty($profMobile)) {
@@ -140,7 +139,7 @@ if (isset($_POST["prof_update"])) {
 if (isset($_POST['prof_toggle_status'])) {
     $profID = $_POST['profID'];
 
-    $stmt = $conn->prepare("SELECT profStatus FROM tb_professor WHERE profID=?");
+    $stmt = $conn->prepare("SELECT status FROM tb_professor WHERE profID=?");
     $stmt->bind_param("i", $profID);
     $stmt->execute();
     $stmt->bind_result($currentStatus);
@@ -149,7 +148,7 @@ if (isset($_POST['prof_toggle_status'])) {
 
     $newStatus = ($currentStatus == 1) ? 0 : 1;
 
-    $stmt = $conn->prepare("UPDATE tb_professor SET profStatus=? WHERE profID=?");
+    $stmt = $conn->prepare("UPDATE tb_professor SET status=? WHERE profID=?");
     $stmt->bind_param("ii", $newStatus, $profID);
     $stmt->execute();
 
@@ -161,5 +160,4 @@ if (isset($_POST['prof_toggle_status'])) {
     }
     $stmt->close();
 }
-
 ?>

@@ -318,7 +318,8 @@ class DatabaseHandler
                                         FROM tb_scheduled_2 
                                         WHERE status = 1 
                                         AND (room_id = :room_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day) 
-                                        OR (prof_id = :prof_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day)");
+                                        OR (prof_id = :prof_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day)
+                                        OR (section_id = :section_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day)");
             $stmt->bindParam(':room_id', $data['room_id'], PDO::PARAM_STR);
             $stmt->bindParam(':semester', $data['semester'], PDO::PARAM_STR);
             $stmt->bindParam(':school_yr', $data['school_yr'], PDO::PARAM_STR);
@@ -326,6 +327,7 @@ class DatabaseHandler
             $stmt->bindParam(':end_time', $data['end_time'], PDO::PARAM_STR);
             $stmt->bindParam(':day', $data['day'], PDO::PARAM_STR);
             $stmt->bindParam(':prof_id', $data['prof_id'], PDO::PARAM_STR);
+            $stmt->bindParam(':section_id', $data['section_id'], PDO::PARAM_STR);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
 

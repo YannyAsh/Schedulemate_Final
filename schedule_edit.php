@@ -333,7 +333,7 @@ $result_professor = mysqli_query($conn, $stmnt);
             <form method="POST" action="php/action_page.php">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Subject</h5>
-                    <button type="button" class="close-2" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn btn-primary close-2" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -431,6 +431,51 @@ $result_professor = mysqli_query($conn, $stmnt);
                                         );
                                     ?>
                                     <?php 
+                                        $time = array (
+                                            '07:00',
+                                            '08:00',
+                                            '09:00',
+                                            '10:00',
+                                            '11:00',
+                                            '12:00',
+                                            '13:00',
+                                            '14:00',
+                                            '15:00',
+                                            '16:00',
+                                            '17:00',
+                                            '18:00',
+                                            '19:00',
+                                        );
+
+                                        $time30 = array (
+                                            '07:00',
+                                            '07:30',
+                                            '08:00',
+                                            '08:30',
+                                            '09:00',
+                                            '09:30',
+                                            '10:00',
+                                            '10:30',
+                                            '11:00',
+                                            '11:30',
+                                            '12:00',
+                                            '12:30',
+                                            '13:00',
+                                            '13:30',
+                                            '14:00',
+                                            '14:30',
+                                            '15:00',
+                                            '15:30',
+                                            '16:00',
+                                            '16:30',
+                                            '17:00',
+                                            '17:30',
+                                            '18:00',
+                                            '18:30',
+                                            '19:00',
+                                        );
+                                    ?>
+                                    <?php 
                                         if(array_key_exists($row['day'], $day)){
                                             $dayDetails = $day[$row['day']];
                                         }
@@ -439,21 +484,79 @@ $result_professor = mysqli_query($conn, $stmnt);
                                     ?>  
                                 <div class="row">
                                     <?php foreach($day as $key => $value):?>
-                                        <div class="col-sm-3">
-                                            <h6 class="day-heading text-dark"><?php echo $value;?></h6>
-                                            <?php if ($dayDetails == $value): ?>
-                                                <input type="hidden" value="<?= $key?>" name="day[]" id="days">
-                                            <label class="text-dark">Time Starts</label>
-                                                <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['start_time']));?>">
-                                            <label class="text-dark">Time Ends</label>
-                                                <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['end_time']));?>">
-                                            <?php else: ?>
-                                                <input type="hidden" value="<?= $key?>" name="day[]">
-                                            <label class="text-dark">Time Starts</label>
-                                                <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control" >
-                                            <label class="text-dark">Time Ends</label>
-                                                <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control" >
-                                            <?php endif;?>
+                                        <div class="col-sm-4">
+                                           <div class="card mt-3 mb-4 shadow">
+                                            <div class="card-header">
+                                                <h6 class="day-heading text-start text-dark fw-semibold"><?php echo $value;?></h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <?php if ($dayDetails == $value): ?>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                                <input type="hidden" value="<?= $key?>" name="day[]" id="days">
+                                                            <label class="text-dark">Time Starts</label>
+                                                                <!-- <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['start_time']));?>"> -->
+                                                                <select class="form-select select2">
+                                                                    <?php if(!empty($row['start_time'])):?>
+                                                                            <option selected value="<?php echo $row['start_time'];?>">
+                                                                                <?= $date = date("h:i:s A", strtotime($row['start_time']));?>
+                                                                            </option>
+                                                                        <?php foreach ($time as $timedisplay):?>
+                                                                           <?php if (date("h:i:s A", strtotime($timedisplay)) != date("h:i:s A", strtotime($row['start_time']))):?>
+                                                                                <option value="<?php echo $timedisplay;?>">
+                                                                                    <?= $timer = date("h:i:s A", strtotime($timedisplay))?>
+                                                                                </option>
+                                                                            <?php endif;?>
+                                                                        <?php endforeach;?>
+                                                                    <?php else:?>
+                                                                            <?php foreach ($time as $timedisplay):?>
+                                                                            <option value="<?php echo $row['start_time'];?>">
+                                                                                <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
+                                                                            </option>
+                                                                            <?php endforeach;?>
+                                                                    <?php endif;?>
+                                                                </select>    
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label class="text-dark">Time Ends</label>
+                                                                <!-- <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['end_time']));?>"> -->
+                                                                <select class="form-select select2">
+                                                                    <?php if(!empty($row['end_time'])):?>
+                                                                            <option selected value="<?php echo $row['end_time'];?>">
+                                                                                <?= $date = date("h:i:s A", strtotime($row['end_time']));?>
+                                                                            </option>
+                                                                        <?php foreach ($time as $timedisplay):?>
+                                                                           <?php if (date("h:i:s A", strtotime($timedisplay)) != date("h:i:s A", strtotime($row['end_time']))):?>
+                                                                                <option value="<?php echo $timedisplay;?>">
+                                                                                    <?= $timer = date("h:i:s A", strtotime($timedisplay))?>
+                                                                                </option>
+                                                                            <?php endif;?>
+                                                                        <?php endforeach;?>
+                                                                    <?php else:?>
+                                                                            <?php foreach ($time as $timedisplay):?>
+                                                                            <option value="<?php echo $row['end_time'];?>">
+                                                                                <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
+                                                                            </option>
+                                                                            <?php endforeach;?>
+                                                                    <?php endif;?>
+                                                                </select>                                                      
+                                                        </div>
+                                                    </div>
+                                                    <?php else: ?>
+                                                        <div class="row">
+                                                        <div class="col-6">
+                                                                <input type="hidden" value="<?= $key?>" name="day[]" id="days">
+                                                            <label class="text-dark">Time Starts</label>
+                                                                <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control">
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label class="text-dark">Time Ends</label>
+                                                                <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                <?php endif;?>
+                                            </div>
+                                           </div>
                                         </div>
                                     <?php endforeach;?>
                                 </div>
@@ -471,7 +574,9 @@ $result_professor = mysqli_query($conn, $stmnt);
 
 
 </html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="JS\select2.min.js"></script>
 <script>
     var el = document.getElementById("wrapper");
     var toggleButton = document.getElementById("menu-toggle");
@@ -495,8 +600,6 @@ $result_professor = mysqli_query($conn, $stmnt);
         });
     }
 </script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function() {

@@ -28,28 +28,28 @@ $db = new DatabaseHandler();
                                     <tbody >
                                         <?php 
                                         $conditions = [];
-                                        $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled',$conditions,' sy,semester,prof');
+                                        $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled_2',$conditions,' school_yr,semester,prof_id');
                                         $i=0;
                                         
                                         foreach ($sql as $row) {
-                                            if($row['prof']=="TBA"){
+                                            if($row['prof_id']=="TBA"){
                                                 continue;
                                             }
-                                            $profFName = $db->getIdByColumnValue('tb_professor','profID',$row['prof'],'profFName');
-                                            $profMname = $db->getIdByColumnValue('tb_professor','profID',$row['prof'],'profMname');
-                                            $profLname = $db->getIdByColumnValue('tb_professor','profID',$row['prof'],'profLname');
+                                            $profFName = $db->getIdByColumnValue('tb_professor','profID',$row['prof_id'],'profFName');
+                                            $profMname = $db->getIdByColumnValue('tb_professor','profID',$row['prof_id'],'profMname');
+                                            $profLname = $db->getIdByColumnValue('tb_professor','profID',$row['prof_id'],'profLname');
                                         
                                             $fullname = ucwords($profFName.' '.$profMname.' '.$profLname);
                                             $i++;
                                         ?>
                                         <tr>
-                                            <td><?=$row['sy']?></td>
+                                            <td><?=$row['school_yr']?></td>
                                             <td><?=$row['semester']?></td>
                                             <td><?=$fullname?></td>
                                             <td>
                                                 <!-- <a href="#editSubj" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a> -->
                                                 <!-- <a href="#statusSubj" class="status" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a> -->
-                                                <a href="pdf-pbt.php?ay=<?=$row['sy']?>&semester=<?=$row['semester']?>&prof=<?=$row['prof']?>" target="_blank" class="status text-warning" ><i class="material-icons"  title="Status">&#xe415;</i></a>
+                                                <a href="pdf-pbt.php?ay=<?=$row['school_yr']?>&semester=<?=$row['semester']?>&prof=<?=$row['prof_id']?>" target="_blank" class="status text-warning" ><i class="material-icons"  title="Status">&#xe415;</i></a>
                                             </td>
                                         </tr>
                                         <?php } ?>

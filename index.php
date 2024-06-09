@@ -6,59 +6,23 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" href="CSS/index_style.css" />
-
 	<!-- this is the js for the icons -->
 	<script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
 
 	<!-- sweetalert2 js -->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 	<title>Sign in & Sign up Form</title>
 </head>
 
 <body>
-
 	<div class="container">
-		<!-- Alerts -->
-		<?php
-		if (isset($_SESSION["success"])) {
-			if ($_SESSION["success"] == 1) {
-		?>
-				<script>
-					Swal.fire({
-						icon: "success",
-						title: "Registration successful! Please wait for approval.",
-						text: "",
-					});
-				</script>
-			<?php
-				$_SESSION["success"] = null;
-			} else {
-				// No need to show login success alert
-				$_SESSION["success"] = null;
-			}
-		}
-
-		if (isset($_SESSION["errors"])) {
-			foreach ($_SESSION["errors"] as $error) {
-			?>
-				<script>
-					Swal.fire({
-						icon: "error",
-						title: "Oops...",
-						text: "<?php echo $error; ?>",
-					});
-				</script>
-		<?php
-			}
-			$_SESSION["errors"] = null;
-		}
-		?>
-
 		<div class="forms-container">
 			<div class="signin-signup">
 				<!-- Sign IN form -->
-				<form action="login_backend.php" class="sign-in-form" method="post">
+				<form action="login_backend.php" class="sign-in-form" method="post" id="signin-form">
 					<img src="images/login_logo.png" alt="" width="300">
 					<h2 class="title">Sign in</h2>
 
@@ -77,7 +41,7 @@
 				</form>
 
 				<!-- Sign UP form -->
-				<form action="register_backend.php" class="sign-up-form" method="post">
+				<form action="register_backend.php" class="sign-up-form" method="post" id="signup-form">
 					<h2 class="title">Sign up</h2>
 
 					<div class="input-field">
@@ -102,7 +66,7 @@
 
 					<div class="input-field">
 						<i class="fas fa-envelope"></i>
-						<input type="email" name="userEmail" placeholder="Email" />
+						<input type="email" name="userEmail" placeholder="Email" required />
 					</div>
 
 
@@ -330,6 +294,92 @@
 			positionSelect.addEventListener('change', toggleFields);
 		});
 	</script>
+
+	<script>
+		// jQuery for AJAX form submission
+		$(document).ready(function() {
+			$('#signin-form').on('submit', function(e) {
+				e.preventDefault();
+				$.ajax({
+					type: 'POST',
+					url: 'login_backend.php',
+					data: $(this).serialize(),
+					success: function(response) {
+						// Handle success response
+						Swal.fire({
+							icon: 'success',
+							title: 'Login successful!',
+							text: response,
+						});
+						// Redirect or perform other actions on success
+						<?php
+						if (isset($_SESSION["success"])) {
+							if ($_SESSION["success"] == 1) {
+						?>
+								// Do something after successful login, if needed
+						<?php
+								$_SESSION["success"] = null;
+							} else {
+								// No need to show login success alert
+								$_SESSION["success"] = null;
+							}
+						}
+						?>
+					},
+					error: function(response) {
+						// Handle error response
+						Swal.fire({
+							icon: 'error',
+							title: 'Login failed!',
+							text: response.responseText,
+						});
+					}
+				});
+			});
+
+			$('#signup-form').on('submit', function(e) {
+				e.preventDefault();
+				$.ajax({
+					type: 'POST',
+					url: 'register_backend.php',
+					data: $(this).serialize(),
+					success: function(response) {
+						// Handle success response
+						Swal.fire({
+							icon: 'success',
+							title: 'Registration successful!',
+							text: response,
+						});
+						// Redirect or perform other actions on success
+						<?php
+						if (isset($_SESSION["success"])) {
+							if ($_SESSION["success"] == 1) {
+						?>
+								// Do something after successful registration, if needed
+						<?php
+								$_SESSION["success"] = null;
+							} else {
+								// No need to show registration success alert
+								$_SESSION["success"] = null;
+							}
+						}
+						?>
+					},
+					error: function(response) {
+						// Handle error response
+						Swal.fire({
+							icon: 'error',
+							title: 'Registration failed!',
+							text: response.responseText,
+						});
+					}
+				});
+			});
+		});
+	</script>
+
+	</script>
+
 </body>
 
 </html>

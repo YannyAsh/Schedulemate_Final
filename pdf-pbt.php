@@ -9,6 +9,7 @@ $prof = $_GET['prof'];
 $program = $_SESSION['program'];
 $college = strtoupper($_SESSION['college']);
 $position = strtoupper($_SESSION['postion']);
+// $section = $_GET['section'];
 
 $schoolyear = $ay;
 $course = $program;
@@ -59,7 +60,7 @@ $pdf->SetFont('helvetica', 'B', 8);
 $pdf->Cell(0, 15, $college, 0, false, 'C', 0, '', 0, false, 'M', 'N');
 $pdf->SetY($pdf->GetY() + 5);
 $pdf->SetFont('helvetica', 'B', 8);
-$pdf->Cell(0, 15, $title, 0, 1, 'C', 0, '', 0, false, 'M', 'M');
+$pdf->Cell(0, 10, $title, 0, 1, 'C', 0, '', 0, false, 'M', 'M');
 $pdf->Cell(0, 15, $SY, 0, 1, 'C', 0, '', 0, false, 'M', 'M');
 
 
@@ -83,11 +84,11 @@ $pdf->Ln(); // Move to the next line
 
 $pdf->SetFont('helvetica', '', 8);
 $conditions = [
-    'sy = "' . $ay . '"',
+    'school_yr = "' . $ay . '"',
     'semester = "' . $semester . '"',
-    'prof = "' . $prof . '"',
+    'prof_id = "' . $prof . '"',
 ];
-$sql = $db->getAllRowsFromTableWhere('tb_scheduled', $conditions);
+$sql = $db->getAllDataCourse('tb_scheduled_2', $conditions);
 // echo '<pre>';
 // var_dump($sql);
 $dayMon = [];
@@ -102,36 +103,35 @@ $descriptionArr = [];
 
 foreach ($sql as $row) {
 
-    $room = strtoupper($row['room']);
-    $subject = strtoupper($row['subject']);
-    $section = strtoupper($row['section']);
-    $subDesc = $db->getIdByColumnValue('tb_subjects', 'subCode', $row['subject'], 'subDesc');
+    $section = strtoupper($row['secProgram'] . " " . $row['secYearlvl'] . " " . $row['secName'] . " " . $row['secSession']);
+    $room = strtoupper($row['roomBuild'] . " " . $row['roomNum']);
+    $subject = strtoupper($row['subCode']);
 
-    $subjectArr[] = $row['subject'];
-    $descriptionArr[] = $subDesc;
+    $subjectArr[] = $row['subCode'];
+    $descriptionArr[] = $row['subDesc'];
 
 
     $appendedDetails = '<br>' . $subject . '<br>' . $section . '<br>' . $room;
-    if ($row['sMonday'] !== "" && $row['eMonday'] !== "") {
-        $dayMon[] = $row['sMonday'] . '-' . $row['eMonday'] . $appendedDetails;
+    if ($row['day'] == 1) {
+        $dayMon[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sTuesday'] !== "" && $row['eTuesday'] !== "") {
-        $dayTues[] = $row['sTuesday'] . '-' . $row['eTuesday'] . $appendedDetails;
+    if ($row['day'] == 2) {
+        $dayTues[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sWednesday'] !== "" && $row['eWednesday'] !== "") {
-        $dayWed[] = $row['sWednesday'] . '-' . $row['eWednesday'] . $appendedDetails;
+    if ($row['day'] == 3) {
+        $dayWed[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sThursday'] !== "" && $row['eThursday'] !== "") {
-        $dayThurs[] = $row['sThursday'] . '-' . $row['eThursday'] . $appendedDetails;
+    if ($row['day'] == 4) {
+        $dayThurs[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sFriday'] !== "" && $row['eFriday'] !== "") {
-        $dayFri[] = $row['sFriday'] . '-' . $row['eFriday'] . $appendedDetails;
+    if ($row['day'] == 5) {
+        $dayFri[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sSaturday'] !== "" && $row['eSaturday'] !== "") {
-        $daySat[] = $row['sSaturday'] . '-' . $row['eSaturday'] . $appendedDetails;
+    if ($row['day'] == 6) {
+        $daySat[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
-    if ($row['sSunday'] !== "" && $row['eSunday'] !== "") {
-        $daySun[] = $row['sSunday'] . '-' . $row['eSunday'] . $appendedDetails;
+    if ($row['day'] == 7) {
+        $daySun[] = $row['start_time'] . '-' . $row['end_time'] . $appendedDetails;
     }
 }
 $maxCount = max(
@@ -201,6 +201,7 @@ function returnTD($timeProvided, $timeSlots, $dayNumber)
     return $timeSlots;
 }
 
+
 // var_dump($timeSlots);
 $rows = '';
 foreach ($timeSlots as $key => $timeSlot) {
@@ -222,9 +223,9 @@ $rows2 = '';
 foreach ($subjectArr as $key => $timeSlot) {
     $rows2 .= '<tr>';
     $rows2 .= '<td style="text-align:center" colspan="2">' . $timeSlot . '</td>';
-    $rows2 .= '<td style="text-align:center" colspan="2">' . $descriptionArr[$key] . '</td>';
+    $rows2 .= '<td style="text-align:center" colspan="3">' . $descriptionArr[$key] . '</td>';
     $rows2 .= '<td style="text-align:center" colspan="2">' . $section . '</td>';
-    $rows2 .= '<td colspan="3"></td>';
+    $rows2 .= '<td colspan="2"></td>';
     $rows2 .= '</tr>';
 }
 
@@ -235,13 +236,13 @@ $tbl1 = <<<EOD
 <td style="width: 30%">
 <table border="1" style="align-items:center; table-layout: fixed; width: 100%">
 <tr >
-    <th style="text-align:center;font-weight:bold" colspan="9">SUMMARY COURSES</th>
+    <th style="text-align:center;font-weight:bold" colspan="9">SUMMARY OF COURSES</th>
 </tr>
        <tr style="height: 30px;">
             <td style="text-align:center;font-weight:bold;" colspan="2">Course Code</td>
-            <td style="text-align:center;font-weight:bold;" colspan="2">Descriptive Title</td>
+            <td style="text-align:center;font-weight:bold;" colspan="3">Descriptive Title</td>
             <td style="text-align:center;font-weight:bold;" colspan="2">Degree Yr & Sec</td>
-            <td style="text-align:center;font-weight:bold;" colspan="3">Total No. of Students</td>
+            <td style="text-align:center;font-weight:bold;" colspan="2">Total No. of Students</td>
        </tr>
     <tbody>
     $rows2
@@ -277,7 +278,7 @@ $tbl1 = <<<EOD
 <table border="1" style="align-items:center; table-layout: fixed; width: 100%">
        <thead>
        <tr style="height: 30px;">
-       <th style="text-align: center;font-weight:bold;" colspan="1">Time</th>
+       <th style="text-align: center;font-weight:bold;">Time</th>
        <th style="text-align: center;font-weight:bold;" colspan="1">MONDAY</th>
        <th style="text-align: center;font-weight:bold;" colspan="1">TUESDAY</th>
        <th style="text-align: center;font-weight:bold;" colspan="1">WEDNESDAY</th>
@@ -297,6 +298,7 @@ $tbl1 = <<<EOD
 EOD;
 
 $pdf->writeHTML($tbl1, true, false, false, false, '');
+$pdf->AddPage('L');
 
 // FOOTER DETAILS
 $pdf->SetFont('helvetica', 'B', 8);
@@ -323,7 +325,7 @@ $pdf->Ln(); // Move to the next line
 $pdf->MultiCell(195, 5, "Dean, CAS", 0, 'C', false, 0, '55', '', true);
 
 $img_file3 = K_PATH_IMAGES . 'footerlogo.png';
-$pdf->Image($img_file3, 60, 175, 185, 0, '', '', '', false, 300, '', false, false, 0);
+$pdf->Image($img_file3, 75, 175, 150, 0, '', '', '', false, 300, '', false, false, 0);
 
 $pdf->SetFont('helvetica', 'B', 8);
 $filename = $profLname . '_PBT_' . date('Y-m-d') . '.pdf';

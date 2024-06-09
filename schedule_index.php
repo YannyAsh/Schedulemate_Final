@@ -132,7 +132,7 @@ $programType = json_encode($programType);
                                             </td>
                                         </tr>
                                     <?php
-                                        // $i++;
+                                        $i++;
                                     }
                                 } else if ($program == $row['course']) {
                                     ?>
@@ -194,7 +194,6 @@ $programType = json_encode($programType);
                         <div class="modal-body">
                             <div class="form-group">
                                 <div class="row">
-
                                     <div class="col">
                                         <select name="plotYear" required id="plotYear" class="form-control">
                                             <option value="" disabled selected>Select Academic Year</option>
