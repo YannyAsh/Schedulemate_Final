@@ -6,11 +6,11 @@ if (isset($_POST["submit"])) {
     $fname = $_POST["userFname"];
     $mname = $_POST["userMname"];
     $lname = $_POST["userLname"];
-    $email = $_POST["userEmail"];
+    $email = $_POST["userEmailReg"];
     $position = $_POST["userPosition"];
     $college = isset($_POST["userCollege"]) ? $_POST["userCollege"] : ""; // Default value if not set
     $prog = isset($_POST["userProgram"]) ? $_POST["userProgram"] : ""; // Default value if not set
-    $password = $_POST["userPass"];
+    $password = $_POST["userPassReg"];
     $passwordRepeat = $_POST["userPasscon"];
     $userApproval = isset($_POST["userApproval"]) ? $_POST["userApproval"] : 'pending';
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);

@@ -341,18 +341,22 @@ $result_professor = mysqli_query($conn, $stmnt);
                     <div class="form-group">
                         <div class="row">
                             <div class="col">
+                                <label class="text-dark" for="schoolyear">School Year: </label>
                                 <label class="form-control" id="plotYear"><?php echo $_GET['sy']; ?></label>
                             </div>
                             <div class="col">
+                                <label class="text-dark" for="semester">Semester: </label>
                                 <label class="form-control" id="plotSem"><?php echo $_GET['semester']; ?></label>
                             </div>
                             <div class="col">
+                                <label class="text-dark" for="section">Section: </label>
                                 <label class="form-control" id="plotSection"><?php echo $_GET['section']; ?></label>
                             </div>
                             <input type="hidden" name="schedID" id="schedID" value="<?php echo $_GET['scheduleID'];?>"/>
                         </div>
                         <div class="row">
                             <div class="col ">
+                                <label class="text-dark" for="subject">Select Subject: </label>
                                 <select class="form-control" name="plotSubj2[]" id="plotSubj2">
                                     <option value="" disabled selected>Select Subject</option>
                                     <?php
@@ -392,6 +396,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                 </select>
                             </div>
                             <div class="col">
+                                <label class="text-dark" for="Room">Select Room: </label>
                                 <select class="form-control" name="plotRoom2[]" id="plotRoom2">
                                     <option value="" disabled selected>Select Room</option>
                                     <?php
@@ -510,9 +515,9 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                                         <?php endforeach;?>
                                                                     <?php else:?>
                                                                             <?php foreach ($time as $timedisplay):?>
-                                                                            <option value="<?php echo $row['start_time'];?>">
-                                                                                <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
-                                                                            </option>
+                                                                                <option value="<?php echo $row['start_time'];?>">
+                                                                                    <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
+                                                                                </option>
                                                                             <?php endforeach;?>
                                                                     <?php endif;?>
                                                                 </select>    
@@ -534,9 +539,9 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                                         <?php endforeach;?>
                                                                     <?php else:?>
                                                                             <?php foreach ($time as $timedisplay):?>
-                                                                            <option value="<?php echo $row['end_time'];?>">
-                                                                                <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
-                                                                            </option>
+                                                                                <option value="<?php echo $row['end_time'];?>">
+                                                                                    <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
+                                                                                </option>
                                                                             <?php endforeach;?>
                                                                     <?php endif;?>
                                                                 </select>                                                      
@@ -547,11 +552,25 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                         <div class="col-6">
                                                                 <input type="hidden" value="<?= $key?>" name="day[]" id="days">
                                                             <label class="text-dark">Time Starts</label>
-                                                                <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control">
+                                                                <select class="form-select select2">
+                                                                    <option value="" selected disabled>Select Start Time</option>
+                                                                        <?php foreach ($time as $timedisplay):?>
+                                                                            <option value="<?php echo $timedisplay;?>">
+                                                                                <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
+                                                                            </option>
+                                                                        <?php endforeach;?>
+                                                                </select>    
                                                         </div>
                                                         <div class="col-6">
                                                             <label class="text-dark">Time Ends</label>
-                                                                <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control">
+                                                                <select class="form-select select2">
+                                                                    <option value="" selected disabled>Select End Time</option>
+                                                                        <?php foreach ($time as $timedisplay):?>
+                                                                            <option value="<?php echo $timedisplay;?>">
+                                                                                <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
+                                                                            </option>
+                                                                        <?php endforeach;?>
+                                                                </select> 
                                                         </div>
                                                     </div>
                                                 <?php endif;?>
@@ -564,8 +583,8 @@ $result_professor = mysqli_query($conn, $stmnt);
                             <?php endif;?>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" class="btn" data-bs-dismiss="modal" value="Cancel">
-                    <input type="submit" name="sched_edit_new" class="btn" value="update">
+                    <button type="button" class="btn" data-bs-dismiss="modal" value="Cancel">Cancel</button>
+                    <button type="submit" name="sched_edit_new" class="btn" value="update">Update</button>
                 </div>
             </form>
         </div>

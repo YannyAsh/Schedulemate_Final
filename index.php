@@ -46,38 +46,38 @@
 
 					<div class="input-field">
 						<i class="fas fa-user"></i>
-						<input type="number" name="userEmployID" placeholder="Employee ID" required>
+						<input type="number" name="userEmployID" placeholder="Employee ID">
 					</div>
 
 					<div class="input-field">
 						<i class="fas fa-user"></i>
-						<input type="text" name="userFname" placeholder="First Name" required>
+						<input type="text" name="userFname" placeholder="First Name">
 					</div>
 
 					<div class="input-field">
 						<i class="fas fa-user"></i>
-						<input type="text" name="userMname" placeholder="Middle Name" required>
+						<input type="text" name="userMname" placeholder="Middle Name">
 					</div>
 
 					<div class="input-field">
 						<i class="fas fa-user"></i>
-						<input type="text" name="userLname" placeholder="Last Name" required>
+						<input type="text" name="userLname" placeholder="Last Name">
 					</div>
 
 					<div class="input-field">
 						<i class="fas fa-envelope"></i>
-						<input type="email" name="userEmail" placeholder="Email" required />
+						<input type="email" name="userEmailReg" placeholder="Email"/>
 					</div>
 
 
-					<select class="input-field" name="userPosition" required>
+					<select class="input-field" name="userPosition">
 						<option value="" disabled selected>Select School Position</option>
 						<option value="admin">Admin</option>
 						<option value="dean">Dean</option>
 						<option value="chairperson">Chairperson</option>
 					</select>
 
-					<select class="input-field" name="userCollege" required>
+					<select class="input-field" name="userCollege">
 						<option value="" disabled selected>Select College</option>
 						<option value="coed">COLLEGE OF EDUCATION</option>
 						<option value="coe">COLLEGE OF ENGINEERING</option>
@@ -87,7 +87,7 @@
 						<option value="ccict">COLLEGE OF COMPUTER INFORMATION AND COMMUNICATIONS TECHNOLOGY</option>
 					</select>
 
-					<select class="input-field" name="userProgram" required>
+					<select class="input-field" name="userProgram">
 						<option value="" disabled selected>Select Program</option>
 						<!-- College of Education Programs -->
 						<option value="">BEEd - Bachelor in Elementary Education</option>
@@ -162,15 +162,15 @@
 
 					<div class="input-field">
 						<i class="fas fa-lock"></i>
-						<input type="password" name="userPass" placeholder="Create Password" required>
+						<input type="password" name="userPassReg" placeholder="Create Password">
 					</div>
 
 					<div class="input-field">
 						<i class="fas fa-lock"></i>
-						<input type="password" name="userPasscon" placeholder="Confirm Password" required>
+						<input type="password" name="userPasscon" placeholder="Confirm Password">
 					</div>
 
-					<input type="submit" class="btn" value="Sign up" name="submit" />
+					<input type="submit" class="btn" value="Sign up" name="submit" id="submit-form" onclick="return validateSignUpForm(event)"/>
 				</form>
 			</div>
 		</div>
@@ -296,88 +296,83 @@
 	</script>
 
 	<script>
+		 document.getElementById('signup-form').addEventListener('submit', function(event) {
+				// Call the validation function
+				validateSignUpForm();
+			});
 		// jQuery for AJAX form submission
-		$(document).ready(function() {
-			$('#signin-form').on('submit', function(e) {
-				e.preventDefault();
-				$.ajax({
-					type: 'POST',
-					url: 'login_backend.php',
-					data: $(this).serialize(),
-					success: function(response) {
-						// Handle success response
-						Swal.fire({
-							icon: 'success',
-							title: 'Login successful!',
-							text: response,
-						});
-						// Redirect or perform other actions on success
-						<?php
-						if (isset($_SESSION["success"])) {
-							if ($_SESSION["success"] == 1) {
-						?>
-								// Do something after successful login, if needed
-						<?php
-								$_SESSION["success"] = null;
-							} else {
-								// No need to show login success alert
-								$_SESSION["success"] = null;
-							}
-						}
-						?>
-					},
-					error: function(response) {
-						// Handle error response
-						Swal.fire({
-							icon: 'error',
-							title: 'Login failed!',
-							text: response.responseText,
-						});
-					}
-				});
-			});
+		function validateSignUpForm() {
+            const employeeID = document.querySelector('input[name="userEmployID"]').value.trim();
+            const firstName = document.querySelector('input[name="userFname"]').value.trim();
+            const middleName = document.querySelector('input[name="userMname"]').value.trim();
+            const lastName = document.querySelector('input[name="userLname"]').value.trim();
+            const email = document.querySelector('input[name="userEmailReg"]').value.trim();
+            const position = document.querySelector('select[name="userPosition"]').value;
+            const college = document.querySelector('select[name="userCollege"]').value;
+            const program = document.querySelector('select[name="userProgram"]').value;
+            const password = document.querySelector('input[name="userPassReg"]').value.trim();
+            const passwordConfirm = document.querySelector('input[name="userPasscon"]').value.trim();
 
-			$('#signup-form').on('submit', function(e) {
-				e.preventDefault();
-				$.ajax({
-					type: 'POST',
-					url: 'register_backend.php',
-					data: $(this).serialize(),
-					success: function(response) {
-						// Handle success response
-						Swal.fire({
-							icon: 'success',
-							title: 'Registration successful!',
-							text: response,
-						});
-						// Redirect or perform other actions on success
-						<?php
-						if (isset($_SESSION["success"])) {
-							if ($_SESSION["success"] == 1) {
-						?>
-								// Do something after successful registration, if needed
-						<?php
-								$_SESSION["success"] = null;
-							} else {
-								// No need to show registration success alert
-								$_SESSION["success"] = null;
-							}
-						}
-						?>
-					},
-					error: function(response) {
-						// Handle error response
-						Swal.fire({
-							icon: 'error',
-							title: 'Registration failed!',
-							text: response.responseText,
-						});
-					}
-				});
-			});
-		});
-	</script>
+			let errors = [];
 
+			if (!employeeID) {
+				errors.push('Employee ID is required.');
+			}
+
+			if (!firstName) {
+				errors.push('First Name is required.');
+			}
+
+			if (!middleName) {
+				errors.push('Middle Name is required.');
+			}
+
+			if (!lastName) {
+				errors.push('Last Name is required.');
+			}
+
+			if (!email) {
+				errors.push('Email is required.');
+			} else if (!validateEmail(email)) {
+				errors.push('Please enter a valid email address.');
+			}
+
+			if (!position) {
+				errors.push('Position is required.');
+			}
+			if (position == 'dean' || position == 'chairperson') {
+				if (!college) {
+					errors.push('College is required.');
+				}
+				if (position == 'chairperson') {
+					if (!program) {
+						errors.push('Program is required.');
+					}
+				}
+			}
+			
+
+			if (!password) {
+				errors.push('Password is required.');
+			} else if (password.length < 6) {
+				errors.push('Password must be at least 6 characters long.');
+			}
+
+			if (password !== passwordConfirm) {
+				errors.push('Passwords do not match.');
+			}
+
+			if (errors.length > 0) {
+				alert(errors.join('\n'));
+				event.preventDefault();
+			}
+        }
+
+        // Email validation function
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
 	</script>
 
 </body>
