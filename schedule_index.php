@@ -238,7 +238,6 @@ $programType = json_encode($programType);
 
                                     <div class="form-row" id="rowTemplate" style="display: none;">
                                         <div class="label-container">
-                                            <hr>
                                             <label class="row-label"></label>
                                         </div>
                                         <div class="container">
@@ -313,16 +312,58 @@ $programType = json_encode($programType);
                                                     6 => 'Saturday',
                                                     7 => 'Sunday'
                                                 );
+
+                                                $time = array (
+                                                    '07:00',
+                                                    '08:00',
+                                                    '09:00',
+                                                    '10:00',
+                                                    '11:00',
+                                                    '12:00',
+                                                    '13:00',
+                                                    '14:00',
+                                                    '15:00',
+                                                    '16:00',
+                                                    '17:00',
+                                                    '18:00',
+                                                    '19:00',
+                                                );
                                             ?>
                                             <div class="row">
                                                 <?php foreach($day as $key => $value):?>
                                                     <div class="col-sm-3">
-                                                        <h6 class="day-heading text-dark"><?php echo $value;?></h6>
-                                                            <input type="hidden" value="<?= $key?>" name="day[]">
-                                                        <label class="text-dark">Time Starts</label>
-                                                            <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control">
-                                                        <label class="text-dark">Time Ends</label>
-                                                            <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control">
+                                                        <div class="card mt-3 mb-4">
+                                                            <div class="card-header">
+                                                                <h6 class="day-heading text-dark"><?php echo $value;?></h6> 
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                            <input type="hidden" value="<?= $key?>" name="day[]" id="days">
+                                                                        <label class="text-dark">Time Starts</label>
+                                                                            <select class="form-select select2" name="start_time[]">
+                                                                                <option value="" selected disabled>Select Start Time</option>
+                                                                                    <?php foreach ($time as $timedisplay):?>
+                                                                                        <option value="<?php echo $timedisplay;?>">
+                                                                                            <?= $timer = date("h:i:s A", strtotime($timedisplay))?>
+                                                                                        </option>
+                                                                                    <?php endforeach;?>
+                                                                            </select>    
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <label class="text-dark">Time Ends</label>
+                                                                            <select class="form-select select2" name="end_time[]">
+                                                                                <option value="" selected disabled>Select End Time</option>
+                                                                                    <?php foreach ($time as $timedisplay):?>
+                                                                                        <option value="<?php echo $timedisplay;?>">
+                                                                                            <?= $timer = date("h:i:s A", strtotime($timedisplay))?>
+                                                                                        </option>
+                                                                                    <?php endforeach;?>
+                                                                            </select> 
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 <?php endforeach;?>
                                                 

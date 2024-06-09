@@ -501,7 +501,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                                 <input type="hidden" value="<?= $key?>" name="day[]" id="days">
                                                             <label class="text-dark">Time Starts</label>
                                                                 <!-- <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['start_time']));?>"> -->
-                                                                <select class="form-select select2">
+                                                                <select class="form-select select2" name="start_time[]">
                                                                     <?php if(!empty($row['start_time'])):?>
                                                                             <option selected value="<?php echo $row['start_time'];?>">
                                                                                 <?= $date = date("h:i:s A", strtotime($row['start_time']));?>
@@ -516,7 +516,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                                     <?php else:?>
                                                                             <?php foreach ($time as $timedisplay):?>
                                                                                 <option value="<?php echo $row['start_time'];?>">
-                                                                                    <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
+                                                                                    <?= $timer = date("h:i:s A", strtotime($timedisplay))?>
                                                                                 </option>
                                                                             <?php endforeach;?>
                                                                     <?php endif;?>
@@ -525,7 +525,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                         <div class="col-6">
                                                             <label class="text-dark">Time Ends</label>
                                                                 <!-- <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['end_time']));?>"> -->
-                                                                <select class="form-select select2">
+                                                                <select class="form-select select2" name="end_time[]">
                                                                     <?php if(!empty($row['end_time'])):?>
                                                                             <option selected value="<?php echo $row['end_time'];?>">
                                                                                 <?= $date = date("h:i:s A", strtotime($row['end_time']));?>
@@ -540,7 +540,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                                     <?php else:?>
                                                                             <?php foreach ($time as $timedisplay):?>
                                                                                 <option value="<?php echo $row['end_time'];?>">
-                                                                                    <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
+                                                                                    <?= $timer = date("h:i:s A", strtotime($timedisplay))?>
                                                                                 </option>
                                                                             <?php endforeach;?>
                                                                     <?php endif;?>
@@ -548,26 +548,26 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                         </div>
                                                     </div>
                                                     <?php else: ?>
-                                                        <div class="row">
+                                                    <div class="row">
                                                         <div class="col-6">
                                                                 <input type="hidden" value="<?= $key?>" name="day[]" id="days">
                                                             <label class="text-dark">Time Starts</label>
-                                                                <select class="form-select select2">
+                                                                <select class="form-select select2" name="start_time[]">
                                                                     <option value="" selected disabled>Select Start Time</option>
                                                                         <?php foreach ($time as $timedisplay):?>
                                                                             <option value="<?php echo $timedisplay;?>">
-                                                                                <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
+                                                                                <?= $timer = date("h:i:s A", strtotime($timedisplay))?>
                                                                             </option>
                                                                         <?php endforeach;?>
                                                                 </select>    
                                                         </div>
                                                         <div class="col-6">
                                                             <label class="text-dark">Time Ends</label>
-                                                                <select class="form-select select2">
+                                                                <select class="form-select select2" name="end_time[]">
                                                                     <option value="" selected disabled>Select End Time</option>
                                                                         <?php foreach ($time as $timedisplay):?>
                                                                             <option value="<?php echo $timedisplay;?>">
-                                                                                <?= $timer = date("H:i:s A", strtotime($timedisplay))?>
+                                                                                <?= $timer = date("h:i:s A", strtotime($timedisplay))?>
                                                                             </option>
                                                                         <?php endforeach;?>
                                                                 </select> 
