@@ -66,7 +66,7 @@
 
 					<div class="input-field">
 						<i class="fas fa-envelope"></i>
-						<input type="email" name="userEmailReg" placeholder="Email"/>
+						<input type="email" name="userEmailReg" placeholder="Email" />
 					</div>
 
 
@@ -170,7 +170,7 @@
 						<input type="password" name="userPasscon" placeholder="Confirm Password">
 					</div>
 
-					<input type="submit" class="btn" value="Sign up" name="submit" id="submit-form" onclick="return validateSignUpForm(event)"/>
+					<input type="submit" class="btn" value="Sign up" name="submit" id="submit-form" onclick="return validateSignUpForm(event)" />
 				</form>
 			</div>
 		</div>
@@ -295,23 +295,26 @@
 		});
 	</script>
 
+
+	<!-- IF there is an error when signing in or signing up the data inputted will remain -->
 	<script>
-		 document.getElementById('signup-form').addEventListener('submit', function(event) {
-				// Call the validation function
-				validateSignUpForm();
-			});
-		// jQuery for AJAX form submission
-		function validateSignUpForm() {
-            const employeeID = document.querySelector('input[name="userEmployID"]').value.trim();
-            const firstName = document.querySelector('input[name="userFname"]').value.trim();
-            const middleName = document.querySelector('input[name="userMname"]').value.trim();
-            const lastName = document.querySelector('input[name="userLname"]').value.trim();
-            const email = document.querySelector('input[name="userEmailReg"]').value.trim();
-            const position = document.querySelector('select[name="userPosition"]').value;
-            const college = document.querySelector('select[name="userCollege"]').value;
-            const program = document.querySelector('select[name="userProgram"]').value;
-            const password = document.querySelector('input[name="userPassReg"]').value.trim();
-            const passwordConfirm = document.querySelector('input[name="userPasscon"]').value.trim();
+		document.getElementById('signup-form').addEventListener('submit', function(event) {
+			// Call the validation function
+			validateSignUpForm(event);
+		});
+
+		// Form validation function
+		function validateSignUpForm(event) {
+			const employeeID = document.querySelector('input[name="userEmployID"]').value.trim();
+			const firstName = document.querySelector('input[name="userFname"]').value.trim();
+			const middleName = document.querySelector('input[name="userMname"]').value.trim();
+			const lastName = document.querySelector('input[name="userLname"]').value.trim();
+			const email = document.querySelector('input[name="userEmail"]').value.trim();
+			const position = document.querySelector('select[name="userPosition"]').value;
+			const college = document.querySelector('select[name="userCollege"]').value;
+			const program = document.querySelector('select[name="userProgram"]').value;
+			const password = document.querySelector('input[name="userPass"]').value.trim();
+			const passwordConfirm = document.querySelector('input[name="userPasscon"]').value.trim();
 
 			let errors = [];
 
@@ -350,7 +353,6 @@
 					}
 				}
 			}
-			
 
 			if (!password) {
 				errors.push('Password is required.');
@@ -363,16 +365,38 @@
 			}
 
 			if (errors.length > 0) {
-				alert(errors.join('\n'));
-				event.preventDefault();
-			}
-        }
+				event.preventDefault(); // Prevent form submission
 
-        // Email validation function
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
+				// Combine all error messages into one string
+				const errorMessage = errors.join('<br>');
+
+				// Display errors using SweetAlert2 toast
+				const Toast = Swal.mixin({
+					toast: true,
+					position: 'top-end',
+					showConfirmButton: false,
+					timer: 5000,
+					timerProgressBar: true,
+					didOpen: (toast) => {
+						toast.addEventListener('mouseenter', Swal.stopTimer);
+						toast.addEventListener('mouseleave', Swal.resumeTimer);
+					}
+				});
+
+				Toast.fire({
+					icon: 'error',
+					html: errorMessage // Use html property to support line breaks
+				});
+			}
+		}
+
+		// Email validation function
+		function validateEmail(email) {
+			const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			return re.test(email);
+		}
+	</script>
+
 	</script>
 
 </body>
