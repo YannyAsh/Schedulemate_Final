@@ -142,65 +142,38 @@ if(isset($_POST['plotProf'])){
         window.location.href='../schedule_index.php'
         </script>
         ";
-}else if(isset($_POST['schedule_edit_id'])){
+}else if(isset($_POST['sched_edit_new'])){
     // EDITING THE SCHEDULE
     
-$schedule = $_POST['schedule_edit_id'];
-// echo '<pre>';
-// var_dump($_POST);
+$schedule = $_POST['schedID'];
+echo '<pre>';
+var_dump($_POST);
 
 foreach ($schedule as $key => $value) {
 
     $sec_edit = $_POST['sec_edit'][$key];
     $prof_edit = $_POST['prof_edit'][$key];
-    $schedule_edit_id = $_POST['schedule_edit_id'][$key];
-
-    $sMonday = $_POST["sMonday"][$key];
-    $eMonday = $_POST["eMonday"][$key];
-    $sTuesday = $_POST["sTuesday"][$key];
-    $eTuesday = $_POST["eTuesday"][$key];
-    $sWednesday = $_POST["sWednesday"][$key];
-    $eWednesday = $_POST["eWednesday"][$key];
-    $sThursday = $_POST["sThursday"][$key];
-    $eThursday = $_POST["eThursday"][$key];
-    $sFriday = $_POST["sFriday"][$key];
-    $eFriday = $_POST["eFriday"][$key];
-    $sSaturday = $_POST["sSaturday"][$key];
-    $eSaturday = $_POST["eSaturday"][$key];
-    $sSunday = $_POST["sSunday"][$key];
-    $eSunday = $_POST["eSunday"][$key];
-
+    $schedule_edit_id = $_POST['schedID'][$key];
 
     $data = array(
         'section' => $sec_edit,
         'prof' => $prof_edit,
-        'sMonday' => $sMonday,
-        'eMonday' => $eMonday,
-        'sTuesday' => $sTuesday,
-        'eTuesday' => $eTuesday,
-        'sWednesday' => $sWednesday,
-        'eWednesday' => $eWednesday,
-        'sThursday' => $sThursday,
-        'eThursday' => $eThursday,
-        'sFriday' => $sFriday,
-        'eFriday' => $eFriday,
-        'sSaturday' => $sSaturday,
-        'eSaturday' => $eSaturday,
-        'sSunday' => $sSunday,
-        'eSunday' => $eSunday,
         );
     
         $whereClause = array(
             'id' => $schedule_edit_id,
         );
-    if($db->updateData('tb_scheduled',$data,$whereClause)){
+        
+        var_dump($data);
+        die();
+    if($db->updateData('tb_scheduled_2 ',$data,$whereClause)){
+        echo "<script>
+            alert('Schedule Edited Successfully')
+            window.location.href='../schedule_index.php'
+        </script>";
     }   
 }
-echo "<script>
-alert('Schedule Edited Successfully')
-window.location.href='../schedule_index.php'
-</script>
-";
+
 }else{
     echo "<script>
     alert('it seems there is an empty in your forms, please verify your transaction again')

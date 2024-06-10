@@ -104,11 +104,11 @@ $result_professor = mysqli_query($conn, $stmnt);
                                             if ($_SESSION['college'] == 'cas' && $row['subType'] != 'major') {
 
                                             ?>
-                                                <a href="" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
+                                                <a href="#&id=<?= $row['id'] ?>" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>', '<?= $row['id'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
                                             <?php
                                             } else if ($_SESSION['college'] != 'cas' && $row['subType'] == 'major') {
                                             ?>
-                                                <a href="" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
+                                                <a href="#&id=<?= $row['id'] ?>" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>', '<?= $row['id'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
                                             <?php
                                             }
                                             ?>
@@ -352,7 +352,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                 <label class="text-dark" for="section">Section: </label>
                                 <label class="form-control" id="plotSection"><?php echo $_GET['section']; ?></label>
                             </div>
-                            <input type="hidden" name="schedID" id="schedID" value="<?php echo $_GET['scheduleID'];?>"/>
+                            <input type="hidden" name="schedID" id="schedID" value=""/>
                         </div>
                         <div class="row">
                             <div class="col ">
@@ -421,7 +421,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                             </div>
                         </div>
                         <?php
-                            $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled where scheduled.status = 1";
+                            $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled where scheduled.status = 1 AND scheduled.section_id = ".$_GET['id']." ";
                             $result_sched = mysqli_query($conn, $stmnt);
                         ?>
                             <?php if (mysqli_num_rows($result_sched) > 0) : ?>
@@ -896,13 +896,15 @@ $result_professor = mysqli_query($conn, $stmnt);
 
     });
 // to display the time
-    function openModal(day, stime, etime) {
+    function openModal(day, stime, etime, schedID) {
         var days = $("#days").val();
         $(".editListinputs").find('input').each(function() {
             $(this).val('');
         });
         console.log(stime);
         console.log(etime);
+        console.log(schedID);
+        $("#schedID").val(schedID);
         $("#start_time").text(stime);
         $("#end_time").text(etime);
 
