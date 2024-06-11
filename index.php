@@ -309,11 +309,11 @@
 			const firstName = document.querySelector('input[name="userFname"]').value.trim();
 			const middleName = document.querySelector('input[name="userMname"]').value.trim();
 			const lastName = document.querySelector('input[name="userLname"]').value.trim();
-			const email = document.querySelector('input[name="userEmail"]').value.trim();
+			const email = document.querySelector('input[name="userEmailRegS"]').value.trim();
 			const position = document.querySelector('select[name="userPosition"]').value;
 			const college = document.querySelector('select[name="userCollege"]').value;
 			const program = document.querySelector('select[name="userProgram"]').value;
-			const password = document.querySelector('input[name="userPass"]').value.trim();
+			const password = document.querySelector('input[name="userPassReg"]').value.trim();
 			const passwordConfirm = document.querySelector('input[name="userPasscon"]').value.trim();
 
 			let errors = [];
