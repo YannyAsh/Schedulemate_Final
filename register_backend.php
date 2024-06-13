@@ -52,6 +52,36 @@ if (isset($_POST["submit"])) {
         }
     }
 
+    // Check if a dean already exists for the college
+    if ($position === "dean") {
+        $sql = "SELECT * FROM tb_register WHERE userPosition = 'dean' AND userCollege = ?";
+        $stmt = mysqli_stmt_init($conn);
+        if (mysqli_stmt_prepare($stmt, $sql)) {
+            mysqli_stmt_bind_param($stmt, "s", $college);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_store_result($stmt);
+            $rowCount = mysqli_stmt_num_rows($stmt);
+            if ($rowCount > 0) {
+                array_push($errors, "A dean already exists for this college.");
+            }
+        }
+    }
+
+    // Check if a chairperson already exists for the college and program
+    if ($position === "chairperson") {
+        $sql = "SELECT * FROM tb_register WHERE userPosition = 'chairperson' AND userCollege = ? AND userProgram = ?";
+        $stmt = mysqli_stmt_init($conn);
+        if (mysqli_stmt_prepare($stmt, $sql)) {
+            mysqli_stmt_bind_param($stmt, "ss", $college, $prog);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_store_result($stmt);
+            $rowCount = mysqli_stmt_num_rows($stmt);
+            if ($rowCount > 0) {
+                array_push($errors, "A chairperson already exists for this college and program.");
+            }
+        }
+    }
+
     if (count($errors) > 0) {
         $_SESSION['errors'] = $errors;
         header("Location: index.php");
@@ -63,7 +93,7 @@ if (isset($_POST["submit"])) {
             mysqli_stmt_bind_param($stmt, "isssssssss", $employID, $fname, $mname, $lname, $email, $position, $college, $prog, $passwordHash, $userApproval);
             mysqli_stmt_execute($stmt);
             $_SESSION["success"] = 1;
-            header("Location: index.php"); // Assuming 'register.php' is your registration page
+            header("Location: index.php"); 
             exit();
         } else {
             die("Something went wrong");

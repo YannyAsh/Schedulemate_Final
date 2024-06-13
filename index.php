@@ -79,12 +79,12 @@
 
 					<select class="input-field" name="userCollege">
 						<option value="" disabled selected>Select College</option>
-						<option value="coed">COLLEGE OF EDUCATION</option>
-						<option value="coe">COLLEGE OF ENGINEERING</option>
-						<option value="cot">COLLEGE OF TECHNOLOGY</option>
-						<option value="come">COLLEGE OF MANAGEMENT AND ENTREPRENEURSHIP</option>
-						<option value="cas">COLLEGE OF ARTS AND SCIENCES</option>
-						<option value="ccict">COLLEGE OF COMPUTER INFORMATION AND COMMUNICATIONS TECHNOLOGY</option>
+						<option value="COLLEGE OF EDUCATION">COED - COLLEGE OF EDUCATION</option>
+						<option value="COLLEGE OF ENGINEERING">COE - COLLEGE OF ENGINEERING</option>
+						<option value="COLLEGE OF TECHNOLOGY">COT - COLLEGE OF TECHNOLOGY</option>
+						<option value="COLLEGE OF MANAGEMENT AND ENTREPRENEURSHIP">COME - COLLEGE OF MANAGEMENT AND ENTREPRENEURSHIP</option>
+						<option value="COLLEGE OF ARTS AND SCIENCES">CAS - COLLEGE OF ARTS AND SCIENCES</option>
+						<option value="COLLEGE OF COMPUTER INFORMATION AND COMMUNICATIONS TECHNOLOGY">CCICT - COLLEGE OF COMPUTER INFORMATION AND COMMUNICATIONS TECHNOLOGY</option>
 					</select>
 
 					<select class="input-field" name="userProgram">
@@ -143,9 +143,9 @@
 						<option value="">BSTM - Bachelor of Science in Tourism Management</option>
 
 						<!-- College of Information and Communications Technology -->
-						<option value="bsit">BSIT - Bachelor of Science in Information Technology </option>
-						<option value="bsis">BSIS - Bachelor of Science in Information Systems </option>
-						<option value="bit-ct">BIT-CT - Bachelor in Industrial Technology- Computer Technology</option>
+						<option value="">BSIT - Bachelor of Science in Information Technology</option>
+						<option value="">BSIS - Bachelor of Science in Information Systems</option>
+						<option value="">BIT-CT - Bachelor in Industrial Technology- Computer Technology</option>
 
 						<!-- College of Arts and Sciences -->
 						<option value="">BAEL-ECP - Bachelor of Arts in English Language (English Across the Professions)</option>
@@ -211,12 +211,12 @@
 			var collegeSelect = document.querySelector('select[name="userCollege"]');
 			var programSelect = document.querySelector('select[name="userProgram"]');
 			var programs = {
-				"coed": ["BEEd - Bachelor in Elementary Education", "BECEd - Bachelor in Early Childhood Education", "BSNEd - Bachelor in Special Need Education", "BSEd-Math - Bachelor in Secondary Education (Mathematics)", "BSEd-Science - Bachelor in Secondary Education (Science)", "BSEd-Values Ed - Bachelor in Secondary Education (Values Education)", "BSEd-English - Bachelor in Secondary Education (English)", "BSEd-Filipino - Bachelor in Secondary Education (Filipino)", "BTLEd-IA - Bachelor in Technology and Livelihood Education (Industrial Arts)", "BTLEd-HE - Bachelor in Technology and Livelihood Education (Home Economics)", "BTLEd-ICT - Bachelor in Technology and Livelihood Education (Information and Communication Technology)", "BTVTEd-Draft - Bachelor in Technical and Vocational Teacher Education (Architectural Drafting)", "BTVTEd-Auto - Bachelor in Technical and Vocational Teacher Education (Automotive Technology)", "BTVTEd-Food - Bachelor in Technical and Vocational Teacher Education (Food Services Management Technology)", "BTVTEd-Elec - Bachelor in Technical and Vocational Teacher Education (Electrical Technology)", "BTVTEd-Elex - Bachelor in Technical and Vocational Teacher Education (Electronics Technology)", "BTVTEd-GFD - Bachelor in Technical and Vocational Teacher Education (Garments, Fashion and Design Technology)", "BTVTEd-WF - Bachelor in Technical and Vocational Teacher Education (Welding and Fabrication Technology)"],
-				"coe": ["BSCE - Bachelor of Science in Civil Engineering", "BSCPE - Bachelor of Science in Computer Engineering", "BSECE - Bachelor of Science in Electronics Engineering", "BSEE - Bachelor of Science in Electrical Engineering", "BSIE - Bachelor of Science in Industrial Engineering", "BSME - Bachelor of Science in Mechanical Engineering"],
-				"cot": ["BSMx - Bachelor of Science in Mechatronics", "BSGD - Bachelor of Science in Graphics and Design", "BSTechM - Bachelor of Science in Technology Management", "BIT Automotive Technology - Bachelor of Industrial Technology (Automotive Technology)", "BIT Civil Technology - Bachelor of Industrial Technology (Civil Technology)", "BIT Cosmetology - Bachelor of Industrial Technology (Cosmetology)", "BIT Drafting Technology - Bachelor of Industrial Technology (Drafting Technology)", "BIT Electrical Technology - Bachelor of Industrial Technology (Electrical Technology)", "BIT Electronics Technology - Bachelor of Industrial Technology (Electronics Technology)", "BIT Food Preparation and Services Technology - Bachelor of Industrial Technology (Food Preparation and Services Technology)", "BIT Furniture and Cabinet Making - Bachelor of Industrial Technology (Furniture and Cabinet Making)", "BIT Garments Technology - Bachelor of Industrial Technology (Garments Technology)", "BIT Interior Design Technology - Bachelor of Industrial Technology (Interior Design Technology)", "BIT Machine Shop Technology - Bachelor of Industrial Technology (Machine Shop Technology)", "BIT Power Plant Technology - Bachelor of Industrial Technology (Power Plant Technology)", "BIT Refrigeration and Air-conditioning Technology - Bachelor of Industrial Technology (Refrigeration and Air-conditioning Technology)", "BIT Welding and Fabrication Technology - Bachelor of Industrial Technology (Welding and Fabrication Technology)"],
-				"come": ["BPA - Bachelor of Public Administration", "BSHM - Bachelor of Science in Hospitality Management", "BSBA- MM - Bachelor of Science in Business Administration Major in Marketing Management", "BSTM - Bachelor of Science in Tourism Management"],
-				"ccict": ["BSIT - Bachelor of Science in Information Technology", "BSIS - Bachelor of Science in Information Systems", "BIT-CT - Bachelor in Industrial Technology- Computer Technology"],
-				"cas": ["BAEL-ECP - Bachelor of Arts in English Language (English Across the Professions)", "BAEL-ELSD - Bachelor of Arts in English Language (English Language Studies as Discipline)", "BAL–LCS - Bachelor of Arts in Literature (Literature And Cultural Studies)", "BAL–LAP - Bachelor of Arts in Literature (Literature Across The Professions)", "BS MATH - Bachelor of Science in Mathematics", "BS STAT - Bachelor of Science in Statistics", "BSDevCom - Bachelor of Science in Development Communication", "BAF - Batsilyer ng Sining sa Filipino", "BS PSYCH - Bachelor of Science in Psychology", "Bachelor of Science in Nursing"]
+				"COLLEGE OF EDUCATION": ["BEEd", "BECEd", "BSNEd", "BSEd-Math", "BSEd-Science", "BSEd-Values Ed", "BSEd-English", "BSEd-Filipino", "BTLEd-IA", "BTLEd-HE", "BTLEd-ICT", "BTVTEd-Draft", "BTVTEd-Auto", "BTVTEd-Food", "BTVTEd-Elec", "BTVTEd-Elex", "BTVTEd-GFD", "BTVTEd-WF"],
+				"COLLEGE OF ENGINEERING": ["BSCE", "BSCPE", "BSECE", "BSEE", "BSIE", "BSME"],
+				"COLLEGE OF TECHNOLOGY": ["BSMx", "BSGD", "BSTechM", "BIT Automotive Technology", "BIT Civil Technology", "BIT Cosmetology", "BIT Drafting Technology", "BIT Electrical Technology", "BIT Electronics Technology", "BIT Food Preparation and Services Technology", "BIT Furniture and Cabinet Making", "BIT Garments Technology", "BIT Interior Design Technology", "BIT Machine Shop Technology", "BIT Power Plant Technology", "BIT Refrigeration and Air-conditioning Technology", "BIT Welding and Fabrication Technology"],
+				"COLLEGE OF MANAGEMENT AND ENTREPRENEURSHIP": ["BPA", "BSHM", "BSBA-MM", "BSTM"],
+				"COLLEGE OF COMPUTER INFORMATION AND COMMUNICATIONS TECHNOLOGY": ["BSIT", "BSIS", "BIT-CT"],
+				"COLLEGE OF ARTS AND SCIENCES": ["BAEL-ECP", "BAEL-ELSD", "BAL–LCS", "BAL–LAP", "BS MATH", "BS STAT", "BSDevCom", "BAF", "BS PSYCH", "Bachelor of Science in Nursing"]
 			};
 
 			collegeSelect.addEventListener('change', function() {
@@ -296,7 +296,7 @@
 	</script>
 
 
-	<!-- IF there is an error when signing in or signing up the data inputted will remain -->
+	<!-- IF there is an error when signing UP the data inputted will remain -->
 	<script>
 		document.getElementById('signup-form').addEventListener('submit', function(event) {
 			// Call the validation function
@@ -309,7 +309,7 @@
 			const firstName = document.querySelector('input[name="userFname"]').value.trim();
 			const middleName = document.querySelector('input[name="userMname"]').value.trim();
 			const lastName = document.querySelector('input[name="userLname"]').value.trim();
-			const email = document.querySelector('input[name="userEmailRegS"]').value.trim();
+			const email = document.querySelector('input[name="userEmailReg"]').value.trim();
 			const position = document.querySelector('select[name="userPosition"]').value;
 			const college = document.querySelector('select[name="userCollege"]').value;
 			const program = document.querySelector('select[name="userProgram"]').value;
@@ -395,8 +395,27 @@
 			const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 			return re.test(email);
 		}
-	</script>
 
+		// Show success message if it exists
+		<?php if (isset($_SESSION['success']) && $_SESSION['success']) : ?>
+			Swal.fire({
+				icon: 'success',
+				title: 'Pending for approval',
+				showConfirmButton: false,
+				timer: 1500
+			});
+			<?php unset($_SESSION['success']); ?>
+		<?php endif; ?>
+
+		// Show error messages if they exist
+		<?php if (isset($_SESSION['errors']) && count($_SESSION['errors']) > 0) : ?>
+			const errorMessage = <?php echo json_encode(implode('<br>', $_SESSION['errors'])); ?>;
+			Swal.fire({
+				icon: 'error',
+				html: errorMessage // Use html property to support line breaks
+			});
+			<?php unset($_SESSION['errors']); ?>
+		<?php endif; ?>
 	</script>
 
 </body>
