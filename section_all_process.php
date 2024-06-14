@@ -1,7 +1,7 @@
 <?php
-session_start();
-
-include_once('db.php');
+include 'conn/conn.php';
+$db = new DatabaseHandler();
+include_once('db.php');;
 
 $secProgram = "";
 $secYearlvl = 0;
@@ -13,12 +13,12 @@ $sec_edit_state = false;
 
 //saving records
 if (isset($_POST['sec_add_new'])) {
-    $secProgram = $_POST["secProgram"];
+    $secProgram = $_SESSION["program"];
     $secYearlvl = $_POST["secYearlvl"];
     $secName = $_POST["secName"];
     $secSession = $_POST["secSession"];
     $secStatus = $_POST["secStatus"];
-    $secCourse = $_SESSION["program"];
+    $secCourse = $_SESSION["college"];
 
     // Check for duplicate entry 
     $stmt = $conn->prepare("SELECT COUNT(*) FROM tb_section WHERE secYearlvl=? AND secName=?");

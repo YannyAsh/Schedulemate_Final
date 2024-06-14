@@ -1,5 +1,5 @@
 <?php
-include 'subject_all_process.php';
+include 'section_all_process.php';
 include 'include/header.php';
 
 ?>
