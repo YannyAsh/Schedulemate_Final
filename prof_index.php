@@ -27,41 +27,41 @@ if (isset($_GET['prof_edit'])) {
     <div class="row g-3 my-2">
         <div class="container">
             <!-- Alerts -->
-		<?php
-		if (isset($_SESSION["success"])) {
-			if ($_SESSION["success"] == 1) {
-		?>
-				<script>
-					Swal.fire({
-						icon: "success",
-						title: "Registration successful! Please wait for approval.",
-						text: "",
-					});
-				</script>
-			<?php
-				$_SESSION["success"] = null;
-			} else {
-				// No need to show login success alert
-				$_SESSION["success"] = null;
-			}
-		}
+            <?php
+            if (isset($_SESSION["success"])) {
+                if ($_SESSION["success"] == 1) {
+            ?>
+                    <script>
+                        Swal.fire({
+                            icon: "success",
+                            title: "Registration successful! Please wait for approval.",
+                            text: "",
+                        });
+                    </script>
+                <?php
+                    $_SESSION["success"] = null;
+                } else {
+                    // No need to show login success alert
+                    $_SESSION["success"] = null;
+                }
+            }
 
-		if (isset($_SESSION["errors"])) {
-			foreach ($_SESSION["errors"] as $error) {
-			?>
-				<script>
-					Swal.fire({
-						icon: "error",
-						title: "Oops...",
-						text: "<?php echo $error; ?>",
-					});
-				</script>
-		<?php
-			}
-			$_SESSION["errors"] = null;
-		}
-		?>
-        
+            if (isset($_SESSION["errors"])) {
+                foreach ($_SESSION["errors"] as $error) {
+                ?>
+                    <script>
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "<?php echo $error; ?>",
+                        });
+                    </script>
+            <?php
+                }
+                $_SESSION["errors"] = null;
+            }
+            ?>
+
             <div class="table-wrapper">
                 <div class="table-title">
                     <div class="row">
@@ -446,7 +446,7 @@ if (isset($_GET['prof_edit'])) {
                                 <div class="col">
                                     <div class="form-group">
                                         <label>Educational Attainment</label>
-                                        <textarea class="form-control" name="profEduc" id="profEduc" rows="4" required><?php echo $profEduc; ?><?php echo $profEduc; ?></textarea>
+                                        <textarea class="form-control" name="profEduc" id="profEduc" rows="4" required><?php echo $profEduc; ?></textarea>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -678,13 +678,9 @@ if (isset($_GET['prof_edit'])) {
     $(document).ready(function() {
 
         // display Edit modal
-
         $('.edit').on('click', function() {
-
             $('#editProf').modal('show');
-
             $tr = $(this).closest('tr');
-
             var data = $tr.find("td").map(function() {
                 return $(this).text();
             }).get();
@@ -701,8 +697,7 @@ if (isset($_GET['prof_edit'])) {
             $('#profExpert').val(data[8]);
             $('#profRank').val(data[9]);
             $('#profHrs').val(data[10]);
-            // $('#profPart').val(data[11]);
-            // $('#profFull').val(data[12]);
+            $('#profEmployStatus').val(data[11]);
         });
 
     });
@@ -725,7 +720,6 @@ if (isset($_GET['prof_edit'])) {
 
             console.log(data);
             $('#profID').val(data[0]);
-
             $('#profEmployID').val(data[1]);
             $('#profFname').val(data[2]);
             $('#profMname').val(data[3]);
@@ -736,6 +730,7 @@ if (isset($_GET['prof_edit'])) {
             $('#profExpert').val(data[8]);
             $('#profRank').val(data[9]);
             $('#profHrs').val(data[10]);
+            $('#profEmployStatus').val(data[11]);
         });
 
     });

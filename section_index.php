@@ -3,8 +3,6 @@ include 'section_all_process.php';
 include 'include/header.php';
 
 ?>
-
-
             <!-- Start of the contents -->
             <div class="container-fluid px-4">
                 <div class="row g-3 my-2">

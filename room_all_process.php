@@ -1,6 +1,7 @@
 <?php
-
-include_once('db.php');
+include 'conn/conn.php';
+$db = new DatabaseHandler();
+include_once('db.php');;
 
 $roomBuild = "";
 $roomFloornum = 0;

@@ -93,6 +93,13 @@ if (isset($_POST["prof_update"])) {
     $profStatus = $_POST["profStatus"];
     $profID = $_POST["profID"];
 
+    // Validate the mobile number format
+    if (!preg_match('/^(?:\+639|09)\d{9}$/', $profMobile)) {
+        $_SESSION['message'] = "Error: Invalid mobile number format. Use either '+639xxxxxxxxx' or '09xxxxxxxxx'.";
+        header("Location: prof_index.php");
+        die();
+    }
+
     // Fetch the current data from the database
     $currentDataQuery = "SELECT * FROM tb_professor WHERE profID = ?";
     $currentDataStmt = $conn->prepare($currentDataQuery);
@@ -100,6 +107,7 @@ if (isset($_POST["prof_update"])) {
     $currentDataStmt->execute();
     $currentDataResult = $currentDataStmt->get_result();
     $currentDataRow = $currentDataResult->fetch_assoc();
+    $currentDataStmt->close();
 
     // Compare each field to check for changes
     $fieldsToCheck = ["profEmployID", "profFname", "profMname" , "profLname", "profMobile", "profAddress", "profEduc", "profExpert", "profRank", "profHrs", "profEmployStatus"];
@@ -113,7 +121,6 @@ if (isset($_POST["prof_update"])) {
     }
 
     if (!$changesDetected) {
-        // No changes detected
         $_SESSION["message"] = "No changes detected in the information.";
         header('Location: prof_index.php');
         exit;
@@ -128,7 +135,6 @@ if (isset($_POST["prof_update"])) {
         $_SESSION["message"] = "Information Updated Successfully";
         header('Location: prof_index.php');
     } else {
-        // Handle the update error
         $_SESSION['error'] = "An error occurred while updating professor details.";
         header("Location: prof_index.php");
     }

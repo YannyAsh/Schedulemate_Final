@@ -1,8 +1,7 @@
 <?php
-include 'conn/conn.php';
 include 'room_all_process.php';
 include 'include/header.php';
-$db = new DatabaseHandler();
+
 
 if (isset($_GET['room_edit'])) {
     $roomID = $_GET['room_edit'];
@@ -121,7 +120,7 @@ if (isset($_GET['room_edit'])) {
                     <div id="addRoom" class="modal fade">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <form method="POST" action="php/action_page.php">
+                                <form method="POST" action="room_all_process.php">
                                     <input type="hidden" name="roomID" value="<?php echo $roomID; ?>">
                                     <input type="hidden" name="roomStatus" value="1"> <!-- Always set to "1" for active status -->
 
