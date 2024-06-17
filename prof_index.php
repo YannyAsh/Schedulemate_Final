@@ -26,6 +26,7 @@ if (isset($_GET['prof_edit'])) {
 <div class="container-fluid px-4">
     <div class="row g-3 my-2">
         <div class="container">
+            
             <!-- this is for the alerts -->
             <?php if (isset($_SESSION['message'])) : ?>
                 <script>
@@ -137,7 +138,7 @@ if (isset($_GET['prof_edit'])) {
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form method="POST" action="prof_all_process.php">
-                        <input type="hidden" name="profID">
+                        <input type="hidden" name="profID" value="<?php echo $profID ?>">
                         <div class="modal-header">
                             <h5 class="modal-title">Add New Professor</h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
@@ -381,8 +382,8 @@ if (isset($_GET['prof_edit'])) {
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form method="POST" action="prof_all_process.php">
-                        <input type="hidden" name="profID" id="profID">
-                        <input type="hidden" name="profStatus" value="1">
+                        <input type="hidden" name="profID" id="profID" value="<?php echo $profID; ?>>
+                        <input type=" hidden" name="profStatus" value="1">
 
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Professor</h5>
@@ -393,191 +394,191 @@ if (isset($_GET['prof_edit'])) {
                                 <div class="col">
                                     <div class="form-group">
                                         <label>Employee ID</label>
-                                        <input type=" text" name="profEmployID" id="profEmployID" class="form-control" required value="<?php echo $profEmployID; ?>">
+                                        <input type=" text" name="profEmployID" id="profEmployID" class="form-control" required ">
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>First Name</label>
-                                        <input type=" text" name="profFname" id="profFname" class="form-control" required value="<?php echo $profFname; ?>">
+                                <div class=" col">
+                                        <div class="form-group">
+                                            <label>First Name</label>
+                                            <input type=" text" name="profFname" id="profFname" class="form-control" required">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label>Middle Name</label>
+                                            <input type="text" name="profMname" id="profMname" class="form-control" required">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label>Last Name</label>
+                                            <input type="text" name="profLname" id="profLname" class="form-control" required">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>Middle Name</label>
-                                        <input type="text" name="profMname" id="profMname" class="form-control" required value="<?php echo $profMname; ?>">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>Last Name</label>
-                                        <input type="text" name="profLname" id="profLname" class="form-control" required value="<?php echo $profLname; ?>">
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>Mobile No.</label>
-                                        <input type="number" name="profMobile" id="profMobile" class="form-control" required value="<?php echo $profMobile; ?>">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label>Mobile No.</label>
+                                            <input type="number" name="profMobile" id="profMobile" class="form-control" required">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label>Address</label>
+                                            <textarea class="form-control" name="profAddress" id="profAddress" required></textarea>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>Address</label>
-                                        <textarea class="form-control" name="profAddress" id="profAddress" required><?php echo $profAddress; ?></textarea>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>Educational Attainment</label>
-                                        <textarea class="form-control" name="profEduc" id="profEduc" rows="4" required><?php echo $profEduc; ?></textarea>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label>Educational Attainment</label>
+                                            <textarea class="form-control" name="profEduc" id="profEduc" rows="4" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label>Expertise/Specialization</label>
+                                            <textarea class="form-control" name="profExpert" id="profExpert" rows="4" required></textarea>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>Expertise/Specialization</label>
-                                        <textarea class="form-control" name="profExpert" id="profExpert" rows="4" required><?php echo $profExpert; ?></textarea>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>Rank</label>
-                                        <select class="form-control" required name="profRank" id="profRank">
-                                            <option value="" disabled>Select Professors Rank</option>
-                                            <option value="Instructor 1" <?= ($profRank == "Instructor 1") ? "selected" : ""; ?>>
-                                                Instructor 1
-                                            </option>
-                                            <option value="Instructor 2" <?= ($profRank == "Instructor 2") ? "selected" : ""; ?>>
-                                                Instructor 2
-                                            </option>
-                                            <option value="Instructor 3" <?= ($profRank == "Instructor 3") ? "selected" : ""; ?>>
-                                                Instructor 3
-                                            </option>
-                                            <option value="Instructor 4" <?= ($profRank == "Instructor 4") ? "selected" : ""; ?>>
-                                                Instructor 4
-                                            </option>
-                                            <option value="Instructor 5" <?= ($profRank == "Instructor 5") ? "selected" : ""; ?>>
-                                                Instructor 5
-                                            </option>
-                                            <option value="Instructor 6" <?= ($profRank == "Instructor 6") ? "selected" : ""; ?>>
-                                                Instructor 6
-                                            </option>
-                                            <option value="Instructor 7" <?= ($profRank == "Instructor 7") ? "selected" : ""; ?>>
-                                                Instructor 7
-                                            </option>
-                                            <option value="Assistant Prof. 1" <?= ($profRank == "Assistant Prof. 1") ? "selected" : ""; ?>>
-                                                Assistant Prof. 1</option>
-                                            <option value="Assistant Prof. 2" <?= ($profRank == "Assistant Prof. 2") ? "selected" : ""; ?>>
-                                                Assistant Prof. 2</option>
-                                            <option value="Assistant Prof. 3" <?= ($profRank == "Assistant Prof. 3") ? "selected" : ""; ?>>
-                                                Assistant Prof. 3</option>
-                                            <option value="Assistant Prof. 4" <?= ($profRank == "Assistant Prof. 4") ? "selected" : ""; ?>>
-                                                Assistant Prof. 4</option>
-                                            <option value="Assistant Prof. 5" <?= ($profRank == "Assistant Prof. 5") ? "selected" : ""; ?>>
-                                                Assistant Prof. 5</option>
-                                            <option value="Assistant Prof. 6" <?= ($profRank == "Assistant Prof. 6") ? "selected" : ""; ?>>
-                                                Assistant Prof. 6</option>
-                                            <option value="Assistant Prof. 7" <?= ($profRank == "Assistant Prof. 7") ? "selected" : ""; ?>>
-                                                Assistant Prof. 7</option>
-                                            <option value="Associate Prof. 1" <?= ($profRank == "Associate Prof. 1") ? "selected" : ""; ?>>
-                                                Associate Prof. 1</option>
-                                            <option value="Associate Prof. 2" <?= ($profRank == "Associate Prof. 2") ? "selected" : ""; ?>>
-                                                Associate Prof. 2</option>
-                                            <option value="Associate Prof. 3" <?= ($profRank == "Associate Prof. 3") ? "selected" : ""; ?>>
-                                                Associate Prof. 3</option>
-                                            <option value="Associate Prof. 4" <?= ($profRank == "Associate Prof. 4") ? "selected" : ""; ?>>
-                                                Associate Prof. 4</option>
-                                            <option value="Associate Prof. 5" <?= ($profRank == "Associate Prof. 5") ? "selected" : ""; ?>>
-                                                Associate Prof. 5</option>
-                                            <option value="Associate Prof. 6" <?= ($profRank == "Associate Prof. 6") ? "selected" : ""; ?>>
-                                                Associate Prof. 6</option>
-                                            <option value="Associate Prof. 7" <?= ($profRank == "Associate Prof. 7") ? "selected" : ""; ?>>
-                                                Associate Prof. 7</option>
-                                            <option value="Professor 1" <?= ($profRank == "Professor 1") ? "selected" : ""; ?>>
-                                                Professor
-                                                1
-                                            </option>
-                                            <option value="Professor 2" <?= ($profRank == "Professor 2") ? "selected" : ""; ?>>
-                                                Professor
-                                                2
-                                            </option>
-                                            <option value="Professor 3" <?= ($profRank == "Professor 3") ? "selected" : ""; ?>>
-                                                Professor
-                                                3
-                                            </option>
-                                            <option value="Professor 4" <?= ($profRank == "Professor 4") ? "selected" : ""; ?>>
-                                                Professor
-                                                4
-                                            </option>
-                                            <option value="Professor 5" <?= ($profRank == "Professor 5") ? "selected" : ""; ?>>
-                                                Professor
-                                                5
-                                            </option>
-                                            <option value="Professor 6" <?= ($profRank == "Professor 6") ? "selected" : ""; ?>>
-                                                Professor
-                                                6
-                                            </option>
-                                            <option value="Professor 7" <?= ($profRank == "Professor 7") ? "selected" : ""; ?>>
-                                                Professor
-                                                7
-                                            </option>
-                                            <option value="Professor 8" <?= ($profRank == "Professor 8") ? "selected" : ""; ?>>
-                                                Professor
-                                                8
-                                            </option>
-                                            <option value="Professor 9" <?= ($profRank == "Professor 9") ? "selected" : ""; ?>>
-                                                Professor
-                                                9
-                                            </option>
-                                            <option value="Professor 10" <?= ($profRank == "Professor 10") ? "selected" : ""; ?>>
-                                                Professor 10
-                                            </option>
-                                            <option value="Professor 11" <?= ($profRank == "Professor 11") ? "selected" : ""; ?>>
-                                                Professor 11
-                                            </option>
-                                            <option value="Professor 12" <?= ($profRank == "Professor 12") ? "selected" : ""; ?>>
-                                                Professor 12
-                                            </option>
-                                            <option value="Univ. Professor" <?= ($profRank == "Univ. Professor") ? "selected" : ""; ?>>
-                                                Univ.
-                                                Professor</option>
-                                        </select>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label>Rank</label>
+                                            <select class="form-control" required name="profRank" id="profRank">
+                                                <option value="" disabled>Select Professors Rank</option>
+                                                <option value="Instructor 1" <?= ($profRank == "Instructor 1") ? "selected" : ""; ?>>
+                                                    Instructor 1
+                                                </option>
+                                                <option value="Instructor 2" <?= ($profRank == "Instructor 2") ? "selected" : ""; ?>>
+                                                    Instructor 2
+                                                </option>
+                                                <option value="Instructor 3" <?= ($profRank == "Instructor 3") ? "selected" : ""; ?>>
+                                                    Instructor 3
+                                                </option>
+                                                <option value="Instructor 4" <?= ($profRank == "Instructor 4") ? "selected" : ""; ?>>
+                                                    Instructor 4
+                                                </option>
+                                                <option value="Instructor 5" <?= ($profRank == "Instructor 5") ? "selected" : ""; ?>>
+                                                    Instructor 5
+                                                </option>
+                                                <option value="Instructor 6" <?= ($profRank == "Instructor 6") ? "selected" : ""; ?>>
+                                                    Instructor 6
+                                                </option>
+                                                <option value="Instructor 7" <?= ($profRank == "Instructor 7") ? "selected" : ""; ?>>
+                                                    Instructor 7
+                                                </option>
+                                                <option value="Assistant Prof. 1" <?= ($profRank == "Assistant Prof. 1") ? "selected" : ""; ?>>
+                                                    Assistant Prof. 1</option>
+                                                <option value="Assistant Prof. 2" <?= ($profRank == "Assistant Prof. 2") ? "selected" : ""; ?>>
+                                                    Assistant Prof. 2</option>
+                                                <option value="Assistant Prof. 3" <?= ($profRank == "Assistant Prof. 3") ? "selected" : ""; ?>>
+                                                    Assistant Prof. 3</option>
+                                                <option value="Assistant Prof. 4" <?= ($profRank == "Assistant Prof. 4") ? "selected" : ""; ?>>
+                                                    Assistant Prof. 4</option>
+                                                <option value="Assistant Prof. 5" <?= ($profRank == "Assistant Prof. 5") ? "selected" : ""; ?>>
+                                                    Assistant Prof. 5</option>
+                                                <option value="Assistant Prof. 6" <?= ($profRank == "Assistant Prof. 6") ? "selected" : ""; ?>>
+                                                    Assistant Prof. 6</option>
+                                                <option value="Assistant Prof. 7" <?= ($profRank == "Assistant Prof. 7") ? "selected" : ""; ?>>
+                                                    Assistant Prof. 7</option>
+                                                <option value="Associate Prof. 1" <?= ($profRank == "Associate Prof. 1") ? "selected" : ""; ?>>
+                                                    Associate Prof. 1</option>
+                                                <option value="Associate Prof. 2" <?= ($profRank == "Associate Prof. 2") ? "selected" : ""; ?>>
+                                                    Associate Prof. 2</option>
+                                                <option value="Associate Prof. 3" <?= ($profRank == "Associate Prof. 3") ? "selected" : ""; ?>>
+                                                    Associate Prof. 3</option>
+                                                <option value="Associate Prof. 4" <?= ($profRank == "Associate Prof. 4") ? "selected" : ""; ?>>
+                                                    Associate Prof. 4</option>
+                                                <option value="Associate Prof. 5" <?= ($profRank == "Associate Prof. 5") ? "selected" : ""; ?>>
+                                                    Associate Prof. 5</option>
+                                                <option value="Associate Prof. 6" <?= ($profRank == "Associate Prof. 6") ? "selected" : ""; ?>>
+                                                    Associate Prof. 6</option>
+                                                <option value="Associate Prof. 7" <?= ($profRank == "Associate Prof. 7") ? "selected" : ""; ?>>
+                                                    Associate Prof. 7</option>
+                                                <option value="Professor 1" <?= ($profRank == "Professor 1") ? "selected" : ""; ?>>
+                                                    Professor
+                                                    1
+                                                </option>
+                                                <option value="Professor 2" <?= ($profRank == "Professor 2") ? "selected" : ""; ?>>
+                                                    Professor
+                                                    2
+                                                </option>
+                                                <option value="Professor 3" <?= ($profRank == "Professor 3") ? "selected" : ""; ?>>
+                                                    Professor
+                                                    3
+                                                </option>
+                                                <option value="Professor 4" <?= ($profRank == "Professor 4") ? "selected" : ""; ?>>
+                                                    Professor
+                                                    4
+                                                </option>
+                                                <option value="Professor 5" <?= ($profRank == "Professor 5") ? "selected" : ""; ?>>
+                                                    Professor
+                                                    5
+                                                </option>
+                                                <option value="Professor 6" <?= ($profRank == "Professor 6") ? "selected" : ""; ?>>
+                                                    Professor
+                                                    6
+                                                </option>
+                                                <option value="Professor 7" <?= ($profRank == "Professor 7") ? "selected" : ""; ?>>
+                                                    Professor
+                                                    7
+                                                </option>
+                                                <option value="Professor 8" <?= ($profRank == "Professor 8") ? "selected" : ""; ?>>
+                                                    Professor
+                                                    8
+                                                </option>
+                                                <option value="Professor 9" <?= ($profRank == "Professor 9") ? "selected" : ""; ?>>
+                                                    Professor
+                                                    9
+                                                </option>
+                                                <option value="Professor 10" <?= ($profRank == "Professor 10") ? "selected" : ""; ?>>
+                                                    Professor 10
+                                                </option>
+                                                <option value="Professor 11" <?= ($profRank == "Professor 11") ? "selected" : ""; ?>>
+                                                    Professor 11
+                                                </option>
+                                                <option value="Professor 12" <?= ($profRank == "Professor 12") ? "selected" : ""; ?>>
+                                                    Professor 12
+                                                </option>
+                                                <option value="Univ. Professor" <?= ($profRank == "Univ. Professor") ? "selected" : ""; ?>>
+                                                    Univ.
+                                                    Professor</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>Maximum Hours</label>
-                                        <input type="number" name="profHrs" id="profHrs" class="form-control" required value="<?php echo $profHrs; ?>">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label>Maximum Hours</label>
+                                            <input type="number" name="profHrs" id="profHrs" class="form-control" required value="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="profEmployStatus">Employment Status</label>
-                                        <select class="form-control" name="profEmployStatus">
-                                            <option value="" disabled>Select Professor's Employment Status</option>
-                                            <option id="profPerm" value="Permanent" <?= ($profEmployStatus == "Permanent") ? "selected" : ""; ?>>
-                                                Permanent</option>
-                                            <option id="profFull" value="Full-Time Probationary" <?= ($profEmployStatus == "Full-Time Probationary") ? "selected" : ""; ?>>
-                                                Full-Time Probationary</option>
-                                            <option id="profPart" value="Part-Time" <?= ($profEmployStatus == "Part-Time") ? "selected" : ""; ?>>
-                                                Part-Time</option>
-                                        </select>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="profEmployStatus">Employment Status</label>
+                                            <select class="form-control" name="profEmployStatus">
+                                                <option value="" disabled>Select Professor's Employment Status</option>
+                                                <option id="profPerm" value="Permanent" <?= ($profEmployStatus == "Permanent") ? "selected" : ""; ?>>
+                                                    Permanent</option>
+                                                <option id="profFull" value="Full-Time Probationary" <?= ($profEmployStatus == "Full-Time Probationary") ? "selected" : ""; ?>>
+                                                    Full-Time Probationary</option>
+                                                <option id="profPart" value="Part-Time" <?= ($profEmployStatus == "Part-Time") ? "selected" : ""; ?>>
+                                                    Part-Time</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <a class="btn btn-default" data-bs-toggle="modal" data-bs-dismiss="modal" href="#viewProf" role="button">Cancel</a>
-                            <input type="submit" name="prof_update" class="btn" value="Update">
-                        </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-default" data-bs-toggle="modal" data-bs-dismiss="modal" href="#viewProf" role="button">Cancel</a>
+                                <input type="submit" name="prof_update" class="btn" value="Update">
+                            </div>
                     </form>
                 </div>
             </div>
@@ -672,6 +673,7 @@ if (isset($_GET['prof_edit'])) {
         $('.edit').on('click', function() {
             $('#editProf').modal('show');
             $tr = $(this).closest('tr');
+
             var data = $tr.find("td").map(function() {
                 return $(this).text();
             }).get();
@@ -701,7 +703,6 @@ if (isset($_GET['prof_edit'])) {
         $('.view').on('click', function() {
 
             $('#viewProf').modal('show');
-
             $tr = $(this).closest('tr');
 
             var data = $tr.find("td").map(function() {
@@ -731,7 +732,7 @@ if (isset($_GET['prof_edit'])) {
     // JavaScript to set secID when opening status modal
     $('.status').on('click', function() {
         // del_profID
-        var profID = $(this).data('profid');
+        var profID = $(this).data('profID');
         $('#status_profID').val(profID); // Set secID to the hidden input field
         $('#statusProf').modal('show');
         $('#del_profID').val(profID).hide()

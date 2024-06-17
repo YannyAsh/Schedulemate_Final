@@ -62,7 +62,7 @@ if (isset($_POST["prof_add_new"])) {
     if ($count > 0) {
         $_SESSION['error'] = "Error: Duplicate entry";
         header("Location: prof_index.php");
-        die();
+        exit();
     }
 
     // Add the information to the Database
@@ -93,8 +93,6 @@ if (isset($_POST["prof_update"])) {
     $profRank = $_POST["profRank"];
     $profHrs = $_POST["profHrs"];
     $profEmployStatus = $_POST["profEmployStatus"];
-    $profProgram = $_SESSION["program"];
-    $profCourse = $_SESSION["college"];
     $profStatus = isset($_POST["profStatus"]) ? $_POST["profStatus"] : 0; // Set default if not provided
     $profID = $_POST["profID"];
 
@@ -132,8 +130,8 @@ if (isset($_POST["prof_update"])) {
     }
 
     // Proceed with the update
-    $stmt = $conn->prepare("UPDATE tb_professor SET profEmployID=?, profFname=?, profMname=?, profLname=?, profMobile=?, profAddress=?, profEduc=?, profExpert=?, profRank=?, profHrs=?, profEmployStatus=?, profProgram=?, profCourse=?, profStatus=? WHERE profID=?");
-    $stmt->bind_param("isssssssssssssi", $profEmployID, $profFname, $profMname, $profLname, $profMobile, $profAddress, $profEduc, $profExpert, $profRank, $profHrs, $profEmployStatus, $profProgram, $profCourse, $profStatus, $profID);
+    $stmt = $conn->prepare("UPDATE tb_professor SET profEmployID=?, profFname=?, profMname=?, profLname=?, profMobile=?, profAddress=?, profEduc=?, profExpert=?, profRank=?, profHrs=?, profEmployStatus=?, profStatus=? WHERE profID=?");
+    $stmt->bind_param("isssssssssssi", $profEmployID, $profFname, $profMname, $profLname, $profMobile, $profAddress, $profEduc, $profExpert, $profRank, $profHrs, $profEmployStatus, $profStatus, $profID);
     $stmt->execute();
 
     if ($stmt) {

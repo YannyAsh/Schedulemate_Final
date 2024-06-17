@@ -206,7 +206,7 @@ include 'include/header.php';
 
                                         <div class="form-group">
                                             <label style="font-weight: bold;">Section Name</label>
-                                            <input type="text" name="secName" id="secName" class="form-control" required value="<?php echo $secName ?>">
+                                            <input type="text" name="secName" id="secName" class="form-control" required">
                                         </div>
 
                                         <div class="form-group">
