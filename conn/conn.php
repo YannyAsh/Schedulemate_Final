@@ -263,12 +263,10 @@ class DatabaseHandler
     }
 
 
-    public function updateData($tableName, $data, $whereConditions)
+    public function updateData($tableName, $data = array(), $whereConditions)
     {
         try {
-
             $checker = $this->checkDataSchedule($data); // fetching data if there is a conflict schedule
-
             // if there is a conflict schedule true return false;
             if ($checker) {
                 return false;
@@ -283,7 +281,7 @@ class DatabaseHandler
 
             $whereClause = '';
             foreach ($whereConditions as $whereKey => $whereValue) {
-                $whereClause .= "$whereKey = :$whereKey AND ";
+                $whereClause .= "$whereKey = :where_$whereKey AND ";
             }
 
             // Remove the trailing "AND" from the whereClause
@@ -299,13 +297,88 @@ class DatabaseHandler
             foreach ($whereConditions as $whereKey => $whereValue) {
                 $stmt->bindValue(':where_' . $whereKey, $whereValue);
             }
-
+            echo '<pre>';
+            print_r($data);
+            die();
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
             echo "Error updating data: " . $e->getMessage();
             return false;
-            // You can log or handle the error here.
+        }
+    }
+
+    public function updateData2($tableName, $data = array(), $whereConditions)
+    {
+        try {
+            $checker = $this->checkDataSchedule($data); // fetching data if there is a conflict schedule
+            // if there is a conflict schedule true return false;
+            if ($checker) {
+                return false;
+            }
+
+            // Extract arrays if they exist
+            $startTimes = isset($data['start_time']) ? $data['start_time'] : [];
+            $endTimes = isset($data['end_time']) ? $data['end_time'] : [];
+            $days = isset($data['day']) ? $data['day'] : [];
+
+            // Remove arrays from $data for set clause
+            unset($data['start_time']);
+            unset($data['end_time']);
+            unset($data['day']);
+
+            // Prepare set clause
+            $setClause = '';
+            foreach ($data as $key => $value) {
+                $setClause .= "$key = :$key, ";
+            }
+            $setClause = rtrim($setClause, ', ');
+
+            // Prepare where clause
+            $whereClause = '';
+            foreach ($whereConditions as $whereKey => $whereValue) {
+                $whereClause .= "$whereKey = :where_$whereKey AND ";
+            }
+            $whereClause = rtrim($whereClause, ' AND ');
+
+            $sql = "UPDATE $tableName SET $setClause";
+
+            // Append the dynamic conditions for times and days
+            if (!empty($startTimes) && !empty($endTimes) && !empty($days)) {
+                $sql .= ", start_time = :start_time, end_time = :end_time, day = :day";
+            }
+
+            $sql .= " WHERE $whereClause";
+            $stmt = $this->pdo->prepare($sql);
+
+            // Bind the set clause values
+            foreach ($data as $key => $value) {
+                $stmt->bindValue(':' . $key, $value);
+            }
+
+            // Bind the where clause values
+            foreach ($whereConditions as $whereKey => $whereValue) {
+                $stmt->bindValue(':where_' . $whereKey, $whereValue);
+            }
+
+            // Execute for each combination of times and days
+            foreach ($startTimes as $index => $startTime) {
+                $endTime = $endTimes[$index];
+                foreach ($days as $indexs => $day) {
+                    if ($indexs == $index)
+                    {
+                        $stmt->bindValue(':start_time', $startTime);
+                        $stmt->bindValue(':end_time', $endTime);
+                        $stmt->bindValue(':day', $day);
+                        $stmt->execute();
+                    }
+                }
+            }
+
+            return true;
+        } catch (PDOException $e) {
+            echo "Error updating data: " . $e->getMessage();
+            return false;
         }
     }
 
@@ -317,9 +390,11 @@ class DatabaseHandler
             $stmt = $this->pdo->prepare("SELECT COUNT(*) as count 
                                         FROM tb_scheduled_2 
                                         WHERE status = 1 
-                                        AND (room_id = :room_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day) 
-                                        OR (prof_id = :prof_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day)
-                                        OR (section_id = :section_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day)");
+                                        AND (
+                                            (room_id = :room_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day) 
+                                            OR (prof_id = :prof_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day)
+                                            OR (section_id = :section_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day)
+                                        )");
             $stmt->bindParam(':room_id', $data['room_id'], PDO::PARAM_STR);
             $stmt->bindParam(':semester', $data['semester'], PDO::PARAM_STR);
             $stmt->bindParam(':school_yr', $data['school_yr'], PDO::PARAM_STR);
@@ -331,10 +406,12 @@ class DatabaseHandler
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            return $result['count'];
+            // Return true if there is a conflict, otherwise false
+            return $result['count'] > 0;
         } catch (PDOException $e) {
             // Handle query errors
             echo "Query failed: " . $e->getMessage();
+            return false;
         }
     }
 

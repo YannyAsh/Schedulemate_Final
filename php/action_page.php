@@ -134,7 +134,7 @@ if(isset($_POST['plotProf'])){
             'semester' => $_POST['deac_semester'],
             'section' => $_POST['deac_section'],
         );
-    if($db->updateData('tb_scheduled',$data,$whereClause)){
+    if($db->updateData('tb_scheduled_2',$data,$whereClause)){
     }   
 
         echo "<script>
@@ -145,27 +145,30 @@ if(isset($_POST['plotProf'])){
 }else if(isset($_POST['sched_edit_new'])){
     // EDITING THE SCHEDULE
     
-    /* echo '<pre>';
-    var_dump($_POST);
-    */
     $sec_edit = $_POST['sec_id'];
     $prof_edit = $_POST['prof_id'];
     $schedule_edit_id = $_POST['schedID'];
-
+    $day = array(0 => 1, 
+            1 => 2,
+            2 => 3,
+            3 => 4,
+            4 => 5,
+            5 => 6,
+            6 => 7
+        );
     $data = array(
         'section_id' => $sec_edit,
         'prof_id' => $prof_edit,
         'start_time' => $_POST['start_time'],
         'end_time' => $_POST['end_time'],
+        'day' => $day
         );
     
         $whereClause = array(
             'id' => $schedule_edit_id,
         );
         
-        /* var_dump($data);
-        die(); */
-    if($db->updateData('tb_scheduled_2 ',$data,$whereClause)){
+    if($db->updateData2('tb_scheduled_2 ',$data,$whereClause)){
         echo "<script>
             alert('Schedule Edited Successfully')
             window.location.href='../schedule_index.php'

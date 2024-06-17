@@ -27,16 +27,16 @@ function generateAcademicYears()
     return $options;
 }
 
-$stmnt = "SELECT subID, subCode,subYearlvl,SubCourse,subDesc,subType,subSem FROM tb_subjects where status = 0 ";
+$stmnt = "SELECT * FROM tb_subjects where status = 0 ";
 $result_subject = mysqli_query($conn, $stmnt);
 
-$stmnt = "SELECT secID, secProgram, secYearlvl, secName,secCourse  FROM tb_section where status = 0 ";
+$stmnt = "SELECT * FROM tb_section where status = 0 ";
 $result_section = mysqli_query($conn, $stmnt);
 
-$stmnt = "SELECT roomID, roomBuild, roomNum  FROM tb_room where status = 0";
+$stmnt = "SELECT * FROM tb_room where status = 0";
 $result_room = mysqli_query($conn, $stmnt);
 
-$stmnt = "SELECT profID, profFname, profLname  FROM tb_professor where status = 0 ";
+$stmnt = "SELECT * FROM tb_professor where status = 0 ";
 $result_professor = mysqli_query($conn, $stmnt);
 ?>
 <style>
@@ -231,7 +231,7 @@ $result_professor = mysqli_query($conn, $stmnt);
 
                                                             if ($row['subType'] == "minor" && $userSection == $subCourses) {
                                                 ?>
-                                                                <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subCode'] ?> ">
+                                                                <option data-program="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subCode'] ?> ">
                                                                     <!-- DISPLAY -->
                                                                     <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
                                                                     <!-- END DISPLAY -->
@@ -240,7 +240,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                             }
                                                         } else if ($row['subType'] == "major" && $userSection == $subCourses) {
                                                             ?>
-                                                            <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subCode'] ?> ">
+                                                            <option data-program="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subCode'] ?> ">
                                                                 <!-- DISPLAY -->
                                                                 <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
                                                                 <!-- END DISPLAY -->
@@ -371,20 +371,20 @@ $result_professor = mysqli_query($conn, $stmnt);
                                         <?php endwhile; ?>
                                     <?php endif; ?>
                                     <?php
-                                    $stmnt = "SELECT subID, subCode,subYearlvl,SubCourse,subDesc,subType,subSem FROM tb_subjects where status = 0 ";
+                                    $stmnt = "SELECT * FROM tb_subjects where status = 0 ";
                                     $result_subject = mysqli_query($conn, $stmnt);
                                     ?>
                                     <?php if (mysqli_num_rows($result_subject) > 0) : ?>
                                         <?php while ($row = mysqli_fetch_assoc($result_subject)) : ?>
                                             <?php if ($row['subType'] == "minor") : ?>
-                                                <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?> ">
+                                                <option data-program="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?> ">
                                                 <!-- DISPLAY -->
                                                 <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
                                                 <!-- END DISPLAY -->
                                                 </option>
                                             <?php endif; ?>
                                             <?php if ($row['subType'] == "major") : ?>
-                                                <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?> ">
+                                                <option data-program="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?> ">
                                                     <!-- DISPLAY -->
                                                     <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
                                                     <!-- END DISPLAY -->
@@ -521,9 +521,8 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                 <?php if ($dayDetails == $value): ?>
                                                     <div class="row">
                                                         <div class="col-6">
-                                                                <input type="hidden" value="<?= $key?>" name="day[]" id="days">
+                                                                <input type="hidden" value="<?= $row['day'];?>" name="day[]" id="days">
                                                             <label class="text-dark">Time Starts</label>
-                                                                <!-- <input type="time" min="07:00" max="19:00" name="start_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['start_time']));?>"> -->
                                                                 <select class="form-select select2" name="start_time[]">
                                                                     <?php if(!empty($row['start_time'])):?>
                                                                             <option selected value="<?php echo $row['start_time'];?>">
@@ -547,7 +546,6 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                         </div>
                                                         <div class="col-6">
                                                             <label class="text-dark">Time Ends</label>
-                                                                <!-- <input type="time" min="07:00" max="19:00" name="end_time[]" class="form-control" value="<?= $date = date("H:i:s", strtotime($row['end_time']));?>"> -->
                                                                 <select class="form-select select2" name="end_time[]">
                                                                     <?php if(!empty($row['end_time'])):?>
                                                                             <option selected value="<?php echo $row['end_time'];?>">
@@ -573,7 +571,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                     <?php else: ?>
                                                     <div class="row">
                                                         <div class="col-6">
-                                                                <input type="hidden" value="<?= $key?>" name="day[]" id="days">
+                                                                <input type="hidden" value="<?= $key;?>" name="day[]" id="days">
                                                             <label class="text-dark">Time Starts</label>
                                                                 <select class="form-select select2" name="start_time[]">
                                                                     <option value="" selected disabled>Select Start Time</option>
@@ -918,10 +916,11 @@ $result_professor = mysqli_query($conn, $stmnt);
     });
 // to display the time
     function openModal(day, stime, etime, schedID, section_id) {
-        var days = $("#days").val();
+        var days = $(".day").val();
         $(".editListinputs").find('input').each(function() {
             $(this).val('');
         });
+        console.log(day);
         console.log(section_id);
         console.log(stime);
         console.log(etime);
