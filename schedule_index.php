@@ -6,16 +6,16 @@ include 'include/header.php';
 $db = new DatabaseHandler();
 
 // Display data for dropdown
-$stmnt = "SELECT subID, subCode, subDesc, subYearlvl,SubCourse,subType,subSem FROM tb_subjects where status = 0 ";
+$stmnt = "SELECT * FROM tb_subjects where status = 0 ";
 $result_subject = mysqli_query($conn, $stmnt);
 
-$stmnt = "SELECT secID, secProgram, secYearlvl, secName,secCourse  FROM tb_section where status = 0 ";
+$stmnt = "SELECT * FROM tb_section where status = 0 ";
 $result_section = mysqli_query($conn, $stmnt);
 
-$stmnt = "SELECT roomID, roomBuild, roomNum  FROM tb_room where status = 0";
+$stmnt = "SELECT * FROM tb_room where status = 0";
 $result_room = mysqli_query($conn, $stmnt);
 
-$stmnt = "SELECT profID, profFname, profLname  FROM tb_professor where status = 0 ";
+$stmnt = "SELECT * FROM tb_professor where status = 0 ";
 $result_professor = mysqli_query($conn, $stmnt);
 
 function generateAcademicYears()
@@ -54,7 +54,7 @@ if ($position == "dean" || $position == "chairperson") {
 
     if ($position == "chairperson") {
         $hidden = '';
-        if (strpos($program, 'CAS') !== false) {
+        if (strpos($program, 'COLLEGE OF ARTS AND SCIENCES') !== false) {
             $conditions = [];
         }
     }
@@ -62,8 +62,8 @@ if ($position == "dean" || $position == "chairperson") {
     $hidden = '';
 }
 // CAS ONLY
-if (strpos($program, 'CAS') !== false) {
-    $programType = 'CAS';
+if (strpos($program, 'COLLEGE OF ARTS AND SCIENCES') !== false) {
+    $programType = 'COLLEGE OF ARTS AND SCIENCES';
     $conditions = [];
 }
 $programType = json_encode($programType);
@@ -99,23 +99,23 @@ $programType = json_encode($programType);
                         </thead>
                         <tbody>
                             <?php
-                            $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled_2', $conditions, 'school_yr');
+                            $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled_2', $conditions);
                             $i = 0;
                             ?>
                             <?php
                             foreach ($sql as $row) {
                                 //CONDITION ONLY FOR CAS CHAIRPERSON 
                                 $casCondition = '';
-                                if (strpos($program, 'cas') !== false) {
+                                if (strpos($program, 'COLLEGE OF ARTS AND SCIENCES') !== false) {
                                     $courseRow = $row['course'];
-                                    if (!strpos($courseRow, 'cas') !== false) {
+                                    if (!strpos($courseRow, 'COLLEGE OF ARTS AND SCIENCES') !== false) {
                                         $casCondition = 'hidden';
                                     }
                                 }
                                 // END CONDITION ONLY FOR CAS CHAIRPERSON 
 
                                 $i++;
-                                if ($_SESSION['college'] == "cas") {
+                                if ($_SESSION['college'] == "COLLEGE OF ARTS AND SCIENCES") {
                                     $yrs = array("first year", "second year", "third year", "fourth year");
                                     $year = $yrs[explode("-", $row['secID'])[1] - 1];
                                     if ($db->getMajorCountsOfPlot($row['semester'], $row['secID'], $row['course']) == $db->getMajorCountsByYearSem($year, $row['semester'], $row['course'])) {
@@ -127,7 +127,7 @@ $programType = json_encode($programType);
                                             <td><?= strtoupper($row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
                                             <td>
                                                 <a href="#viewSchedule" class="view viewbtn text-primary" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
-                                                <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['secID'] ?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
+                                                <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['secID'] ?>&schedId=<?= $row['id'];?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
                                                 <a <?= $casCondition ?> <?= $hidden ?> href="#statusSchedule" class="status deac" data-bs-toggle="modal" data-sy="<?= $row['sy'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
                                             </td>
                                         </tr>
@@ -144,7 +144,7 @@ $programType = json_encode($programType);
                                         <td>
                                             <a href="#viewSchedule" class="view viewbtn text-primary" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
 
-                                            <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['secID'] ?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
+                                            <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['secID'] ?>&schedId=<?= $row['id'];?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
 
                                             <a <?= $casCondition ?> <?= $hidden ?> href="#statusSchedule" class="status deac" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
 
@@ -244,31 +244,25 @@ $programType = json_encode($programType);
 
                                             <div class="row">
                                                 <div class="col-4">
-                                                    <select class="form-control" name="plotSubj[]" id="plotSubj">
+                                                    <select class="form-select" name="plotSubj[]" id="plotSubj">
                                                         <option value="" disabled selected>Select Subject </option>
-                                                        <?php
-                                                        if (mysqli_num_rows($result_subject) > 0) {
-                                                            while ($row = mysqli_fetch_assoc($result_subject)) {
-                                                                        if ($row['subType'] == "minor") {
-                                                            ?>
-                                                                            <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
-                                                                                <!-- DISPLAY -->
-                                                                                <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
-                                                                                <!-- END DISPLAY -->
-                                                                            </option>
-                                                                        <?php
-                                                                        } elseif ($row['subType'] == "major") {
-                                                                        ?>
-                                                                            <option data-program="<?= $row['SubCourse'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
-                                                                                <!-- DISPLAY -->
-                                                                                <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
-                                                                                <!-- END DISPLAY -->
-                                                                            </option>
-                                                        <?php
-                                                                        }
-                                                                    }
-                                                                }
-                                                        ?>
+                                                        <?php if (mysqli_num_rows($result_subject) > 0) : ?>
+                                                            <?php while ($row = mysqli_fetch_assoc($result_subject)) : ?>
+                                                               <?php if ($row['subType'] == "minor") : ?>
+                                                                        <option data-program="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
+                                                                            <!-- DISPLAY -->
+                                                                            <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
+                                                                            <!-- END DISPLAY -->
+                                                                        </option>
+                                                                <?php elseif ($row['subType'] == "major") : ?>
+                                                                        <option data-program="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
+                                                                            <!-- DISPLAY -->
+                                                                            <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
+                                                                            <!-- END DISPLAY -->
+                                                                        </option>
+                                                                <?php endif;?>
+                                                            <?php endwhile;?>
+                                                        <?php endif;?>
                                                     </select>
                                                 </div>
 
@@ -562,15 +556,12 @@ $programType = json_encode($programType);
 
     $(document).on('change', '#addSchedule #plotSection', function() {
         var selectedSem = ($('#addSchedule #plotSem').val())
-        console.log(selectedSem)
         $('#addSchedule #plotSubj').val('')
         $('#addSchedule #plotSubj option').each(function() {
             $(this).show();
         })
         var program = $(this).find('option:selected').data('program');
         var yearlevel = $(this).find('option:selected').data('yearlevel');
-        console.log(program);
-
 
         $('#addSchedule #plotSubj option').each(function() {
 
@@ -590,23 +581,18 @@ $programType = json_encode($programType);
                 eachYearLevel = 4;
             }
 
-            // console.log(eachSem)
-
-
-
-            if (program === eachProgram && yearlevel === eachYearLevel && programType != "CAS" && selectedSem == eachSem) {
+            if (program === eachProgram && yearlevel === eachYearLevel && programType != "COLLEGE OF ARTS AND SCIENCES" && selectedSem == eachSem) {
                 $(this).show();
             } else {
                 $(this).hide();
                 // condition only for cas
-                if (yearlevel === eachYearLevel && eachProgram && typeof eachProgram === 'string' && eachProgram.includes("CAS") && programType === "CAS" && selectedSem == eachSem) {
+                if (yearlevel === eachYearLevel && eachProgram && typeof eachProgram === 'string' && eachProgram.includes("COLLEGE OF ARTS AND SCIENCES") && programType === "COLLEGE OF ARTS AND SCIENCES" && selectedSem == eachSem) {
                     // console.log("String contains the substring.");
                     $(this).show();
                 }
                 // end condition only for cas
 
             }
-
 
         });
 

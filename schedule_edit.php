@@ -72,8 +72,8 @@ $result_professor = mysqli_query($conn, $stmnt);
                                 $sql = $db->getMajorToDisplay($_GET['sy'], $_GET['semester'], $_GET['section']);
                                 ?>
                                 <?php
-                                $programType = '';
-                                foreach ($sql as $row) {
+                                    $programType = '';
+                                    foreach ($sql as $row) :
                                 ?>
                                     <tr>
                                         <td><?= $row['subCode'] . '-' . $row['subDesc'] ?></td>
@@ -91,7 +91,6 @@ $result_professor = mysqli_query($conn, $stmnt);
                                                 6 => 'Saturday',
                                                 7 => 'Sunday'
                                             );
-
                                             // Get the specific day
                                             if(array_key_exists($row['day'], $day)){
                                                 $dayDetails = $day[$row['day']];
@@ -104,19 +103,17 @@ $result_professor = mysqli_query($conn, $stmnt);
                                             if ($_SESSION['college'] == 'cas' && $row['subType'] != 'major') {
 
                                             ?>
-                                                <a href="#&id=<?= $row['id'] ?>" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>', '<?= $row['id'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
+                                                <a href="" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>', '<?= $row['id'] ?>', '<?= $_GET['section']?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
                                             <?php
                                             } else if ($_SESSION['college'] != 'cas' && $row['subType'] == 'major') {
                                             ?>
-                                                <a href="#&id=<?= $row['id'] ?>" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>', '<?= $row['id'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
+                                                <a href="" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>', '<?= $row['id'] ?>', '<?= $_GET['section']?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
                                             <?php
                                             }
                                             ?>
                                         </td>
                                     </tr>
-                                <?php
-                                }
-                                ?>
+                                <?php endforeach;?>
                             </tbody>
                         </table>
 
@@ -350,8 +347,9 @@ $result_professor = mysqli_query($conn, $stmnt);
                             </div>
                             <div class="col">
                                 <label class="text-dark" for="section">Section: </label>
-                                <label class="form-control" id="plotSection"><?php echo $_GET['section']; ?></label>
+                                <label class="form-control" id="plotSem"><?php echo $_GET['semester']; ?></label>
                             </div>
+                            <input type="hidden" name="sec_id" id="sec_id" value=""/>
                             <input type="hidden" name="schedID" id="schedID" value=""/>
                         </div>
                         <div class="row">
@@ -360,7 +358,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                 <select class="form-control" name="plotSubj2[]" id="plotSubj2">
                                     <option value="" disabled selected>Select Subject</option>
                                     <?php
-                                    $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled LEFT JOIN tb_subjects as subjects ON scheduled.subject_id = subjects.subID WHERE scheduled.status = 1 ";
+                                    $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled LEFT JOIN tb_subjects as subjects ON scheduled.subject_id = subjects.subID WHERE scheduled.status = 1 AND scheduled.id = ". $_GET['schedId'] ." ";
                                     $result_subject = mysqli_query($conn, $stmnt);
                                     ?>
                                        <?php if (mysqli_num_rows($result_subject) > 0) : ?>
@@ -396,11 +394,36 @@ $result_professor = mysqli_query($conn, $stmnt);
                                 </select>
                             </div>
                             <div class="col">
+                                <label class="text-dark" for="Room">Select Professor: </label>
+                                <select class="form-control" name="prof_id" id="plotProf">
+                                    <option>Select Professor</option>
+                                    <?php
+                                        $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled LEFT JOIN tb_professor as prof ON scheduled.prof_id = prof.profID where scheduled.status = 1 AND scheduled.id = ". $_GET['schedId'] ." ";
+                                        $result_professor = mysqli_query($conn, $stmnt);
+                                    ?>
+                                    <?php if (mysqli_num_rows($result_professor) > 0) : ?>
+                                        <?php while ($row = mysqli_fetch_assoc($result_professor)) : ?>
+                                            <option value="<?= $row['prof_id'] ?>" selected><?= $row['profFname'] ?> <?= $row['profLname'] ?></option>
+                                        <?php endwhile ;?>
+                                    <?php endif ;?>
+                                    <?php
+                                        $stmnt = "SELECT * FROM tb_professor where status = 0";
+                                        $result_professor2 = mysqli_query($conn, $stmnt);
+                                    ?>
+                                    <?php if (mysqli_num_rows($result_professor2) > 0) : ?>
+                                        <?php while ($row = mysqli_fetch_assoc($result_professor2)) : ?>
+                                            <option value="<?= $row['profID'] ?>"><?= $row['profFname'] ?> <?= $row['profLname'] ?></option>
+                                        <?php endwhile ;?>
+                                    <?php endif ;?>
+                                    <option value="TBA">TBA ( To be Announce )</option>
+                                </select>
+                            </div>
+                            <div class="col">
                                 <label class="text-dark" for="Room">Select Room: </label>
                                 <select class="form-control" name="plotRoom2[]" id="plotRoom2">
                                     <option value="" disabled selected>Select Room</option>
                                     <?php
-                                        $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled LEFT JOIN tb_room as rooms ON scheduled.room_id = rooms.roomID where scheduled.status = 1";
+                                        $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled LEFT JOIN tb_room as rooms ON scheduled.room_id = rooms.roomID where scheduled.status = 1 AND scheduled.id = ". $_GET['schedId'] ." ";
                                         $result_room = mysqli_query($conn, $stmnt);
                                     ?>
                                         <?php if (mysqli_num_rows($result_room) > 0) : ?>
@@ -421,7 +444,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                             </div>
                         </div>
                         <?php
-                            $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled where scheduled.status = 1 AND scheduled.section_id = ".$_GET['id']." ";
+                            $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled where scheduled.status = 1 AND scheduled.id = ". $_GET['schedId'] ." ";
                             $result_sched = mysqli_query($conn, $stmnt);
                         ?>
                             <?php if (mysqli_num_rows($result_sched) > 0) : ?>
@@ -593,7 +616,7 @@ $result_professor = mysqli_query($conn, $stmnt);
 
 
 </html>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="JS\select2.min.js"></script>
 <script>
@@ -641,8 +664,6 @@ $result_professor = mysqli_query($conn, $stmnt);
 </script>
 <!-- Bootstrap JS and jQuery -->
 <!-- creating rows modal -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     $(document).ready(function() {
         var rowToRemove; // Store the row to be removed
@@ -896,14 +917,16 @@ $result_professor = mysqli_query($conn, $stmnt);
 
     });
 // to display the time
-    function openModal(day, stime, etime, schedID) {
+    function openModal(day, stime, etime, schedID, section_id) {
         var days = $("#days").val();
         $(".editListinputs").find('input').each(function() {
             $(this).val('');
         });
+        console.log(section_id);
         console.log(stime);
         console.log(etime);
         console.log(schedID);
+        $("#sec_id").val(section_id);
         $("#schedID").val(schedID);
         $("#start_time").text(stime);
         $("#end_time").text(etime);
