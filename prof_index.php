@@ -26,41 +26,30 @@ if (isset($_GET['prof_edit'])) {
 <div class="container-fluid px-4">
     <div class="row g-3 my-2">
         <div class="container">
-            <!-- Alerts -->
-            <?php
-            if (isset($_SESSION["success"])) {
-                if ($_SESSION["success"] == 1) {
-            ?>
-                    <script>
-                        Swal.fire({
-                            icon: "success",
-                            title: "Registration successful! Please wait for approval.",
-                            text: "",
-                        });
-                    </script>
-                <?php
-                    $_SESSION["success"] = null;
-                } else {
-                    // No need to show login success alert
-                    $_SESSION["success"] = null;
-                }
-            }
+            <!-- this is for the alerts -->
+            <?php if (isset($_SESSION['message'])) : ?>
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: '<?php echo $_SESSION['message']; ?>',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                </script>
+            <?php unset($_SESSION['message']);
+            endif; ?>
 
-            if (isset($_SESSION["errors"])) {
-                foreach ($_SESSION["errors"] as $error) {
-                ?>
-                    <script>
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: "<?php echo $error; ?>",
-                        });
-                    </script>
-            <?php
-                }
-                $_SESSION["errors"] = null;
-            }
-            ?>
+            <?php if (isset($_SESSION['error'])) : ?>
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: '<?php echo $_SESSION['error']; ?>',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                </script>
+            <?php unset($_SESSION['error']);
+            endif; ?>
 
             <div class="table-wrapper">
                 <div class="table-title">
@@ -104,7 +93,7 @@ if (isset($_GET['prof_edit'])) {
                                     <td><?php echo $row["profEmployStatus"] ?></td>
 
                                     <td>
-                                        <a href="#viewProf" class="view text-primary" data-bs-toggle="modal" data-id="<?= $row['profEmployID'] ?>" data-fname="<?= $row['profFname'] ?>" data-mname="<?= $row['profMname'] ?>" data-lname="<?= $row['profLname'] ?>" data-mobile="<?= $row['profMobile'] ?>" data-address="<?= $row['profAddress'] ?>" data-educational="<?= $row['profEduc'] ?>" data-expertise="<?= $row['profExpert'] ?>" data-rank="<?= $row['profRank'] ?>" ata-max="<?= $row['profMax'] ?>" data-employmentstatus="<?= $row['profEmployStatus'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View" data-id='<?php echo $row['profID']; ?>'>&#xe8f4;</i></a>
+                                        <a href="#viewProf" class="view text-primary" data-bs-toggle="modal" data-id="<?= $row['profEmployID'] ?>" data-fname="<?= $row['profFname'] ?>" data-mname="<?= $row['profMname'] ?>" data-lname="<?= $row['profLname'] ?>" data-mobile="<?= $row['profMobile'] ?>" data-address="<?= $row['profAddress'] ?>" data-educational="<?= $row['profEduc'] ?>" data-expertise="<?= $row['profExpert'] ?>" data-rank="<?= $row['profRank'] ?>" data-hrs="<?= $row['profHrs'] ?>" data-employmentstatus="<?= $row['profEmployStatus'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View" data-id='<?php echo $row['profID']; ?>'>&#xe8f4;</i></a>
                                         <a href="#statusProf" class="status" data-bs-toggle="modal" data-profid="<?php echo $row['profID']; ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
                                     </td>
                                 </tr>
@@ -128,7 +117,7 @@ if (isset($_GET['prof_edit'])) {
                                     <td class="text-danger"><?php echo $row["profEmployStatus"] ?></td>
 
                                     <td>
-                                        <a href="#viewProf" class="view text-primary" data-bs-toggle="modal" data-id="<?= $row['profEmployID'] ?>" data-fname="<?= $row['profFname'] ?>" data-mname="<?= $row['profMname'] ?>" data-lname="<?= $row['profLname'] ?>" data-mobile="<?= $row['profMobile'] ?>" data-address="<?= $row['profAddress'] ?>" data-educational="<?= $row['profEduc'] ?>" data-expertise="<?= $row['profExpert'] ?>" data-rank="<?= $row['profRank'] ?>" data-max="<?= $row['profMax'] ?>" data-employmentstatus="<?= $row['profEmployStatus'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View" data-id='<?php echo $row['profID']; ?>'>&#xe8f4;</i></a>
+                                        <a href="#viewProf" class="view text-primary" data-bs-toggle="modal" data-id="<?= $row['profEmployID'] ?>" data-fname="<?= $row['profFname'] ?>" data-mname="<?= $row['profMname'] ?>" data-lname="<?= $row['profLname'] ?>" data-mobile="<?= $row['profMobile'] ?>" data-address="<?= $row['profAddress'] ?>" data-educational="<?= $row['profEduc'] ?>" data-expertise="<?= $row['profExpert'] ?>" data-rank="<?= $row['profRank'] ?>" data-hrs="<?= $row['profHrs'] ?>" data-employmentstatus="<?= $row['profEmployStatus'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View" data-id='<?php echo $row['profID']; ?>'>&#xe8f4;</i></a>
                                         <a href="#statusProf" class="status" data-bs-toggle="modal" data-profid="<?php echo $row['profID']; ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
                                     </td>
                                 </tr>
@@ -367,7 +356,7 @@ if (isset($_GET['prof_edit'])) {
                                         <td id="data_9"></td>
                                     </tr>
                                     <tr>
-                                        <th>Maximum Units</th>
+                                        <th>Maximum Hours</th>
                                         <td id="data_10"></td>
                                     </tr>
                                     <tr>
@@ -392,7 +381,7 @@ if (isset($_GET['prof_edit'])) {
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form method="POST" action="prof_all_process.php">
-                        <input type="hidden" name="profID" id="profID" value="<?php echo $profID; ?>">
+                        <input type="hidden" name="profID" id="profID">
                         <input type="hidden" name="profStatus" value="1">
 
                         <div class="modal-header">
@@ -565,19 +554,21 @@ if (isset($_GET['prof_edit'])) {
                                 </div>
                                 <div class="col">
                                     <div class="form-group">
-                                        <label>Maximum Units</label>
+                                        <label>Maximum Hours</label>
                                         <input type="number" name="profHrs" id="profHrs" class="form-control" required value="<?php echo $profHrs; ?>">
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="profEmployStatus">Employment Status</label>
-                                        <select name="profEmployStatus" class="form-control" required>
+                                        <select class="form-control" name="profEmployStatus">
                                             <option value="" disabled>Select Professor's Employment Status</option>
-                                            <option id="profPart" value="Part-Time" <?= ($profEmployStatus == "Part-Time") ? "selected" : ""; ?>>Part-Time
-                                            </option>
-                                            <option id="profFull" value="Full-Time" <?= ($profEmployStatus == "Full-Time") ? "selected" : ""; ?>>Full-Time
-                                            </option>
+                                            <option id="profPerm" value="Permanent" <?= ($profEmployStatus == "Permanent") ? "selected" : ""; ?>>
+                                                Permanent</option>
+                                            <option id="profFull" value="Full-Time Probationary" <?= ($profEmployStatus == "Full-Time Probationary") ? "selected" : ""; ?>>
+                                                Full-Time Probationary</option>
+                                            <option id="profPart" value="Part-Time" <?= ($profEmployStatus == "Part-Time") ? "selected" : ""; ?>>
+                                                Part-Time</option>
                                         </select>
                                     </div>
                                 </div>
@@ -707,7 +698,6 @@ if (isset($_GET['prof_edit'])) {
     $(document).ready(function() {
 
         // display Edit modal
-
         $('.view').on('click', function() {
 
             $('#viewProf').modal('show');
@@ -738,7 +728,6 @@ if (isset($_GET['prof_edit'])) {
 
 <script>
     //this script is for the secStatus 
-
     // JavaScript to set secID when opening status modal
     $('.status').on('click', function() {
         // del_profID
@@ -765,7 +754,7 @@ if (isset($_GET['prof_edit'])) {
             var profEduc = $(this).data('educational');
             var profExpert = $(this).data('expertise');
             var profRank = $(this).data('rank');
-            var profMax = $(this).data('max');
+            var profHrs = $(this).data('hrs');
             var profEmployStatus = $(this).data('employmentstatus');
 
             // Now you can use these variables as per your requirements
@@ -778,7 +767,7 @@ if (isset($_GET['prof_edit'])) {
             $('#editBtn_prof').data('educational', profEduc)
             $('#editBtn_prof').data('expertise', profExpert)
             $('#editBtn_prof').data('rank', profRank)
-            $('#editBtn_prof').data('max', profMax)
+            $('#editBtn_prof').data('hrs', profHrs)
             $('#editBtn_prof').data('employmentstatus', profEmployStatus)
 
 
@@ -791,7 +780,7 @@ if (isset($_GET['prof_edit'])) {
             $('#data_7').text(profEduc)
             $('#data_8').text(profExpert)
             $('#data_9').text(profRank)
-            $('#data_10').text(profMax)
+            $('#data_10').text(profHrs)
             $('#data_11').text(profEmployStatus)
 
             $('#editBtn_prof').click(function() {
@@ -804,7 +793,7 @@ if (isset($_GET['prof_edit'])) {
                 var profEduc = $(this).data('educational');
                 var profExpert = $(this).data('expertise');
                 var profRank = $(this).data('rank');
-                var profMax = $(this).data('max');
+                var profHrs = $(this).data('hrs');
                 var profEmployStatus = $(this).data('employmentstatus');
 
                 $('#profMobile').val(profMobile)
@@ -813,7 +802,7 @@ if (isset($_GET['prof_edit'])) {
                 $('#profEduc').val(profEduc)
                 $('#profExpert').val(profExpert)
                 $('#profRank').val(profRank)
-                $('#profHrs').val(profMax)
+                $('#profHrs').val(profHrs)
 
             })
 

@@ -48,7 +48,7 @@ include 'include/header.php';
                                 <table id="myTable" class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th >No.</th>
+                                            <th>No.</th>
                                             <th>Section Program</th>
                                             <th>Section Year Level</th>
                                             <th>Section Name</th>

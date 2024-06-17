@@ -29,7 +29,7 @@ if (isset($_POST['sec_add_new'])) {
     $stmt->close();
 
     if ($count > 0) {
-        $_SESSION['message'] = "Error: Duplicate entry";
+        $_SESSION['error'] = "Error: Duplicate entry";
         header("Location: section_index.php");
         exit();
     }

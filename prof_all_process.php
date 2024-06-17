@@ -11,9 +11,11 @@ $profAddress = "";
 $profEduc = "";
 $profExpert = "";
 $profRank = "";
-$profHrs = "";
+$profHrs = 0;
+$profProgram = "";
+$profCourse = "";
 $profEmployStatus = "";
-$profEmployID="";
+$profEmployID = "";
 $profStatus = 0;
 $profID = 0;
 $prof_edit_state = false;
@@ -31,51 +33,52 @@ if (isset($_POST["prof_add_new"])) {
     $profRank = $_POST["profRank"];
     $profHrs = $_POST["profHrs"];
     $profEmployStatus = $_POST["profEmployStatus"];
-    $profStatus = $_POST["profStatus"];
+    $profProgram = $_SESSION["program"];
+    $profCourse = $_SESSION["college"];
+    $profStatus = isset($_POST["profStatus"]) ? $_POST["profStatus"] : 0; // Set default if not provided
 
- 
     // Validate required fields
     if (empty($profFname) || empty($profLname) || empty($profMobile)) {
-        $_SESSION['message'] = "Error: Missing required fields";
+        $_SESSION['error'] = "Error: Missing required fields";
+        header("Location: prof_index.php");
+        exit();
+    }
+
+    // Validate the mobile number format
+    if (!preg_match('/^(?:\+639|09)\d{9}$/', $profMobile)) {
+        $_SESSION['error'] = "Error: Invalid mobile number format. Use either '+639xxxxxxxxx' or '09xxxxxxxxx'.";
         header("Location: prof_index.php");
         exit();
     }
 
     // Check for duplicate entry 
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM tb_professor WHERE profFname=? AND profLname=? AND profMobile=?");
-    $stmt->bind_param("sss", $profFname, $profLname, $profMobile);
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM tb_professor WHERE profFname=? AND profMname=? AND profLname=?");
+    $stmt->bind_param("sss", $profFname, $profMname, $profLname);
     $stmt->execute();
     $stmt->bind_result($count);
     $stmt->fetch();
     $stmt->close();
 
     if ($count > 0) {
-        $_SESSION['message'] = "Error: Duplicate entry";
+        $_SESSION['error'] = "Error: Duplicate entry";
         header("Location: prof_index.php");
         die();
     }
 
-     // Validate the mobile number format
-    if (!preg_match('/^(?:\+639|09)\d{9}$/', $profMobile)) {
-        $_SESSION['message'] = "Error: Invalid mobile number format. Use either '+639xxxxxxxxx' or '09xxxxxxxxx'.";
-        header("Location: prof_index.php");
-        die();
-    }
-
-    //Add the information to the Database
-    $stmt = $conn->prepare("INSERT INTO tb_professor (profEmployID, profFname, profMname, profLname, profMobile, profAddress, profEduc, profExpert, profRank, profHrs, profEmployStatus, profStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("isssssssssss", $profEmployID ,$profFname, $profMname, $profLname, $profMobile, $profAddress, $profEduc, $profExpert, $profRank, $profHrs, $profEmployStatus, $profStatus);
+    // Add the information to the Database
+    $stmt = $conn->prepare("INSERT INTO tb_professor (profEmployID, profFname, profMname, profLname, profMobile, profAddress, profEduc, profExpert, profRank, profHrs, profEmployStatus, profProgram, profCourse, profStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssssssssssss", $profEmployID, $profFname, $profMname, $profLname, $profMobile, $profAddress, $profEduc, $profExpert, $profRank, $profHrs, $profEmployStatus, $profProgram, $profCourse, $profStatus);
     $stmt->execute();
 
     if ($stmt) {
         $_SESSION['message'] = "Information Saved Successfully";
         header("Location: prof_index.php");
     } else {
-        die("Something went wrong");
+        $_SESSION['error'] = "Error: Something went wrong while saving the information.";
+        header("Location: prof_index.php");
     }
     $stmt->close();
 }
-
 
 // For updating records
 if (isset($_POST["prof_update"])) {
@@ -90,14 +93,16 @@ if (isset($_POST["prof_update"])) {
     $profRank = $_POST["profRank"];
     $profHrs = $_POST["profHrs"];
     $profEmployStatus = $_POST["profEmployStatus"];
-    $profStatus = $_POST["profStatus"];
+    $profProgram = $_SESSION["program"];
+    $profCourse = $_SESSION["college"];
+    $profStatus = isset($_POST["profStatus"]) ? $_POST["profStatus"] : 0; // Set default if not provided
     $profID = $_POST["profID"];
 
     // Validate the mobile number format
     if (!preg_match('/^(?:\+639|09)\d{9}$/', $profMobile)) {
-        $_SESSION['message'] = "Error: Invalid mobile number format. Use either '+639xxxxxxxxx' or '09xxxxxxxxx'.";
+        $_SESSION['error'] = "Invalid mobile number format. Use either '+639xxxxxxxxx' or '09xxxxxxxxx'.";
         header("Location: prof_index.php");
-        die();
+        exit();
     }
 
     // Fetch the current data from the database
@@ -110,7 +115,7 @@ if (isset($_POST["prof_update"])) {
     $currentDataStmt->close();
 
     // Compare each field to check for changes
-    $fieldsToCheck = ["profEmployID", "profFname", "profMname" , "profLname", "profMobile", "profAddress", "profEduc", "profExpert", "profRank", "profHrs", "profEmployStatus"];
+    $fieldsToCheck = ["profEmployID", "profFname", "profMname", "profLname", "profMobile", "profAddress", "profEduc", "profExpert", "profRank", "profHrs", "profEmployStatus"];
     $changesDetected = false;
 
     foreach ($fieldsToCheck as $field) {
@@ -127,8 +132,8 @@ if (isset($_POST["prof_update"])) {
     }
 
     // Proceed with the update
-    $stmt = $conn->prepare("UPDATE tb_professor SET profEmployID=?, profFname=?, profMname=?, profLname=?, profMobile=?, profAddress=?, profEduc=?, profExpert=?, profRank=?, profHrs=?, profEmployStatus=?, profStatus=? WHERE profID=?");
-    $stmt->bind_param("isssssssssssi", $profEmployID, $profFname, $profMname, $profLname, $profMobile, $profAddress, $profEduc, $profExpert, $profRank, $profHrs, $profEmployStatus, $profStatus, $profID);
+    $stmt = $conn->prepare("UPDATE tb_professor SET profEmployID=?, profFname=?, profMname=?, profLname=?, profMobile=?, profAddress=?, profEduc=?, profExpert=?, profRank=?, profHrs=?, profEmployStatus=?, profProgram=?, profCourse=?, profStatus=? WHERE profID=?");
+    $stmt->bind_param("isssssssssssssi", $profEmployID, $profFname, $profMname, $profLname, $profMobile, $profAddress, $profEduc, $profExpert, $profRank, $profHrs, $profEmployStatus, $profProgram, $profCourse, $profStatus, $profID);
     $stmt->execute();
 
     if ($stmt) {
@@ -162,8 +167,8 @@ if (isset($_POST['prof_toggle_status'])) {
         $_SESSION["message"] = "Status Updated Successfully";
         header('Location: prof_index.php');
     } else {
-        die("Something went wrong");
+        $_SESSION['error'] = "Error: Something went wrong while updating the status.";
+        header("Location: prof_index.php");
     }
     $stmt->close();
 }
-?>

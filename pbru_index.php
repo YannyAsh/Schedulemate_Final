@@ -29,19 +29,19 @@ $db = new DatabaseHandler();
                                     <tbody >
                                         <?php 
                                         $conditions = [];
-                                        $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled',$conditions,' sy,semester,room');
+                                        $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled_2',$conditions,' school_year,semester,room_id');
                                         $i=0;
                                         
                                         foreach ($sql as $row) {
                                         ?>
                                         <tr>
-                                            <td><?=$row['sy']?></td>
+                                            <td><?=$row['school_year']?></td>
                                             <td><?=$row['semester']?></td>
-                                            <td><?=$row['room']?></td>
+                                            <td><?=$row['room_id']?></td>
                                             <td>
                                                 <!-- <a href="#editSubj" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a> -->
                                                 <!-- <a href="#statusSubj" class="status" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a> -->
-                                                <a href="pdf-pbru.php?ay=<?=$row['sy']?>&semester=<?=$row['semester']?>&room=<?=$row['room']?>" target="_blank" class="status text-warning" ><i class="material-icons"  title="Status">&#xe415;</i></a>
+                                                <a href="pdf-pbru.php?ay=<?=$row['school_year']?>&semester=<?=$row['semester']?>&room=<?=$row['room_id']?>" target="_blank" class="status text-warning" ><i class="material-icons"  title="Status">&#xe415;</i></a>
                                             </td>
                                         </tr>
                                         <?php } ?>
