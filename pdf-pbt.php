@@ -20,7 +20,13 @@ $profFName = $db->getIdByColumnValue('tb_professor', 'profID', $prof, 'profFName
 $profMname = $db->getIdByColumnValue('tb_professor', 'profID', $prof, 'profMname');
 $profLname = $db->getIdByColumnValue('tb_professor', 'profID', $prof, 'profLname');
 $fullname = ucwords($profFName . ' ' . $profMname . ' ' . $profLname);
-
+$preperation_count = $db->getCountDataCourse('tb_scheduled_2', ['prof_id' => $prof]);
+foreach($preperation_count as $key => $val){
+    foreach($val as $key => $vals)
+    {
+        $preperation_count = $vals;
+    }
+}
 $profEduc = $db->getIdByColumnValue('tb_professor', 'profID', $prof, 'profEduc');
 $profEmployStatus = $db->getIdByColumnValue('tb_professor', 'profID', $prof, 'profEmployStatus');
 
@@ -254,7 +260,7 @@ $tbl1 = <<<EOD
     <td colspan="9"></td>
     </tr>
     <tr>
-    <td colspan="5">No. of Preparation: __________</td>
+    <td colspan="5">No. of Preparation: $preperation_count </td>
     <td colspan="5">Production: __________</td>
     </tr>
     <tr>
