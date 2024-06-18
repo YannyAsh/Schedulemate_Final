@@ -45,7 +45,7 @@ include 'include/header.php';
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="myTable" class="table table-hover">
+                                <table id="myTable" class="table-striped">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
@@ -387,7 +387,17 @@ include 'include/header.php';
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.min.js"></script>
 <script>
 $(document).ready(function() {
-    var table = $('#myTable').DataTable();
+    var table = $('#myTable').DataTable({
+        "rowCallback": function( row, data, index ) {
+            if(index%2 == 0){
+                $(row).removeClass('myodd myeven');
+                $(row).addClass('myodd');
+            }else{
+                $(row).removeClass('myodd myeven');
+                 $(row).addClass('myeven');
+            }
+          }
+    });
 
     // Loop through each table row
     table.rows().every(function() {

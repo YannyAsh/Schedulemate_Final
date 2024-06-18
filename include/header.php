@@ -40,6 +40,14 @@ if ($Sessposition == "dean") {
     <!-- table style -->
     <link rel="stylesheet" href="CSS/content.css" />
     <title>Schedulemate</title>
+    <style>
+        table.dataTable tbody tr.myeven{
+            background-color:lightblue;
+        }
+        table.dataTable tbody tr.myodd{
+            background-color:#ff9248 ;
+        }
+    </style>
 </head>
 
 <body>
