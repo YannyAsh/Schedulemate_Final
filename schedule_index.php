@@ -171,8 +171,6 @@ $programType = json_encode($programType);
                                     </td>
                                 </tr>
                             <?php
-                                // $i++;
-
                             } ?>
                         </tbody>
                     </table>

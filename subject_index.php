@@ -52,7 +52,7 @@ function generateAcademicYears()
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-hover" id="table">
+                                <table class="table table-stripped" id="table">
                                     <thead>
                                         <tr>
                                             <th>No.</th>

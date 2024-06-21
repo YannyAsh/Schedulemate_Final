@@ -26,7 +26,7 @@ if (isset($_GET['prof_edit'])) {
 <div class="container-fluid px-4">
     <div class="row g-3 my-2">
         <div class="container">
-            
+
             <!-- this is for the alerts -->
             <?php if (isset($_SESSION['message'])) : ?>
                 <script>
@@ -65,7 +65,7 @@ if (isset($_GET['prof_edit'])) {
                 </div>
                 <!-- makes the table responsive -->
                 <div class="table-responsive">
-                    <table id="table" class="table table-hover">
+                    <table id="table" class="table table-stripped">
                         <thead>
                             <tr>
                                 <th>No.</th>

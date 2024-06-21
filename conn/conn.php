@@ -53,6 +53,33 @@ class DatabaseHandler
         }
     }
 
+    //THIS IS THE ORIGINAL getAllRowsFromTableWhere
+    // public function getAllRowsFromTableWhere($tableName, array $additionalConditions = [])
+    // {
+    //     try {
+    //         // Construct the WHERE clause with status = 0 and additional conditions
+    //         $whereClause = "status != 123123123";
+
+    //         if (!empty($additionalConditions)) {
+    //             $whereClause .= " AND " . implode(' AND ', $additionalConditions);
+    //         }
+
+    //         // Prepare the SQL statement with the dynamic WHERE clause
+    //         $sql = "SELECT * FROM $tableName WHERE $whereClause";
+    //         $stmt = $this->pdo->prepare($sql);
+
+    //         // Execute the query
+    //         $stmt->execute();
+
+    //         // Fetch the results as an associative array
+    //         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //         return $result;
+    //     } catch (PDOException $e) {
+    //         // Handle query errors
+    //         echo "Query failed: " . $e->getMessage();
+    //     }
+    // }
 
     public function getAllRowsFromTableWhere($tableName, array $additionalConditions = [])
     {
@@ -60,16 +87,20 @@ class DatabaseHandler
             // Construct the WHERE clause with status = 0 and additional conditions
             $whereClause = "status != 123123123";
 
+            $params = [];
             if (!empty($additionalConditions)) {
-                $whereClause .= " AND " . implode(' AND ', $additionalConditions);
+                foreach ($additionalConditions as $column => $value) {
+                    $whereClause .= " AND $column = :$column";
+                    $params[$column] = $value;
+                }
             }
 
             // Prepare the SQL statement with the dynamic WHERE clause
             $sql = "SELECT * FROM $tableName WHERE $whereClause";
             $stmt = $this->pdo->prepare($sql);
 
-            // Execute the query
-            $stmt->execute();
+            // Execute the query with the bound parameters
+            $stmt->execute($params);
 
             // Fetch the results as an associative array
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -80,6 +111,7 @@ class DatabaseHandler
             echo "Query failed: " . $e->getMessage();
         }
     }
+
 
     // Get all data of the schedules with the additional conditions
     public function getAllDataCourse($tableName, array $additionalConditions = [])
@@ -365,8 +397,7 @@ class DatabaseHandler
             foreach ($startTimes as $index => $startTime) {
                 $endTime = $endTimes[$index];
                 foreach ($days as $indexs => $day) {
-                    if ($indexs == $index)
-                    {
+                    if ($indexs == $index) {
                         $stmt->bindValue(':start_time', $startTime);
                         $stmt->bindValue(':end_time', $endTime);
                         $stmt->bindValue(':day', $day);
@@ -527,7 +558,8 @@ class DatabaseHandler
         return $result2['major_counts'];
     }
 
-    public function getMajorToDisplay($year, $sem, $section){
+    public function getMajorToDisplay($year, $sem, $section)
+    {
         $qry = "SELECT * FROM tb_scheduled_2 as tb_scheduled
                 LEFT JOIN tb_subjects as tb_subject
                 ON tb_scheduled.subject_id = tb_subject.subID

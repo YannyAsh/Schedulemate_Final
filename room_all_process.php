@@ -7,6 +7,8 @@ $roomBuild = "";
 $roomFloornum = 0;
 $roomNum = 0;
 $roomStatus = 0;
+$roomProgram = "";
+$roomCollege = "";
 $roomID = 0;
 $room_edit_state = false;
 
@@ -15,6 +17,8 @@ if (isset($_POST["room_add_new"])) {
     $roomBuild = $_POST["roomBuild"];
     $roomFloornum = $_POST["roomFloornum"];
     $roomNum = $_POST["roomNum"];
+    $roomProgram = $_SESSION["program"];
+    $roomCollege = $_SESSION["college"];
     $roomStatus = $_POST["roomStatus"];
 
     // Check for valid floor number (1 digit or less) and not negative
@@ -54,8 +58,8 @@ if (isset($_POST["room_add_new"])) {
     }
 
     //Add New Room for DATABASE
-    $stmt = $conn->prepare("INSERT INTO tb_room (roomBuild, roomFloornum, roomNum, roomStatus) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("siii", $roomBuild, $roomFloornum, $roomNum, $roomStatus);
+    $stmt = $conn->prepare("INSERT INTO tb_room (roomBuild, roomFloornum, roomNum, roomProgram, roomCollege,  roomStatus) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("siissi", $roomBuild, $roomFloornum, $roomNum, $roomProgram, $roomCollege, $roomStatus);
     $stmt->execute();
 
     if ($stmt) {
@@ -74,6 +78,8 @@ if (isset($_POST["room_update"])) {
     $roomBuild = $_POST["roomBuild"];
     $roomFloornum = $_POST["roomFloornum"];
     $roomNum = $_POST["roomNum"];
+    $roomProgram = $_SESSION["program"];
+    $roomCollege = $_SESSION["college"];
     $roomStatus = $_POST["roomStatus"];
     $roomID = $_POST["roomID"];
 
@@ -146,6 +152,32 @@ if (isset($_POST['room_toggle_status'])) {
     $newStatus = ($currentStatus == 1) ? 0 : 1;
 
     $stmt = $conn->prepare("UPDATE tb_room SET roomStatus=?,status=1 WHERE roomID=?");
+    $stmt->bind_param("ii", $newStatus, $roomID);
+    $stmt->execute();
+
+    if ($stmt) {
+        $_SESSION["message"] = "Status Updated Successfully";
+        header('Location: room_index.php');
+    } else {
+        echo "Error: ";
+    }
+    $stmt->close();
+}
+
+if (isset($_POST['room_toggle_statusActivate'])) {
+    // var_dump($_POST);
+    $roomID = $_POST['roomID'];
+
+    $stmt = $conn->prepare("SELECT roomStatus FROM tb_room WHERE roomID=?");
+    $stmt->bind_param("i", $roomID);
+    $stmt->execute();
+    $stmt->bind_result($currentStatus);
+    $stmt->fetch();
+    $stmt->close();
+
+    $newStatus = ($currentStatus == 1) ? 0 : 1;
+
+    $stmt = $conn->prepare("UPDATE tb_room SET roomStatus=? , status = 0 WHERE roomID=?");
     $stmt->bind_param("ii", $newStatus, $roomID);
     $stmt->execute();
 

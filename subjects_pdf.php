@@ -66,8 +66,7 @@ function generateAcademicYears()
                                                 <td><?php echo $row["subID"] ?></td>
                                                 <td><?php echo $row["subYear"] ?></td>
                                                 <td>
-                                                        <a target="_blank" href="pdf-subjects.php?ay=<?=$row["subYear"]?>" class="text-warning" ><i class="material-icons" title="Status">&#xe415;</i></a>
-
+                                                    <a target="_blank" href="pdf-subjects.php?ay=<?=$row["subYear"]?>" class="text-warning" ><i class="material-icons" title="Status">&#xe415;</i></a>
                                                 </td>
                                             </tr>
                                         <?php

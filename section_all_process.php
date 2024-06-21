@@ -4,6 +4,7 @@ $db = new DatabaseHandler();
 include_once('db.php');;
 
 $secProgram = "";
+$secCourse = "";
 $secYearlvl = 0;
 $secName = "";
 $secSession = 0;
@@ -20,23 +21,23 @@ if (isset($_POST['sec_add_new'])) {
     $secStatus = $_POST["secStatus"];
     $secCourse = $_SESSION["college"];
 
-    // Check for duplicate entry 
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM tb_section WHERE secYearlvl=? AND secName=?");
-    $stmt->bind_param("is", $secYearlvl, $secName);
+    // Check for duplicate entry within the same secProgram
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM tb_section WHERE secProgram=? AND secYearlvl=? AND secName=?");
+    $stmt->bind_param("sis", $secProgram, $secYearlvl, $secName);
     $stmt->execute();
     $stmt->bind_result($count);
     $stmt->fetch();
     $stmt->close();
 
     if ($count > 0) {
-        $_SESSION['error'] = "Error: Duplicate entry";
+        $_SESSION['error'] = "Error: Duplicate entry within the same program";
         header("Location: section_index.php");
         exit();
     }
 
-    //Add new data to the database
-    $stmt = $conn->prepare("INSERT INTO tb_section (secProgram, secYearlvl, secName, secSession, secStatus,secCourse) VALUES (?, ?, ?, ?, ?,?)");
-    $stmt->bind_param("sissss", $secProgram, $secYearlvl, $secName, $secSession, $secStatus,$secCourse);
+    // Add new data to the database
+    $stmt = $conn->prepare("INSERT INTO tb_section (secProgram, secYearlvl, secName, secSession, secStatus, secCourse) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sissss", $secProgram, $secYearlvl, $secName, $secSession, $secStatus, $secCourse);
     $stmt->execute();
 
     if ($stmt) {
@@ -49,9 +50,10 @@ if (isset($_POST['sec_add_new'])) {
 }
 
 
+
 //For updating records
 if (isset($_POST['sec_update'])) {
-    $secProgram = $_POST["secProgram"];
+    $secProgram = $_SESSION["program"];
     $secYearlvl = $_POST["secYearlvl"];
     $secName = $_POST["secName"];
     $secSession = $_POST["secSession"];
@@ -171,4 +173,3 @@ if (isset($_POST['sec_toggle_statusActivate'])) {
     }
     $stmt->close();
 }
-
