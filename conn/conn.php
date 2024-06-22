@@ -497,6 +497,35 @@ class DatabaseHandler
         }
     }
 
+    public function getCountDataCourse($tableName, array $additionalConditions = [])
+    {
+        try {
+            // Construct the WHERE clause with status = 0 and additional conditions
+            $school_year = $additionalConditions['school_year'];
+            $profid = $additionalConditions['prof_id'];
+            $semester = $additionalConditions['semester'];
+            $whereClause = "$tableName.status = 1 AND $tableName.prof_id = $profid";
+    
+            // Prepare the SQL statement with the dynamic WHERE clause
+            $sql = "SELECT COUNT(*) FROM $tableName 
+            LEFT JOIN tb_professor AS professor ON $tableName.prof_id = professor.profID
+            WHERE $whereClause";
+            $stmt = $this->pdo->prepare($sql);
+    
+            // Execute the query
+            $stmt->execute();
+    
+            // Fetch the results as an associative array
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            /* var_dump($result);
+            die(); */
+            return $result;
+        } catch (PDOException $e) {
+            // Handle query errors
+            echo "Query failed: " . $e->getMessage();
+        }
+    }
+
 
     public function getAllColumnsByColumnValue($tableName, $columnName, $columnValue)
     {
