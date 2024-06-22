@@ -25,8 +25,8 @@ function generateAcademicYears()
 
     for ($i = $currentYear; $i <= $currentYear + 10; $i++) {
         $nextYear = $i + 1;
-        $academicYear = "SY " . $i . " - " . $nextYear;
-        $plotYear = "SY " . $i . " - " . $nextYear;
+        $academicYear = "A.Y. " . $i . " - " . $nextYear;
+        $plotYear = "A.Y. " . $i . " - " . $nextYear;
         $options .= "<option value=\" $plotYear\">$academicYear</option>";
     }
 
@@ -202,6 +202,7 @@ $programType = json_encode($programType);
                                         <select class="form-control" name="plotSem" required id="plotSem">
                                             <option value="" disabled selected>Select Semester</option>
                                             <option value="1st Semester">1st Semester</option>
+                                            
                                             <?php
                                             // Check if the 1st Semester is selected, and hide the 2nd Semester option
                                             if ($_POST['plotSem'] !== "1st Semester") {
@@ -210,6 +211,7 @@ $programType = json_encode($programType);
                                             <?php
                                             }
                                             ?>
+                                            <option value="Trimester">Trimester</option>
                                         </select>
                                     </div>
                                     <div class="col">
