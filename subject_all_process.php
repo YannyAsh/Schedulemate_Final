@@ -29,7 +29,6 @@ if (isset($_POST['sub_add_new'])) {
     $subPrerequisite = $_POST['subPrerequisite'];
     $subStatus = isset($_POST['subStatus']) ? $_POST['subStatus'] : array_fill(0, count($subCode), 1); // Default status to 1 for each entry
     $program = $_SESSION["program"];
-    // adding type if major or minor
     $subjectType = $_POST['subType'];
 
 

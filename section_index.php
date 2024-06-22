@@ -60,7 +60,7 @@ $program = $_SESSION["program"];
                         <tbody>
                             <?php
                             // Fetch only sections that match the user's program
-                            $conditions = ['secProgram' => $program];
+                            $conditions = ['secProgram' => $program, 'status' => 0];
                             $sql =  $db->getAllRowsFromTableWhere('tb_section', $conditions);
                             $i = 1;
                             // Display Active Sections
