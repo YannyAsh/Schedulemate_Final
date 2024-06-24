@@ -294,6 +294,76 @@ class DatabaseHandler
         return true;
     }
 
+    public function insertDataSched($data)
+    {
+        try {
+            // Error reporting for debugging
+            ini_set('display_errors', 1);
+            ini_set('display_startup_errors', 1);
+            error_reporting(E_ALL);
+    
+            // Uncomment this line to check for schedule conflicts
+            // $checker = $this->checkDataSchedule($data); // fetching data if there is a conflict schedule
+            // if there is a conflict schedule true return false;
+            // if ($checker) {
+            //     return false;
+            // }
+    
+            $datasched = [
+                'room_id' => $data['room_id'],
+                'prof_id' => $data['prof_id'],
+                'subject_id' => $data['subject_id'],
+                'section_id' => $data['section_id'],
+                'course' => $data['course'],
+                'school_yr' => $data['school_yr'],
+                'semester' => $data['semester'],
+                'status' => $data['status']
+            ];
+    
+            // if there is no conflict it will insert the schedule
+            $columns = implode(', ', array_keys($datasched));
+            $placeholders = ':' . implode(', :', array_keys($datasched));
+            $sql = "INSERT INTO tb_scheduled ($columns) VALUES ($placeholders)";
+            $stmt = $this->pdo->prepare($sql);
+    
+            foreach ($datasched as $key => $value) {
+                $stmt->bindValue(':' . $key, $value);
+            }
+    
+            $stmt->execute(); // Execute the prepared statement
+    
+            // Get the last inserted id
+            $lastInsertedId = $this->pdo->lastInsertId();
+    
+            // Insert the day, start time, end time, status, and last inserted id into tb_day_and_time
+            $dayAndTimeData = [
+                'sched_id' => $lastInsertedId,
+                'start_time' => $data['start_time'],
+                'end_time' => $data['end_time'],
+                'day' => $data['day'],
+                'status' => $data['status']
+            ];
+    
+            $dayAndTimeColumns = implode(', ', array_keys($dayAndTimeData));
+            $dayAndTimePlaceholders = ':' . implode(', :', array_keys($dayAndTimeData));
+            $dayAndTimeSql = "INSERT INTO tb_day_time ($dayAndTimeColumns) VALUES ($dayAndTimePlaceholders)";
+            $dayAndTimeStmt = $this->pdo->prepare($dayAndTimeSql);
+            var_dump($dayAndTimeSql);
+    
+            foreach ($dayAndTimeData as $key => $value) {
+                $dayAndTimeStmt->bindValue(':' . $key, $value);
+            }
+    
+            $dayAndTimeStmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo 'PDO Exception: ' . $e->getMessage();
+            return false;
+        } catch (Exception $e) {
+            echo 'General Exception: ' . $e->getMessage();
+            return false;
+        }
+    } 
 
     public function updateData($tableName, $data = array(), $whereConditions)
     {
@@ -603,6 +673,26 @@ class DatabaseHandler
         return $result;
     }
 
+    public function getMajorToDisplay2($year, $sem, $section, $schedId)
+    {
+        $qry = "SELECT * FROM tb_scheduled as tb_scheduled
+                LEFT JOIN tb_date_time as date_time ON
+                tb_scheduled.id = date_time.sched_id
+                LEFT JOIN tb_subjects as tb_subject
+                ON tb_scheduled.subject_id = tb_subject.subID
+                LEFT JOIN tb_room as room ON 
+                tb_scheduled.room_id = room.roomID
+                WHERE tb_scheduled.school_yr = '$year' 
+                AND tb_scheduled.semester = '$sem' 
+                AND tb_scheduled.section_id = '$section'
+                AND tb_scheduled.id = '$schedId'";
+        $stmt = $this->pdo->prepare($qry);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo '<pre>';
+        print_r($result);
+        return $result;
+    }
 
     public function pdf_data_subjects($sy, $sem, $course, $yearlevel)
     {

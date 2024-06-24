@@ -23,7 +23,7 @@ if(isset($_POST['plotProf'])){
             );
 
             if (!empty($_POST["start_time"][$dayKey]) && !empty($_POST["end_time"][$dayKey])) { // check if the day is not empty! okay?
-                if($db->insertData('tb_scheduled_2',$data)){ // Successful Insert
+                if($db->insertDataSched($data)){ // Successful Insert
                     echo "<script>
                     alert('Schedule Added')
                     window.location.href='../schedule_index.php'

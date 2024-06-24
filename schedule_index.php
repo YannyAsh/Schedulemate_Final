@@ -99,7 +99,7 @@ $programType = json_encode($programType);
                         </thead>
                         <tbody>
                             <?php
-                            $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled_2', $conditions);
+                            $sql = $db->getAllRowsFromTableWhereGroup('tb_scheduled', $conditions);
                             $i = 0;
                             ?>
                             <?php
@@ -240,7 +240,7 @@ $programType = json_encode($programType);
                                         <div class="label-container">
                                             <label class="row-label"></label>
                                         </div>
-                                        <div class="container">
+                                        <div class="container-fluid-xl">
 
                                             <div class="row">
                                                 <div class="col-4">

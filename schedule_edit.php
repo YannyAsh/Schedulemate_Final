@@ -69,7 +69,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                             </thead>
                             <tbody>
                                 <?php
-                                $sql = $db->getMajorToDisplay($_GET['sy'], $_GET['semester'], $_GET['section']);
+                                $sql = $db->getMajorToDisplay2($_GET['sy'], $_GET['semester'], $_GET['section'], $_GET['schedId']);
                                 ?>
                                 <?php
                                 $programType = '';
@@ -360,7 +360,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                 <select class="form-control" name="plotSubj2[]" id="plotSubj2">
                                     <option value="" disabled selected>Select Subject</option>
                                     <?php
-                                    $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled LEFT JOIN tb_subjects as subjects ON scheduled.subject_id = subjects.subID WHERE scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " ";
+                                    $stmnt = "SELECT * FROM tb_scheduled as scheduled LEFT JOIN tb_subjects as subjects ON scheduled.subject_id = subjects.subID WHERE scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " ";
                                     $result_subject = mysqli_query($conn, $stmnt);
                                     ?>
                                     <?php if (mysqli_num_rows($result_subject) > 0) : ?>
