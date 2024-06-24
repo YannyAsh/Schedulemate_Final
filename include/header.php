@@ -41,11 +41,12 @@ if ($Sessposition == "dean") {
     <link rel="stylesheet" href="CSS/content.css" />
     <title>Schedulemate</title>
     <style>
-        table.dataTable tbody tr.myeven{
-            background-color:lightblue;
+        table.dataTable tbody tr.myeven {
+            background-color: lightblue;
         }
-        table.dataTable tbody tr.myodd{
-            background-color:#ff9248 ;
+
+        table.dataTable tbody tr.myodd {
+            background-color: #ff9248;
         }
     </style>
 </head>
@@ -82,10 +83,12 @@ if ($Sessposition == "dean") {
                         </ul>
                     </div>
 
-
-
                     <!-- schedule -->
                     <a <?= $limited1 ?> href="schedule_index.php" class="list-group-item list-group-item bg-transparent second-text fw-bold"><i class="fas fa-regular fa-calendar-plus me-2"></i>Schedule</a>
+
+                    <!-- USER LIST -->
+                    <a <?= $limited ?> href="user_list.php" class="list-group-item list-group-item bg-transparent second-text fw-bold"><i class="fas fa-user me-2"></i>User List</a>
+
 
                     <!-- reports -->
                     <a href="#" class="list-group-submenu list-group-item bg-transparent second-text fw-bold"><i class="fas fa-solid fa-clipboard me-2"></i>Reports <i class="fa-solid fa-caret-down"></i></a>
@@ -143,4 +146,3 @@ if ($Sessposition == "dean") {
                 </div>
             </nav>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            

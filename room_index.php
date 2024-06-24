@@ -125,8 +125,6 @@ $college = $_SESSION["college"];
                             }
                             ?>
                         </tbody>
-
-
                     </table>
                 </div>
             </div>

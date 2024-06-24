@@ -50,4 +50,7 @@ if (isset($_POST["login"])) {
     header("Location: index.php"); // Redirect back to login page with errors
     exit();
 }
+
+
+
 ?>

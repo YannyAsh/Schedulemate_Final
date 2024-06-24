@@ -4,6 +4,7 @@ include 'include/header.php';
 
 $program = $_SESSION["program"];
 ?>
+
 <!-- Start of the contents -->
 <div class="container-fluid px-4">
     <div class="row g-3 my-2">
@@ -110,6 +111,7 @@ $program = $_SESSION["program"];
                 </div>
             </div>
         </div>
+        
         <!-- Add Modal HTML -->
         <div id="addSection" class="modal fade">
             <div class="modal-dialog">

@@ -1,7 +1,7 @@
 <?php
 include 'conn/conn.php';
 $db = new DatabaseHandler();
-include_once('db.php');;
+include_once('db.php');
 
 $secProgram = "";
 $secCourse = "";
