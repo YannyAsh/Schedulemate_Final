@@ -147,7 +147,7 @@ if (isset($_POST["prof_update"])) {
 if (isset($_POST['prof_toggle_status'])) {
     $profID = $_POST['profID'];
 
-    $stmt = $conn->prepare("SELECT status FROM tb_professor WHERE profID=?");
+    $stmt = $conn->prepare("SELECT profStatus FROM tb_professor WHERE profID=?");
     $stmt->bind_param("i", $profID);
     $stmt->execute();
     $stmt->bind_result($currentStatus);
@@ -156,7 +156,7 @@ if (isset($_POST['prof_toggle_status'])) {
 
     $newStatus = ($currentStatus == 1) ? 0 : 1;
 
-    $stmt = $conn->prepare("UPDATE tb_professor SET profStatus=?, status = 0 WHERE profID=?");
+    $stmt = $conn->prepare("UPDATE tb_professor SET profStatus=?, status=1 WHERE profID=?");
     $stmt->bind_param("ii", $newStatus, $profID);
     $stmt->execute();
 
@@ -164,16 +164,16 @@ if (isset($_POST['prof_toggle_status'])) {
         $_SESSION["message"] = "Status Updated Successfully";
         header('Location: prof_index.php');
     } else {
-        $_SESSION['error'] = "Error: Something went wrong while updating the status.";
-        header("Location: prof_index.php");
+        echo "Error: ";
     }
     $stmt->close();
 }
 
 if (isset($_POST['prof_toggle_statusActivate'])) {
+    // var_dump($_POST);
     $profID = $_POST['profID'];
 
-    $stmt = $conn->prepare("SELECT status FROM tb_professor WHERE profID=?");
+    $stmt = $conn->prepare("SELECT profStatus FROM tb_professor WHERE profID=?");
     $stmt->bind_param("i", $profID);
     $stmt->execute();
     $stmt->bind_result($currentStatus);
@@ -182,7 +182,7 @@ if (isset($_POST['prof_toggle_statusActivate'])) {
 
     $newStatus = ($currentStatus == 1) ? 0 : 1;
 
-    $stmt = $conn->prepare("UPDATE tb_professor SET profStatus=?, status = 1 WHERE profID=?");
+    $stmt = $conn->prepare("UPDATE tb_professor SET profStatus=? , status = 0 WHERE profID=?");
     $stmt->bind_param("ii", $newStatus, $profID);
     $stmt->execute();
 
@@ -190,8 +190,7 @@ if (isset($_POST['prof_toggle_statusActivate'])) {
         $_SESSION["message"] = "Status Updated Successfully";
         header('Location: prof_index.php');
     } else {
-        $_SESSION['error'] = "Error: Something went wrong while updating the status.";
-        header("Location: prof_index.php");
+        echo "Error: ";
     }
     $stmt->close();
 }

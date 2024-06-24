@@ -380,7 +380,7 @@ $college = $_SESSION["college"];
                 <div class="modal-content">
                     <form method="POST" action="prof_all_process.php">
                         <input type="hidden" name="profID" id="profID" value="<?php echo $profID; ?>>
-                        <input type=" hidden" name="profStatus" value="1">
+                        <input type=" hidden" name="profStatus" value="0">
 
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Professor</h5>
@@ -576,12 +576,12 @@ $college = $_SESSION["college"];
         </div>
 
 
-        <!-- Change Status Modal HTML -->
+        <!-- Change Status Modal DE-ACTIVATE -->
         <div id="statusProf" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="POST" action="prof_all_process.php">
-                        <input type="" name="profID" id="profID" value="<?php echo $profID; ?>">
+                        <input type="hidden" name="profID" id="profID" value="<?php echo $profID; ?>">
 
                         <div class="modal-header">
                             <h5 class="modal-title">Change Status</h5>
@@ -601,12 +601,12 @@ $college = $_SESSION["college"];
             </div>
         </div>
 
-        <!-- Change Status Modal HTML -->
-        <div id="statusProf" class="modal fade">
+        <!-- Change Status Modal ACTIVATE -->
+        <div id="statusProfActivate" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="POST" action="prof_all_process.php">
-                        <input type="" name="profID" id="profID" value="<?php echo $profID; ?>">
+                        <input type="hidden" name="profID" id="profID" value="<?php echo $profID; ?>">
 
                         <div class="modal-header">
                             <h5 class="modal-title">Change Status</h5>
@@ -746,7 +746,7 @@ $college = $_SESSION["college"];
     // JavaScript to set secID when opening status modal
     $('.status').on('click', function() {
         // del_profID
-        var profID = $(this).data('profID');
+        var profID = $(this).data('profid');
         $('#status_profID').val(profID); // Set secID to the hidden input field
         $('#status_profIDz').val(profID); // Set secID to the hidden input field
 
