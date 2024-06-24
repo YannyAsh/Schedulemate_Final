@@ -56,9 +56,24 @@ $position = $_SESSION["postion"];
                         </thead>
                         <tbody>
                             <?php
-                            $query = "SELECT * FROM tb_register WHERE userApproval = 'pending' ORDER BY userID ASC";
-                            $result = mysqli_query($conn, $query);
-                            while ($row = mysqli_fetch_array($result)) {
+                            // Initialize conditions based on user role
+                            if ($position == 'admin') {
+                                // For admin, fetch all approved users
+                                $conditions_active = ['status' => 0, 'userApproval' => 'approved'];
+                                $conditions_inactive = ['status' => 1, 'userApproval' => 'approved'];
+                            } elseif ($position == 'dean') {
+                                // For dean, fetch only chairperson and approved users
+                                $conditions_active = ['userPosition' => 'chairperson', 'status' => 0, 'userApproval' => 'approved'];
+                                $conditions_inactive = ['userCollege' => $college, 'userPosition' => 'chairperson', 'status' => 1, 'userApproval' => 'approved'];
+                            } else {
+                                // Default condition for unauthorized or other roles
+                                echo "Unauthorized access";
+                                exit; // Exit or handle as per your application's logic
+                            }
+
+                            // Display Active Sections
+                            $sql_active = $db->getAllRowsFromTableWhere('tb_register', $conditions_active);
+                            foreach ($sql_active as $row) {
                             ?>
                                 <tr>
                                     <td><?php echo $row['userEmployID']; ?></td>
@@ -66,21 +81,34 @@ $position = $_SESSION["postion"];
                                     <td><?php echo $row['userProgram']; ?></td>
                                     <td><?php echo $row['userPosition']; ?></td>
                                     <td>
-                                        <form method="POST" action="admin_approval.php">
-                                            <input type="hidden" name="userID" value="<?php echo $row['userID']; ?>">
-                                            <button type="submit" name="approve" class="approve" value="Approve" data-bs-toggle="tooltip" title="Approve">
-                                                <i class="material-icons">&#xe86c;</i>
-                                            </button>
-                                            <button type="submit" name="deny" class="disapprove" value="Deny" data-bs-toggle="tooltip" title="Deny">
-                                                <i class="material-icons">&#xe5c9;</i>
-                                            </button>
-                                        </form>
+                                        <input type="hidden" name="userID" value="<?php echo $row['userID']; ?>">
+                                        <a href="#statusUser" class="status" data-bs-toggle="modal" data-userid="<?php echo $row['userID']; ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
+                                    </td>
+                                </tr>
+                            <?php
+                            }
+
+                            // Display Inactive Sections
+                            $sql_inactive = $db->getAllRowsFromTableWhere('tb_register', $conditions_inactive);
+                            foreach ($sql_inactive as $row) {
+                            ?>
+                                <tr>
+                                    <td class="text-danger"><?php echo $row['userEmployID']; ?></td>
+                                    <td class="text-danger"><?php echo $row['userFname'] . ' ' . $row['userMname'] . ' ' . $row['userLname']; ?></td>
+                                    <td class="text-danger"><?php echo $row['userProgram']; ?></td>
+                                    <td class="text-danger"><?php echo $row['userPosition']; ?></td>
+                                    <td class="text-warning">
+                                        <a href="#statusUserActivate" class="status" data-bs-toggle="modal" data-userid="<?php echo $row['userID']; ?>">
+                                            <i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe86c;</i>
+                                        </a>
                                     </td>
                                 </tr>
                             <?php
                             }
                             ?>
                         </tbody>
+
+
                     </table>
                 </div>
             </div>
@@ -99,7 +127,7 @@ $position = $_SESSION["postion"];
 
                             <div class="modal-body">
                                 <h6>Are you sure you want to change the Status of this User?</h6>
-                                <input type="hidden" name="roomID" id="status_userID" value="">
+                                <input type="hidden" name="userID" id="status_userID" value="">
                             </div>
 
                             <div class="modal-footer">
@@ -150,7 +178,7 @@ $position = $_SESSION["postion"];
 
         // JavaScript to set userID when opening status modal
         $('.status').on('click', function() {
-            var userID = $(this).data('userid'); 
+            var userID = $(this).data('userid');
             $('#status_userID').val(userID); // Set userID to the hidden input field for deactivation
             $('#status_userIDz').val(userID); // Set userID to the hidden input field for activation
         });
@@ -163,4 +191,5 @@ $position = $_SESSION["postion"];
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.min.js"></script>
 
 </body>
+
 </html>

@@ -2,14 +2,8 @@
 include 'admin_approval.php';
 include 'include/header.php';
 
-
 $college = $_SESSION["college"];
 $position = $_SESSION["postion"];
-
-echo "<script>";
-echo "console.log('College:', '" . $college . "');";
-echo "console.log('Position:', '" . $position . "');";
-echo "</script>";
 ?>
 
 <div class="container-fluid px-4">
