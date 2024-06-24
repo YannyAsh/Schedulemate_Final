@@ -104,11 +104,11 @@ $result_professor = mysqli_query($conn, $stmnt);
                                             if ($_SESSION['college'] == 'cas' && $row['subType'] != 'major') {
 
                                             ?>
-                                                <a href="" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>', '<?= $row['id'] ?>', '<?= $_GET['section'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
+                                                <a href="" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>', '<?= $_GET['schedId'] ?>', '<?= $_GET['section'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
                                             <?php
                                             } else if ($_SESSION['college'] != 'cas' && $row['subType'] == 'major') {
                                             ?>
-                                                <a href="" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>', '<?= $row['id'] ?>', '<?= $_GET['section'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
+                                                <a href="" onclick="openModal('<?= $row['day'] ?>', '<?= $row['start_time'] ?>', '<?= $row['end_time'] ?>', '<?= $_GET['schedId'] ?>', '<?= $_GET['section'] ?>')" name="editSubject" class="edit" data-bs-toggle="modal"><i class="material-icons" data-bs-toggle="tooltip" title="Edit">&#xe254;</i></a>
                                             <?php
                                             }
                                             ?>
@@ -349,7 +349,11 @@ $result_professor = mysqli_query($conn, $stmnt);
                             </div>
                             <div class="col">
                                 <label class="text-dark" for="section">Section: </label>
-                                <label class="form-control" id="plotSem"><?php echo $_GET['semester']; ?></label>
+                                <?php $section = "SELECT * FROM tb_scheduled as scheduled LEFT JOIN tb_section as section ON scheduled.section_id = section.secID WHERE scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " AND scheduled.section_id = " . $_GET['section'] . " ";?>
+                                <?php $result_section = mysqli_query($conn, $section); ?>
+                                    <?php while ($row = mysqli_fetch_assoc($result_section)) : ?>
+                                        <label class="form-control" id="plotSec"><?php echo $row['secProgram']. ' ' . $row['secYearlvl']. '-' .$row['secName']; ?></label>
+                                    <?php endwhile;?>
                             </div>
                             <input type="hidden" name="sec_id" id="sec_id" value="" />
                             <input type="hidden" name="schedID" id="schedID" value="" />
@@ -400,7 +404,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                 <select class="form-control" name="prof_id" id="plotProf">
                                     <option>Select Professor</option>
                                     <?php
-                                    $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled LEFT JOIN tb_professor as prof ON scheduled.prof_id = prof.profID where scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " ";
+                                    $stmnt = "SELECT * FROM tb_scheduled as scheduled LEFT JOIN tb_professor as prof ON scheduled.prof_id = prof.profID where scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " ";
                                     $result_professor = mysqli_query($conn, $stmnt);
                                     ?>
                                     <?php if (mysqli_num_rows($result_professor) > 0) : ?>
@@ -425,7 +429,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                                 <select class="form-control" name="plotRoom2[]" id="plotRoom2">
                                     <option value="" disabled selected>Select Room</option>
                                     <?php
-                                    $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled LEFT JOIN tb_room as rooms ON scheduled.room_id = rooms.roomID where scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " ";
+                                    $stmnt = "SELECT * FROM tb_scheduled as scheduled LEFT JOIN tb_room as rooms ON scheduled.room_id = rooms.roomID where scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " ";
                                     $result_room = mysqli_query($conn, $stmnt);
                                     ?>
                                     <?php if (mysqli_num_rows($result_room) > 0) : ?>
@@ -446,7 +450,7 @@ $result_professor = mysqli_query($conn, $stmnt);
                             </div>
                         </div>
                         <?php
-                        $stmnt = "SELECT * FROM tb_scheduled_2 as scheduled where scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " ";
+                        $stmnt = "SELECT * FROM tb_scheduled as scheduled LEFT JOIN tb_day_time as day_time ON scheduled.id = day_time.sched_id where scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " ";
                         $result_sched = mysqli_query($conn, $stmnt);
                         ?>
                         <?php if (mysqli_num_rows($result_sched) > 0) : ?>

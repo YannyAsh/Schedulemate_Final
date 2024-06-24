@@ -148,33 +148,39 @@ if(isset($_POST['plotProf'])){
     $sec_edit = $_POST['sec_id'];
     $prof_edit = $_POST['prof_id'];
     $schedule_edit_id = $_POST['schedID'];
-    $day = array(0 => 1, 
-            1 => 2,
-            2 => 3,
-            3 => 4,
-            4 => 5,
-            5 => 6,
-            6 => 7
-        );
+    $start_times = $_POST['start_time']; // Assuming this is an array
+    $end_times = $_POST['end_time']; // Assuming this is an array
+    $days = array(0 => 1, 1 => 2, 2 => 3, 3 => 4, 4 => 5, 5 => 6, 6 => 7);
+
     $data = array(
         'section_id' => $sec_edit,
         'prof_id' => $prof_edit,
-        'start_time' => $_POST['start_time'],
-        'end_time' => $_POST['end_time'],
-        'day' => $day
-        );
-    
-        $whereClause = array(
-            'id' => $schedule_edit_id,
-        );
-        
-    if($db->updateData2('tb_scheduled_2 ',$data,$whereClause)){
-        echo "<script>
-            alert('Schedule Edited Successfully')
-            window.location.href='../schedule_index.php'
-        </script>";
-    }   
+    );
 
+    $data2 = array(
+        'sched_id' => $schedule_edit_id,
+        'start_time' => $start_times,
+        'end_time' => $end_times,
+        'day' => $days
+    );
+    
+    $whereClause = array(
+        'id' => $schedule_edit_id,
+    );
+    echo '<pre>';
+    print_r($data2);
+    print_r($data);
+    if($db->updateData2($data, $data2, $whereClause)){
+        echo "<script>
+            alert('Schedule Edited Successfully');
+            window.location.href='../schedule_index.php';
+        </script>";
+    } else {
+        /* echo "<script>
+            alert('Failed to edit schedule.');
+            window.location.href='../schedule_index.php';
+        </script>"; */
+    }
 }else{
     echo "<script>
     alert('it seems there is an empty in your forms, please verify your transaction again')

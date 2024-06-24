@@ -410,26 +410,22 @@ class DatabaseHandler
         }
     }
 
-    public function updateData2($tableName, $data = array(), $whereConditions)
+    public function updateData2($data = array(), $data2 = array(), $whereConditions)
     {
         try {
-            $checker = $this->checkDataSchedule($data); // fetching data if there is a conflict schedule
-            // if there is a conflict schedule true return false;
-            if ($checker) {
-                return false;
-            }
-
             // Extract arrays if they exist
-            $startTimes = isset($data['start_time']) ? $data['start_time'] : [];
-            $endTimes = isset($data['end_time']) ? $data['end_time'] : [];
-            $days = isset($data['day']) ? $data['day'] : [];
+            $startTimes = isset($data2['start_time']) ? $data2['start_time'] : [];
+            $endTimes = isset($data2['end_time']) ? $data2['end_time'] : [];
+            $days = isset($data2['day']) ? $data2['day'] : [];
+            $sched_id = isset($data2['sched_id']) ? $data2['sched_id'] : null;
 
             // Remove arrays from $data for set clause
-            unset($data['start_time']);
-            unset($data['end_time']);
-            unset($data['day']);
+            unset($data2['start_time']);
+            unset($data2['end_time']);
+            unset($data2['day']);
+            unset($data2['sched_id']);
 
-            // Prepare set clause
+            // Prepare set clause for tb_scheduled
             $setClause = '';
             foreach ($data as $key => $value) {
                 $setClause .= "$key = :$key, ";
@@ -443,14 +439,8 @@ class DatabaseHandler
             }
             $whereClause = rtrim($whereClause, ' AND ');
 
-            $sql = "UPDATE $tableName SET $setClause";
-
-            // Append the dynamic conditions for times and days
-            if (!empty($startTimes) && !empty($endTimes) && !empty($days)) {
-                $sql .= ", start_time = :start_time, end_time = :end_time, day = :day";
-            }
-
-            $sql .= " WHERE $whereClause";
+            // Update tb_scheduled
+            $sql = "UPDATE tb_scheduled SET $setClause WHERE $whereClause";
             $stmt = $this->pdo->prepare($sql);
 
             // Bind the set clause values
@@ -463,15 +453,26 @@ class DatabaseHandler
                 $stmt->bindValue(':where_' . $whereKey, $whereValue);
             }
 
+            // Execute the update for tb_scheduled
+            $stmt->execute();
+
+            // Prepare the insert/update statement for tb_day_time
+            $dayTimeSql = "INSERT INTO tb_day_time (sched_id, day, start_time, end_time, status)
+                        VALUES (:sched_id, :day, :start_time, :end_time, :status)
+                        ON DUPLICATE KEY UPDATE start_time = VALUES(start_time), end_time = VALUES(end_time), status = VALUES(status) WHERE sched_id = :sched_id";
+            $dayTimeStmt = $this->pdo->prepare($dayTimeSql);
+
             // Execute for each combination of times and days
             foreach ($startTimes as $index => $startTime) {
                 $endTime = $endTimes[$index];
-                foreach ($days as $indexs => $day) {
-                    if ($indexs == $index) {
-                        $stmt->bindValue(':start_time', $startTime);
-                        $stmt->bindValue(':end_time', $endTime);
-                        $stmt->bindValue(':day', $day);
-                        $stmt->execute();
+                foreach ($days as $key => $day) {
+                    if ($index == $key) {
+                        $dayTimeStmt->bindValue(':sched_id', $sched_id);
+                        $dayTimeStmt->bindValue(':start_time', $startTime);
+                        $dayTimeStmt->bindValue(':end_time', $endTime);
+                        $dayTimeStmt->bindValue(':day', $day);
+                        $dayTimeStmt->bindValue(':status', 1);
+                        $dayTimeStmt->execute();
                     }
                 }
             }
@@ -482,6 +483,7 @@ class DatabaseHandler
             return false;
         }
     }
+
 
     //RESTRICTIONS FOR SCHEDULE
     public function checkDataSchedule($data = array())
@@ -676,8 +678,8 @@ class DatabaseHandler
     public function getMajorToDisplay2($year, $sem, $section, $schedId)
     {
         $qry = "SELECT * FROM tb_scheduled as tb_scheduled
-                LEFT JOIN tb_date_time as date_time ON
-                tb_scheduled.id = date_time.sched_id
+                LEFT JOIN tb_day_time as day_time ON
+                tb_scheduled.id = day_time.sched_id
                 LEFT JOIN tb_subjects as tb_subject
                 ON tb_scheduled.subject_id = tb_subject.subID
                 LEFT JOIN tb_room as room ON 
@@ -689,8 +691,7 @@ class DatabaseHandler
         $stmt = $this->pdo->prepare($qry);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo '<pre>';
-        print_r($result);
+
         return $result;
     }
 
