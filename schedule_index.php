@@ -43,10 +43,10 @@ if (isset($_SESSION['position'])) {
 // CONDITIONS FOR SQLs
 // var_dump($_SESSION);
 $position = $_SESSION['postion'];
+$program = $_SESSION['program'];
 $conditions = [];
 $hidden = 'hidden';
-$program = $_SESSION['program'];
-$programType = '';
+$college = '';
 
 if ($position == "dean" || $position == "chairperson") {
     //$conditions = ["course = '".$program."'"];
@@ -63,10 +63,10 @@ if ($position == "dean" || $position == "chairperson") {
 }
 // CAS ONLY
 if (strpos($program, 'COLLEGE OF ARTS AND SCIENCES') !== false) {
-    $programType = 'COLLEGE OF ARTS AND SCIENCES';
+    $college = 'COLLEGE OF ARTS AND SCIENCES';
     $conditions = [];
 }
-$programType = json_encode($programType);
+$college = json_encode($college);
 
 // END CONDITIONS FOR SQLs
 ?>
@@ -124,10 +124,10 @@ $programType = json_encode($programType);
                                             <td><?= $i ?></td>
                                             <td><?= $row['school_yr'] ?></td>
                                             <td><?= $row['semester'] ?></td>
-                                            <td><?= strtoupper($row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
+                                            <td><?= strtoupper($row['secProgram'] . ' ' . $row['secYearlvl'] . '-' . $row['secName']) ?></td>
                                             <td>
                                                 <a href="#viewSchedule" class="view viewbtn text-primary" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
-                                                <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['secID'] ?>&schedId=<?= $row['id'];?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
+                                                <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['secID'] ?>&schedId=<?= $row['id']; ?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
                                                 <a <?= $casCondition ?> <?= $hidden ?> href="#statusSchedule" class="status deac" data-bs-toggle="modal" data-sy="<?= $row['sy'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
                                             </td>
                                         </tr>
@@ -140,11 +140,11 @@ $programType = json_encode($programType);
                                         <td><?= $i ?></td>
                                         <td><?= $row['school_yr'] ?></td>
                                         <td><?= $row['semester'] ?></td>
-                                        <td><?= strtoupper($row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
+                                        <td><?= strtoupper($row['secProgram'] . ' ' . $row['secYearlvl'] . '-' . $row['secName']) ?></td>
                                         <td>
                                             <a href="#viewSchedule" class="view viewbtn text-primary" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
 
-                                            <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['secID'] ?>&schedId=<?= $row['id'];?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
+                                            <a <?= $hidden ?> target="_blank" href="schedule_edit.php?sy=<?= $row['school_yr'] ?>&semester=<?= $row['semester'] ?>&section=<?= $row['secID'] ?>&schedId=<?= $row['id']; ?>" class="text-success "><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe3c9;</i></a>
 
                                             <a <?= $casCondition ?> <?= $hidden ?> href="#statusSchedule" class="status deac" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="Status">&#xe909;</i></a>
 
@@ -155,7 +155,7 @@ $programType = json_encode($programType);
                             } ?>
 
                             <?php
-                            $sql = $db->getAllRowsFromTableWhereGroup2('tb_scheduled_2', $conditions, ' school_yr');
+                            $sql = $db->getAllRowsFromTableWhereGroup2('tb_scheduled', $conditions, ' school_yr');
                             ?>
                             <?php
                             foreach ($sql as $row) {
@@ -165,7 +165,7 @@ $programType = json_encode($programType);
                                     <td class="text-danger"><?= $i ?></td>
                                     <td class="text-danger"><?= $row['school_yr'] ?></td>
                                     <td class="text-danger"><?= $row['semester'] ?></td>
-                                    <td class="text-danger"><?= strtoupper($row['secProgram'] .' '. $row['secYearlvl'] . '-' . $row['secName']) ?></td>
+                                    <td class="text-danger"><?= strtoupper($row['secProgram'] . ' ' . $row['secYearlvl'] . '-' . $row['secName']) ?></td>
                                     <td class="text-danger">
                                         <a href="#viewSchedule" class="view viewbtn" data-bs-toggle="modal" data-sy="<?= $row['school_yr'] ?>" data-semester="<?= $row['semester'] ?>" data-section="<?= $row['secID'] ?>"><i class="material-icons" data-bs-toggle="tooltip" title="View">&#xe8f4;</i></a>
                                     </td>
@@ -177,7 +177,7 @@ $programType = json_encode($programType);
                 </div>
             </div>
         </div>
-        
+
         <!-- Add Modal HTML -->
         <div id="addSchedule" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -202,7 +202,7 @@ $programType = json_encode($programType);
                                         <select class="form-control" name="plotSem" required id="plotSem">
                                             <option value="" disabled selected>Select Semester</option>
                                             <option value="1st Semester">1st Semester</option>
-                                            
+
                                             <?php
                                             // Check if the 1st Semester is selected, and hide the 2nd Semester option
                                             if ($_POST['plotSem'] !== "1st Semester") {
@@ -221,7 +221,7 @@ $programType = json_encode($programType);
                                             if (mysqli_num_rows($result_section) > 0) {
                                                 while ($row = mysqli_fetch_assoc($result_section)) {
                                             ?>
-                                                    <option data-program="<?= $row['secCourse'] ?>" data-yearlevel="<?= $row['secYearlvl'] ?>" value="<?= $row['secID'] ?>">
+                                                    <option data-college="<?= $row['secCourse'] ?>" data-yearlevel="<?= $row['secYearlvl'] ?>" value="<?= $row['secID'] ?>">
                                                         <!-- DISPLAY -->
                                                         <?= $row['secProgram'] ?> <?= $row['secYearlvl'] ?> <?= $row['secName'] ?>
                                                         <!-- END DISPLAY -->
@@ -248,21 +248,21 @@ $programType = json_encode($programType);
                                                         <option value="" disabled selected>Select Subject </option>
                                                         <?php if (mysqli_num_rows($result_subject) > 0) : ?>
                                                             <?php while ($row = mysqli_fetch_assoc($result_subject)) : ?>
-                                                               <?php if ($row['subType'] == "minor") : ?>
-                                                                        <option data-program="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
-                                                                            <!-- DISPLAY -->
-                                                                            <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
-                                                                            <!-- END DISPLAY -->
-                                                                        </option>
-                                                                <?php elseif ($row['subType'] == "major") : ?>
-                                                                        <option data-program="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
-                                                                            <!-- DISPLAY -->
-                                                                            <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
-                                                                            <!-- END DISPLAY -->
-                                                                        </option>
-                                                                <?php endif;?>
-                                                            <?php endwhile;?>
-                                                        <?php endif;?>
+                                                                <?php if ($college == "COLLEGE OF ARTS AND SCIENCES" && $row['subType'] == "minor") : ?>
+                                                                    <option data-college="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
+                                                                        <!-- DISPLAY -->
+                                                                        <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
+                                                                        <!-- END DISPLAY -->
+                                                                    </option>
+                                                                <?php elseif ($college != "COLLEGE OF ARTS AND SCIENCES" && $row['subType'] == "major") : ?>
+                                                                    <option data-college="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
+                                                                        <!-- DISPLAY -->
+                                                                        <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
+                                                                        <!-- END DISPLAY -->
+                                                                    </option>
+                                                                <?php endif; ?>
+                                                            <?php endwhile; ?>
+                                                        <?php endif; ?>
                                                     </select>
                                                 </div>
 
@@ -298,69 +298,70 @@ $programType = json_encode($programType);
                                                 </div>
                                             </div>
                                             <!-- Days of the weeks -->
-                                            <?php $day = array(1 => 'Monday', 
-                                                    2 => 'Tuesday',
-                                                    3 => 'Wednesday',
-                                                    4 => 'Thursday',
-                                                    5 => 'Friday',
-                                                    6 => 'Saturday',
-                                                    7 => 'Sunday'
-                                                );
+                                            <?php $day = array(
+                                                1 => 'Monday',
+                                                2 => 'Tuesday',
+                                                3 => 'Wednesday',
+                                                4 => 'Thursday',
+                                                5 => 'Friday',
+                                                6 => 'Saturday',
+                                                7 => 'Sunday'
+                                            );
 
-                                                $time = array (
-                                                    '07:00',
-                                                    '08:00',
-                                                    '09:00',
-                                                    '10:00',
-                                                    '11:00',
-                                                    '12:00',
-                                                    '13:00',
-                                                    '14:00',
-                                                    '15:00',
-                                                    '16:00',
-                                                    '17:00',
-                                                    '18:00',
-                                                    '19:00',
-                                                );
+                                            $time = array(
+                                                '07:00',
+                                                '08:00',
+                                                '09:00',
+                                                '10:00',
+                                                '11:00',
+                                                '12:00',
+                                                '13:00',
+                                                '14:00',
+                                                '15:00',
+                                                '16:00',
+                                                '17:00',
+                                                '18:00',
+                                                '19:00',
+                                            );
                                             ?>
                                             <div class="row">
-                                                <?php foreach($day as $key => $value):?>
+                                                <?php foreach ($day as $key => $value) : ?>
                                                     <div class="col-sm-3">
                                                         <div class="card mt-3 mb-4">
                                                             <div class="card-header">
-                                                                <h6 class="day-heading text-dark"><?php echo $value;?></h6> 
+                                                                <h6 class="day-heading text-dark"><?php echo $value; ?></h6>
                                                             </div>
                                                             <div class="card-body">
                                                                 <div class="row">
                                                                     <div class="col-6">
-                                                                            <input type="hidden" value="<?= $key?>" name="day[]" id="days">
+                                                                        <input type="hidden" value="<?= $key ?>" name="day[]" id="days">
                                                                         <label class="text-dark">Time Starts</label>
-                                                                            <select class="form-select select2" name="start_time[]">
-                                                                                <option value="" selected disabled>Select Start Time</option>
-                                                                                    <?php foreach ($time as $timedisplay):?>
-                                                                                        <option value="<?php echo $timedisplay;?>">
-                                                                                            <?= $timer = date("h:i:s A", strtotime($timedisplay))?>
-                                                                                        </option>
-                                                                                    <?php endforeach;?>
-                                                                            </select>    
+                                                                        <select class="form-select select2" name="start_time[]">
+                                                                            <option value="" selected disabled>Select Start Time</option>
+                                                                            <?php foreach ($time as $timedisplay) : ?>
+                                                                                <option value="<?php echo $timedisplay; ?>">
+                                                                                    <?= $timer = date("h:i:s A", strtotime($timedisplay)) ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
                                                                     </div>
                                                                     <div class="col-6">
                                                                         <label class="text-dark">Time Ends</label>
-                                                                            <select class="form-select select2" name="end_time[]">
-                                                                                <option value="" selected disabled>Select End Time</option>
-                                                                                    <?php foreach ($time as $timedisplay):?>
-                                                                                        <option value="<?php echo $timedisplay;?>">
-                                                                                            <?= $timer = date("h:i:s A", strtotime($timedisplay))?>
-                                                                                        </option>
-                                                                                    <?php endforeach;?>
-                                                                            </select> 
+                                                                        <select class="form-select select2" name="end_time[]">
+                                                                            <option value="" selected disabled>Select End Time</option>
+                                                                            <?php foreach ($time as $timedisplay) : ?>
+                                                                                <option value="<?php echo $timedisplay; ?>">
+                                                                                    <?= $timer = date("h:i:s A", strtotime($timedisplay)) ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                <?php endforeach;?>
-                                                
+                                                <?php endforeach; ?>
+
                                             </div>
                                             <button type="button" class="btn btn-danger remove-btn" disabled>Remove</button>
                                             <button type="button" id="addbtn" class="btn btn-primary mt-1 add-btn">Add rows</button>
@@ -552,7 +553,7 @@ $programType = json_encode($programType);
         $(this).hide();
     })
 
-    var programType = <?php echo ($programType); ?>;
+    var college = <?php echo ($college); ?>;
 
     $(document).on('change', '#addSchedule #plotSection', function() {
         var selectedSem = ($('#addSchedule #plotSem').val())
@@ -563,11 +564,16 @@ $programType = json_encode($programType);
         var program = $(this).find('option:selected').data('program');
         var yearlevel = $(this).find('option:selected').data('yearlevel');
 
+        console.log('program:', program); // added console log
+        console.log('yearlevel:', yearlevel); // added console log
+
         $('#addSchedule #plotSubj option').each(function() {
 
-            eachProgram = $(this).attr('data-program');
+            eachcollege = $(this).attr('data-college');
             eachYearLevel = $(this).attr('data-yearlevel');
             eachSem = $(this).attr('data-sem');
+
+            console.log('eachcollege:', eachcollege); // added console log
 
             if (eachYearLevel === "first year") {
                 eachYearLevel = 1;
@@ -581,17 +587,16 @@ $programType = json_encode($programType);
                 eachYearLevel = 4;
             }
 
-            if (program === eachProgram && yearlevel === eachYearLevel && programType != "COLLEGE OF ARTS AND SCIENCES" && selectedSem == eachSem) {
+            if (program === eachcollege && yearlevel === eachYearLevel && college != "COLLEGE OF ARTS AND SCIENCES" && selectedSem == eachSem) {
                 $(this).show();
             } else {
                 $(this).hide();
                 // condition only for cas
-                if (yearlevel === eachYearLevel && eachProgram && typeof eachProgram === 'string' && eachProgram.includes("COLLEGE OF ARTS AND SCIENCES") && programType === "COLLEGE OF ARTS AND SCIENCES" && selectedSem == eachSem) {
+                if (yearlevel === eachYearLevel && eachcollege && typeof eachcollege === 'string' && eachcollege.includes("COLLEGE OF ARTS AND SCIENCES") && college === "COLLEGE OF ARTS AND SCIENCES" && selectedSem == eachSem) {
                     // console.log("String contains the substring.");
                     $(this).show();
                 }
                 // end condition only for cas
-
             }
 
         });

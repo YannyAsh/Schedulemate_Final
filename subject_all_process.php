@@ -22,7 +22,7 @@ if (isset($_POST['sub_add_new'])) {
     $subSem = $_POST['subSem'];
     $subCode = $_POST['subCode'];
     $subYearLevel = $_POST['subYearLevel'];
-    $subDesc = $_POST['subDesc'];
+    $subDesc = $_SESSION["college"];
     $subUnits = $_POST['subUnits']; // Access as array
     $subLabhours = $_POST['subLabhours']; // Access as array
     $subLechours = $_POST['subLechours']; // Access as array
