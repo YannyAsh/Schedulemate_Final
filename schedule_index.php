@@ -269,13 +269,17 @@ $college = json_encode($college);
                                                 <div class="col-4">
                                                     <select class="form-control" name="plotProf[]" id="plotProf">
                                                         <option value="" disabled selected>Select Professor</option>
-                                                        <option value="TBA">TBA ( To be Assigned )</option>
+                                                        <option value="TBA">TBA (To be Assigned)</option>
                                                         <?php
                                                         if (mysqli_num_rows($result_professor) > 0) {
                                                             while ($row = mysqli_fetch_assoc($result_professor)) {
+                                                                if ($row['profCourse'] == $_SESSION['college']) { // Check if professor's college matches user's college
                                                         ?>
-                                                                <option value="<?= $row['profID'] ?>"><?= $row['profFname'] ?> <?= $row['profLname'] ?></option>
+                                                                    <option data-college="<?php echo $row['profCourse']; ?>" data-program="<?php echo $row['profProgram']; ?>" value="<?php echo $row['profID']; ?>">
+                                                                        <?php echo $row['profFname'] . ' ' . $row['profLname']; ?>
+                                                                    </option>
                                                         <?php
+                                                                }
                                                             }
                                                         }
                                                         ?>
