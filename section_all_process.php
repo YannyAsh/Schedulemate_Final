@@ -4,7 +4,7 @@ $db = new DatabaseHandler();
 include_once('db.php');
 
 $secProgram = "";
-$secCourse = "";
+$secCollege = "";
 $secYearlvl = 0;
 $secName = "";
 $secSession = 0;
@@ -19,7 +19,7 @@ if (isset($_POST['sec_add_new'])) {
     $secName = $_POST["secName"];
     $secSession = $_POST["secSession"];
     $secStatus = $_POST["secStatus"];
-    $secCourse = $_SESSION["college"];
+    $secCollege = $_SESSION["college"];
 
     // Check for duplicate entry within the same secProgram
     $stmt = $conn->prepare("SELECT COUNT(*) FROM tb_section WHERE secProgram=? AND secYearlvl=? AND secName=?");
@@ -36,8 +36,8 @@ if (isset($_POST['sec_add_new'])) {
     }
 
     // Add new data to the database
-    $stmt = $conn->prepare("INSERT INTO tb_section (secProgram, secYearlvl, secName, secSession, secStatus, secCourse) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sissss", $secProgram, $secYearlvl, $secName, $secSession, $secStatus, $secCourse);
+    $stmt = $conn->prepare("INSERT INTO tb_section (secProgram, secYearlvl, secName, secSession, secStatus, secCollege) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sissss", $secProgram, $secYearlvl, $secName, $secSession, $secStatus, $secCollege);
     $stmt->execute();
 
     if ($stmt) {

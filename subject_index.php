@@ -69,8 +69,8 @@ function generateAcademicYears()
                                     </thead>
                                     <tbody id="myTable">
                                         <?php
-                                        $program = $_SESSION['program'];
-                                        $conditions = ['SubCourse= "'.$program.'" '];
+                                        $subProgram = $_SESSION['program'];
+                                        $conditions = ['subProgram = "'.$subProgram.'" '];
                                         $sql = $db->getAllRowsFromTableWhere('tb_subjects',$conditions);                                        
                                         $i = 1;
                                         foreach ($sql as $row) {

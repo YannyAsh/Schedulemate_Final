@@ -119,7 +119,7 @@ $program = $_SESSION["program"];
 
                     <form method="POST" action="section_all_process.php">
                         <input type="hidden" name="secID">
-                        <input type="hidden" name="secStatus" value="1"> <!-- Always set to "1" for active status -->
+                        <input type="hidden" name="secStatus" value="0"> <!-- Always set to "0" for active status -->
 
                         <div class="modal-header">
                             <h5 class="modal-title">Add New Section</h5>
@@ -178,7 +178,7 @@ $program = $_SESSION["program"];
 
                     <form method="POST" action="section_all_process.php">
                         <input type="hidden" name="secID" id="secID" value="<?php echo $secID; ?>">
-                        <input type="hidden" name="secStatus" value="1"> <!-- Always set to "1" for active status -->
+                        <input type="hidden" name="secStatus" value="0"> <!-- Always set to "0" for active status -->
 
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Section</h5>

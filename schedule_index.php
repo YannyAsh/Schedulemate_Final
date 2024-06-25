@@ -221,7 +221,7 @@ $college = json_encode($college);
                                             if (mysqli_num_rows($result_section) > 0) {
                                                 while ($row = mysqli_fetch_assoc($result_section)) {
                                             ?>
-                                                    <option data-college="<?= $row['secCourse'] ?>" data-yearlevel="<?= $row['secYearlvl'] ?>" value="<?= $row['secID'] ?>">
+                                                    <option data-college="<?= $row['secCollege'] ?>" data-program="<?= $row['secProgram'] ?>" data-yearlevel="<?= $row['secYearlvl'] ?>" value="<?= $row['secID'] ?>">
                                                         <!-- DISPLAY -->
                                                         <?= $row['secProgram'] ?> <?= $row['secYearlvl'] ?> <?= $row['secName'] ?>
                                                         <!-- END DISPLAY -->
@@ -248,14 +248,14 @@ $college = json_encode($college);
                                                         <option value="" disabled selected>Select Subject </option>
                                                         <?php if (mysqli_num_rows($result_subject) > 0) : ?>
                                                             <?php while ($row = mysqli_fetch_assoc($result_subject)) : ?>
-                                                                <?php if ($college == "COLLEGE OF ARTS AND SCIENCES" && $row['subType'] == "minor") : ?>
-                                                                    <option data-college="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
+                                                                <?php if ($college == "COLLEGE OF ARTS AND SCIENCES" && $row['subType'] == "minor" && $row['subProgram'] == $_SESSION['program']) : ?>
+                                                                    <option data-college="<?= $row['subCollege'] ?>" data-program="<?= $row['subProgram'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
                                                                         <!-- DISPLAY -->
                                                                         <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
                                                                         <!-- END DISPLAY -->
                                                                     </option>
-                                                                <?php elseif ($college != "COLLEGE OF ARTS AND SCIENCES" && $row['subType'] == "major") : ?>
-                                                                    <option data-college="<?= $row['subDept'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
+                                                                <?php elseif ($college != "COLLEGE OF ARTS AND SCIENCES" && $row['subType'] == "major" && $row['subProgram'] == $_SESSION['program']) : ?>
+                                                                    <option data-college="<?= $row['subCollege'] ?>" data-program="<?= $row['subProgram'] ?>" data-yearlevel=" <?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
                                                                         <!-- DISPLAY -->
                                                                         <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
                                                                         <!-- END DISPLAY -->
@@ -269,7 +269,7 @@ $college = json_encode($college);
                                                 <div class="col-4">
                                                     <select class="form-control" name="plotProf[]" id="plotProf">
                                                         <option value="" disabled selected>Select Professor</option>
-                                                        <option value="TBA">TBA ( To be Announce )</option>
+                                                        <option value="TBA">TBA ( To be Assigned )</option>
                                                         <?php
                                                         if (mysqli_num_rows($result_professor) > 0) {
                                                             while ($row = mysqli_fetch_assoc($result_professor)) {
@@ -561,19 +561,26 @@ $college = json_encode($college);
         $('#addSchedule #plotSubj option').each(function() {
             $(this).show();
         })
+
+        var college = $(this).find('option:selected').data('college');
         var program = $(this).find('option:selected').data('program');
         var yearlevel = $(this).find('option:selected').data('yearlevel');
 
-        console.log('program:', program); // added console log
-        console.log('yearlevel:', yearlevel); // added console log
+        console.log('college:', college);
+        console.log('program:', program);
+        console.log('yearlevel:', yearlevel);
 
         $('#addSchedule #plotSubj option').each(function() {
 
             eachcollege = $(this).attr('data-college');
-            eachYearLevel = $(this).attr('data-yearlevel');
+            eachprogram = $(this).attr('data-program');
+            eachYearLevel = $(this).attr('data-yearlvl');
             eachSem = $(this).attr('data-sem');
 
-            console.log('eachcollege:', eachcollege); // added console log
+            console.log('eachcollege:', eachcollege);
+            console.log('eachprogram:', eachprogram);
+            console.log('eachYearLevel:', eachYearLevel);
+            console.log('eachSem:', eachSem);
 
             if (eachYearLevel === "first year") {
                 eachYearLevel = 1;
