@@ -220,6 +220,7 @@ $college = json_encode($college);
                                             <?php
                                             if (mysqli_num_rows($result_section) > 0) {
                                                 while ($row = mysqli_fetch_assoc($result_section)) {
+                                                    if ($row['secProgram'] == $_SESSION['program']){
                                             ?>
                                                     <option data-college="<?= $row['secCollege'] ?>" data-program="<?= $row['secProgram'] ?>" data-yearlevel="<?= $row['secYearlvl'] ?>" value="<?= $row['secID'] ?>">
                                                         <!-- DISPLAY -->
@@ -227,6 +228,7 @@ $college = json_encode($college);
                                                         <!-- END DISPLAY -->
                                                     </option>
                                             <?php
+                                                    }
                                                 }
                                             }
                                             ?>
@@ -292,9 +294,13 @@ $college = json_encode($college);
                                                         <?php
                                                         if (mysqli_num_rows($result_room) > 0) {
                                                             while ($row = mysqli_fetch_assoc($result_room)) {
+                                                                if ($row['roomCollege'] == $_SESSION['college']){ // Check the rooms college matches user's college
                                                         ?>
-                                                                <option value="<?= $row['roomID'] ?>"><?= $row['roomBuild'] ?> <?= $row['roomNum'] ?></option>
+                                                                <option data-college="<?php echo $row['roomCollege']; ?>" value="<?= $row['roomID'] ?>">
+                                                                    <?= $row['roomBuild'] ?> <?= $row['roomNum'] ?>
+                                                                </option>
                                                         <?php
+                                                                }
                                                             }
                                                         }
                                                         ?>
