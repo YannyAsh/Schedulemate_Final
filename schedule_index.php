@@ -415,7 +415,7 @@ $college = json_encode($college);
                         <button type="button" class="close-2" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <div class="table-responsive" id="myTable1">
+                        <div class="table-responsive " id="myTable1">
 
 
                         </div>

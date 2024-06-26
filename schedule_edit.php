@@ -427,168 +427,175 @@ $result_professor = mysqli_query($conn, $stmnt);
                             </div>
                         </div>
                         <?php
-                        $stmnt = "SELECT DISTINCT scheduled.id FROM tb_scheduled as scheduled 
-                                  LEFT JOIN tb_day_time as day_time ON scheduled.id = day_time.sched_id 
-                                  WHERE scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " 
-                                  ";
-                        $result_sched = mysqli_query($conn, $stmnt);
-                        ?>
-                        <?php if (mysqli_num_rows($result_sched) > 0) : ?>
-                            <?php while ($row = mysqli_fetch_assoc($result_sched)) : ?>
-                                <?php $day = array(
-                                    1 => 'Monday',
-                                    2 => 'Tuesday',
-                                    3 => 'Wednesday',
-                                    4 => 'Thursday',
-                                    5 => 'Friday',
-                                    6 => 'Saturday',
-                                    7 => 'Sunday'
-                                );
-                                ?>
-                                <?php
-                                $time = array(
-                                    '07:00',
-                                    '08:00',
-                                    '09:00',
-                                    '10:00',
-                                    '11:00',
-                                    '12:00',
-                                    '13:00',
-                                    '14:00',
-                                    '15:00',
-                                    '16:00',
-                                    '17:00',
-                                    '18:00',
-                                    '19:00',
-                                );
+                            // Assuming $conn is your database connection
+                            $schedId = $_GET['schedId'];
+                            $stmnt = "SELECT * FROM tb_day_time as day_time
+                                    LEFT JOIN tb_scheduled as scheduled ON scheduled.id = day_time.sched_id 
+                                    WHERE scheduled.status = 1 AND day_time.sched_id = $schedId";
+                            $result_sched = mysqli_query($conn, $stmnt);
 
-                                $time30 = array(
-                                    '07:00',
-                                    '07:30',
-                                    '08:00',
-                                    '08:30',
-                                    '09:00',
-                                    '09:30',
-                                    '10:00',
-                                    '10:30',
-                                    '11:00',
-                                    '11:30',
-                                    '12:00',
-                                    '12:30',
-                                    '13:00',
-                                    '13:30',
-                                    '14:00',
-                                    '14:30',
-                                    '15:00',
-                                    '15:30',
-                                    '16:00',
-                                    '16:30',
-                                    '17:00',
-                                    '17:30',
-                                    '18:00',
-                                    '18:30',
-                                    '19:00',
-                                );
-                                ?>
-                                <?php
-                                if (array_key_exists($row['day'], $day)) {
-                                    $dayDetails = $day[$row['day']];
+                            $schedules = [];
+                            if (mysqli_num_rows($result_sched) > 0) {
+                                while ($row = mysqli_fetch_assoc($result_sched)) {
+                                    $schedules[$row['sched_id']][] = $row;
                                 }
-                                $start_time = new DateTime($row['start_time']);
-                                $end_time = new DateTime($row['end_time']);
-                                ?>
-                                <div class="row">
-                                    <?php foreach ($day as $key => $value) : ?>
-                                        <div class="col-sm-4">
-                                            <div class="card mt-3 mb-4 shadow">
-                                                <div class="card-header">
-                                                    <h6 class="day-heading text-start text-dark fw-semibold"><?php echo $value; ?></h6>
-                                                </div>
-                                                <div class="card-body">
-                                                    <?php if ($dayDetails == $value) : ?>
-                                                        <div class="row">
-                                                            <div class="col-6">
-                                                                <input type="hidden" value="<?= $row['day']; ?>" name="day[]" id="days">
-                                                                <label class="text-dark">Time Starts</label>
-                                                                <select class="form-select select2" name="start_time[]">
-                                                                    <?php if (!empty($row['start_time'])) : ?>
-                                                                        <option selected value="<?php echo $row['start_time']; ?>">
-                                                                            <?= $date = date("h:i:s A", strtotime($row['start_time'])); ?>
-                                                                        </option>
-                                                                        <?php foreach ($time as $timedisplay) : ?>
-                                                                            <?php if (date("h:i:s A", strtotime($timedisplay)) != date("h:i:s A", strtotime($row['start_time']))) : ?>
-                                                                                <option value="<?php echo $timedisplay; ?>">
+                            }
+
+                            $day = [
+                                1 => 'Monday',
+                                2 => 'Tuesday',
+                                3 => 'Wednesday',
+                                4 => 'Thursday',
+                                5 => 'Friday',
+                                6 => 'Saturday',
+                                7 => 'Sunday'
+                            ];
+
+                            $time = [
+                                '07:00',
+                                '08:00',
+                                '09:00',
+                                '10:00',
+                                '11:00',
+                                '12:00',
+                                '13:00',
+                                '14:00',
+                                '15:00',
+                                '16:00',
+                                '17:00',
+                                '18:00',
+                                '19:00',
+                            ];
+
+                            $time30 = [
+                                '07:00',
+                                '07:30',
+                                '08:00',
+                                '08:30',
+                                '09:00',
+                                '09:30',
+                                '10:00',
+                                '10:30',
+                                '11:00',
+                                '11:30',
+                                '12:00',
+                                '12:30',
+                                '13:00',
+                                '13:30',
+                                '14:00',
+                                '14:30',
+                                '15:00',
+                                '15:30',
+                                '16:00',
+                                '16:30',
+                                '17:00',
+                                '17:30',
+                                '18:00',
+                                '18:30',
+                                '19:00',
+                            ];
+                            ?>
+
+                            <?php if (!empty($schedules)) : ?>
+                                <?php foreach ($schedules as $sched_id => $rows) : ?>
+                                    <div class="row">
+                                        <?php foreach ($day as $key => $value) : ?>
+                                            <div class="col-sm-4">
+                                                <div class="card mt-3 mb-4 shadow">
+                                                    <div class="card-header">
+                                                        <h6 class="day-heading text-start text-dark fw-semibold"><?php echo $value; ?></h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <?php
+                                                        $row = array_filter($rows, function ($row) use ($key) {
+                                                            return $row['day'] == $key;
+                                                        });
+                                                        $row = reset($row); // Get the first matching row or false if none
+                                                        ?>
+                                                        <?php if ($row) : ?>
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <input type="hidden" value="<?= $row['day']; ?>" name="day[]" id="days">
+                                                                    <label class="text-dark">Time Starts</label>
+                                                                    <select class="form-select select2" name="start_time[]">
+                                                                        <?php if (!empty($row['start_time'])) : ?>
+                                                                            <option selected value="<?php echo $row['start_time']; ?>">
+                                                                                <?= $date = date("h:i:s A", strtotime($row['start_time'])); ?>
+                                                                            </option>
+                                                                            <?php foreach ($time as $timedisplay) : ?>
+                                                                                <?php if (date("h:i:s A", strtotime($timedisplay)) != date("h:i:s A", strtotime($row['start_time']))) : ?>
+                                                                                    <option value="<?php echo $timedisplay; ?>">
+                                                                                        <?= $timer = date("h:i:s A", strtotime($timedisplay)) ?>
+                                                                                    </option>
+                                                                                <?php endif; ?>
+                                                                            <?php endforeach; ?>
+                                                                        <?php else : ?>
+                                                                            <?php foreach ($time as $timedisplay) : ?>
+                                                                                <option value="<?php echo $row['start_time']; ?>">
                                                                                     <?= $timer = date("h:i:s A", strtotime($timedisplay)) ?>
                                                                                 </option>
-                                                                            <?php endif; ?>
-                                                                        <?php endforeach; ?>
-                                                                    <?php else : ?>
+                                                                            <?php endforeach; ?>
+                                                                        <?php endif; ?>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label class="text-dark">Time Ends</label>
+                                                                    <select class="form-select select2" name="end_time[]">
+                                                                        <?php if (!empty($row['end_time'])) : ?>
+                                                                            <option selected value="<?php echo $row['end_time']; ?>">
+                                                                                <?= $date = date("h:i:s A", strtotime($row['end_time'])); ?>
+                                                                            </option>
+                                                                            <?php foreach ($time as $timedisplay) : ?>
+                                                                                <?php if (date("h:i:s A", strtotime($timedisplay)) != date("h:i:s A", strtotime($row['end_time']))) : ?>
+                                                                                    <option value="<?php echo $timedisplay; ?>">
+                                                                                        <?= $timer = date("h:i:s A", strtotime($timedisplay)) ?>
+                                                                                    </option>
+                                                                                <?php endif; ?>
+                                                                            <?php endforeach; ?>
+                                                                        <?php else : ?>
+                                                                            <?php foreach ($time as $timedisplay) : ?>
+                                                                                <option value="<?php echo $row['end_time']; ?>">
+                                                                                    <?= $timer = date("h:i:s A", strtotime($timedisplay)) ?>
+                                                                                </option>
+                                                                            <?php endforeach; ?>
+                                                                        <?php endif; ?>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        <?php else : ?>
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <input type="hidden" value="<?= $key; ?>" name="day[]" id="days">
+                                                                    <label class="text-dark">Time Starts</label>
+                                                                    <select class="form-select select2" name="start_time[]">
+                                                                        <option value="" selected disabled>Select Start Time</option>
                                                                         <?php foreach ($time as $timedisplay) : ?>
-                                                                            <option value="<?php echo $row['start_time']; ?>">
+                                                                            <option value="<?php echo $timedisplay; ?>">
                                                                                 <?= $timer = date("h:i:s A", strtotime($timedisplay)) ?>
                                                                             </option>
                                                                         <?php endforeach; ?>
-                                                                    <?php endif; ?>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <label class="text-dark">Time Ends</label>
-                                                                <select class="form-select select2" name="end_time[]">
-                                                                    <?php if (!empty($row['end_time'])) : ?>
-                                                                        <option selected value="<?php echo $row['end_time']; ?>">
-                                                                            <?= $date = date("h:i:s A", strtotime($row['end_time'])); ?>
-                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label class="text-dark">Time Ends</label>
+                                                                    <select class="form-select select2" name="end_time[]">
+                                                                        <option value="" selected disabled>Select End Time</option>
                                                                         <?php foreach ($time as $timedisplay) : ?>
-                                                                            <?php if (date("h:i:s A", strtotime($timedisplay)) != date("h:i:s A", strtotime($row['end_time']))) : ?>
-                                                                                <option value="<?php echo $timedisplay; ?>">
-                                                                                    <?= $timer = date("h:i:s A", strtotime($timedisplay)) ?>
-                                                                                </option>
-                                                                            <?php endif; ?>
-                                                                        <?php endforeach; ?>
-                                                                    <?php else : ?>
-                                                                        <?php foreach ($time as $timedisplay) : ?>
-                                                                            <option value="<?php echo $row['end_time']; ?>">
+                                                                            <option value="<?php echo $timedisplay; ?>">
                                                                                 <?= $timer = date("h:i:s A", strtotime($timedisplay)) ?>
                                                                             </option>
                                                                         <?php endforeach; ?>
-                                                                    <?php endif; ?>
-                                                                </select>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    <?php else : ?>
-                                                        <div class="row">
-                                                            <div class="col-6">
-                                                                <input type="hidden" value="<?= $key; ?>" name="day[]" id="days">
-                                                                <label class="text-dark">Time Starts</label>
-                                                                <select class="form-select select2" name="start_time[]">
-                                                                    <option value="" selected disabled>Select Start Time</option>
-                                                                    <?php foreach ($time as $timedisplay) : ?>
-                                                                        <option value="<?php echo $timedisplay; ?>">
-                                                                            <?= $timer = date("h:i:s A", strtotime($timedisplay)) ?>
-                                                                        </option>
-                                                                    <?php endforeach; ?>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <label class="text-dark">Time Ends</label>
-                                                                <select class="form-select select2" name="end_time[]">
-                                                                    <option value="" selected disabled>Select End Time</option>
-                                                                    <?php foreach ($time as $timedisplay) : ?>
-                                                                        <option value="<?php echo $timedisplay; ?>">
-                                                                            <?= $timer = date("h:i:s A", strtotime($timedisplay)) ?>
-                                                                        </option>
-                                                                    <?php endforeach; ?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    <?php endif; ?>
+                                                        <?php endif; ?>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endwhile; ?>
-                        <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn" data-bs-dismiss="modal" value="Cancel">Cancel</button>

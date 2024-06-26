@@ -12,8 +12,8 @@ $conditions = [
     'semester = "'.$semester.'"',
     'section_id = "'.$section.'"'
 ];
-$sql = $db->getAllDataCourse('tb_scheduled_2',$conditions);
-$row1='<table  class="table table-hover">
+$sql = $db->getAllDataCourse('tb_scheduled',$conditions);
+$row1='<table class="table table-striped table-hover">
 <thead>
     <tr>
         <th>Academic Year</th>
@@ -23,15 +23,13 @@ $row1='<table  class="table table-hover">
 </thead>
 <tbody >';
 $row2='
-<table class="table table-hover">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>MIS Code</th>
             <th>Subject</th>
             <th>Professor</th>
             <th>Room</th>
-            <th>DAY</th>
-            <th>TIME</th>
         </tr>
     </thead>
     <tbody>
@@ -39,28 +37,6 @@ $row2='
 $count=0;
 
     foreach ($sql as $row ) {
-    $currentLowestTime='';
-    $currentHighestTime='';
-
-    $start_time = date('h:i A', strtotime($row['start_time']));
-    $end_time = date('h:i A', strtotime($row['end_time']));
-    $timeDetails = $start_time . ' - ' . $end_time;
-    $dayDetails = '';
-
-    $day = array(1 => 'Monday', 
-        2 => 'Tuesday',
-        3 => 'Wednesday',
-        4 => 'Thursday',
-        5 => 'Friday',
-        6 => 'Saturday',
-        7 => 'Sunday'
-    );
-
-    // Get the specific day
-    if(array_key_exists($row['day'], $day)){
-        $dayDetails = $day[$row['day']];
-    }
-
     // GET START & END
     if($row['prof_id'] == "TBA"){
         $profName = "TBA";
@@ -78,8 +54,6 @@ $count=0;
             <td>".$row['subCode']. "-". $row['subDesc'] ."</td>
             <td>".$row['profLname']. ',' . $row['profFname'] . ' ' . $row['profMname'] . "</td>
             <td>".$row['roomBuild']. " ". $row['roomNum'] ."</td>
-            <td>".$dayDetails."</td>
-            <td>". $timeDetails."</td>
         </tr>
     ";
     
