@@ -136,6 +136,10 @@ table.table .avatar {
     margin-right: 10px;
 }
 
+table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
+    background-color: #D0E1F1;
+}
+
 .pagination {
     float: right;
     margin: 0 0 5px;

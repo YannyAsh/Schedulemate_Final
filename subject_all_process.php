@@ -4,6 +4,7 @@ $db = new DatabaseHandler();
 include_once('db.php');
 
 $subYear = "";
+$subCMO ="";
 $subSem = "";
 $subCode = "";
 $subDesc = "";
@@ -19,6 +20,7 @@ $sub_edit_state = false;
 if (isset($_POST['sub_add_new'])) {
     // Access submitted data using array names
     $subYear = $_POST['subYear'];
+    $subCMO = $_POST ['subCMO'];
     $subSem = $_POST['subSem'];
     $subCode = $_POST['subCode'];
     $subYearLevel = $_POST['subYearLevel'];
@@ -28,15 +30,16 @@ if (isset($_POST['sub_add_new'])) {
     $subLechours = $_POST['subLechours']; // Access as array
     $subPrerequisite = $_POST['subPrerequisite'];
     $subStatus = isset($_POST['subStatus']) ? $_POST['subStatus'] : array_fill(0, count($subCode), 1); // Default status to 1 for each entry
-    $subCollege = $_SESSION["college"];
     $subProgram = $_SESSION["program"];
+    $subCollege = $_SESSION["college"];
+    // adding type if major or minor
     $subjectType = $_POST['subType'];
 
 
     // Loop through each entry and insert into the database
     for($i=1; $i < count($subCode); $i++) {
-        $stmt = $conn->prepare("INSERT INTO tb_subjects(subYear, subSem, subCode, subDesc, subUnits, subLabhours, subLechours, subStatus, subProgram, subCollege, subYearlvl, subPrerequisite, subType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssssssssss", $subYear ,$subSem, $subCode[$i], $subDesc[$i], $subUnits[$i], $subLabhours[$i], $subLechours[$i], $subStatus[$i], $subProgram, $subCollege ,$subYearLevel, $subPrerequisite[$i], $subjectType[$i-1]);
+        $stmt = $conn->prepare("INSERT INTO tb_subjects(subYear,subCMO , subSem, subCode, subDesc, subUnits, subLabhours, subLechours, subStatus, subProgram, subCollege, subYearlvl, subPrerequisite, subType) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssssssssss", $subYear, $subCMO ,$subSem, $subCode[$i], $subDesc[$i], $subUnits[$i], $subLabhours[$i], $subLechours[$i], $subStatus[$i], $subProgram, $subCollege, $subYearLevel, $subPrerequisite[$i], $subjectType[$i-1]);
         $stmt->execute();
     }
 
@@ -51,8 +54,11 @@ if (isset($_POST['sub_add_new'])) {
 }
 
 
+
 //For updating records
 if (isset($_POST["sub_update"])) {
+    // $subYear = $_POST['subYear'];
+    // $subSem = $_POST['subSem'];
     $subCode = $_POST['subCode'];
     $subDesc = $_POST['subDesc'];
     $subUnits = $_POST['subUnits'];

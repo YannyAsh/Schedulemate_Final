@@ -87,7 +87,7 @@ $college = json_encode($college);
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table id="myTable" class="table table-hover">
+                    <table id="myTable" class="table-striped">
                         <thead>
                             <tr>
                                 <th>No.</th>
@@ -220,13 +220,13 @@ $college = json_encode($college);
                                             <?php
                                             if (mysqli_num_rows($result_section) > 0) {
                                                 while ($row = mysqli_fetch_assoc($result_section)) {
-                                                    if ($row['secProgram'] == $_SESSION['program']){
+                                                    if ($row['secProgram'] == $_SESSION['program']) {
                                             ?>
-                                                    <option data-college="<?= $row['secCollege'] ?>" data-program="<?= $row['secProgram'] ?>" data-yearlevel="<?= $row['secYearlvl'] ?>" value="<?= $row['secID'] ?>">
-                                                        <!-- DISPLAY -->
-                                                        <?= $row['secProgram'] ?> <?= $row['secYearlvl'] ?> <?= $row['secName'] ?>
-                                                        <!-- END DISPLAY -->
-                                                    </option>
+                                                        <option data-college="<?= $row['secCollege'] ?>" data-program="<?= $row['secProgram'] ?>" data-yearlevel="<?= $row['secYearlvl'] ?>" value="<?= $row['secID'] ?>">
+                                                            <!-- DISPLAY -->
+                                                            <?= $row['secProgram'] ?> <?= $row['secYearlvl'] ?> <?= $row['secName'] ?>
+                                                            <!-- END DISPLAY -->
+                                                        </option>
                                             <?php
                                                     }
                                                 }
@@ -247,20 +247,16 @@ $college = json_encode($college);
                                             <div class="row">
                                                 <div class="col-4">
                                                     <select class="form-select" name="plotSubj[]" id="plotSubj">
-                                                        <option value="" disabled selected>Select Subject </option>
+                                                        <option value="" disabled selected>Select Subject</option>
                                                         <?php if (mysqli_num_rows($result_subject) > 0) : ?>
                                                             <?php while ($row = mysqli_fetch_assoc($result_subject)) : ?>
-                                                                <?php if ($college == "COLLEGE OF ARTS AND SCIENCES" && $row['subType'] == "minor" && $row['subProgram'] == $_SESSION['program']) : ?>
+                                                                <?php if ($college == '"COLLEGE OF ARTS AND SCIENCES"' && $row['subProgram'] == $_SESSION['program'] && $row['subType'] == "minor") : ?>
                                                                     <option data-college="<?= $row['subCollege'] ?>" data-program="<?= $row['subProgram'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
-                                                                        <!-- DISPLAY -->
                                                                         <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
-                                                                        <!-- END DISPLAY -->
                                                                     </option>
-                                                                <?php elseif ($college != "COLLEGE OF ARTS AND SCIENCES" && $row['subType'] == "major" && $row['subProgram'] == $_SESSION['program']) : ?>
-                                                                    <option data-college="<?= $row['subCollege'] ?>" data-program="<?= $row['subProgram'] ?>" data-yearlevel=" <?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
-                                                                        <!-- DISPLAY -->
+                                                                <?php elseif ($college != '"COLLEGE OF ARTS AND SCIENCES"' && $row['subProgram'] == $_SESSION['program'] && $row['subType'] == "major") : ?>
+                                                                    <option data-college="<?= $row['subCollege'] ?>" data-program="<?= $row['subProgram'] ?>" data-yearlevel="<?= $row['subYearlvl'] ?>" data-sem="<?= $row['subSem'] ?>" value="<?= $row['subID'] ?>">
                                                                         <?= $row['subCode'] ?> - <?= $row['subDesc'] ?>
-                                                                        <!-- END DISPLAY -->
                                                                     </option>
                                                                 <?php endif; ?>
                                                             <?php endwhile; ?>
@@ -294,11 +290,11 @@ $college = json_encode($college);
                                                         <?php
                                                         if (mysqli_num_rows($result_room) > 0) {
                                                             while ($row = mysqli_fetch_assoc($result_room)) {
-                                                                if ($row['roomCollege'] == $_SESSION['college']){ // Check the rooms college matches user's college
+                                                                if ($row['roomCollege'] == $_SESSION['college']) { // Check the rooms college matches user's college
                                                         ?>
-                                                                <option data-college="<?php echo $row['roomCollege']; ?>" value="<?= $row['roomID'] ?>">
-                                                                    <?= $row['roomBuild'] ?> <?= $row['roomNum'] ?>
-                                                                </option>
+                                                                    <option data-college="<?php echo $row['roomCollege']; ?>" value="<?= $row['roomID'] ?>">
+                                                                        <?= $row['roomBuild'] ?> <?= $row['roomNum'] ?>
+                                                                    </option>
                                                         <?php
                                                                 }
                                                             }
@@ -543,83 +539,77 @@ $college = json_encode($college);
 <script>
     var rowToRemove; // Store the row to be removed
     var rowCount = 1; // Initialize row count
+
+    // Event handler to add a new schedule row
     $(document).on('click', '#addSchedule .add-btn', function() {
-        var rowCountCurrent = 0;
-        $('.row-label').each(function() {
-            rowCountCurrent += 1;
-        })
-        console.log(rowCountCurrent);
+        var rowCountCurrent = $('.row-label').length;
         rowCount++;
 
-        // Initialize the modal with one form row
+        // Clone and initialize the new row
         var rowTemplate = $('#rowTemplate').clone();
         rowTemplate.removeAttr('id').removeAttr('style');
         rowTemplate.find('.row-label').text('Subject ' + rowCountCurrent + ':');
-
         rowTemplate.find('.remove-btn').prop('disabled', false); // Enable the remove button for the new row
         $('#formInputs').append(rowTemplate);
     });
+
+    // Hide all subject options initially
     $('#addSchedule #plotSubj option').each(function() {
         $(this).hide();
-    })
+    });
 
-    var college = <?php echo ($college); ?>;
+    // Retrieve the college information from the server-side script
+    var college = <?php echo json_encode($college); ?>;
 
+    // Event handler for when the section dropdown changes
     $(document).on('change', '#addSchedule #plotSection', function() {
-        var selectedSem = ($('#addSchedule #plotSem').val())
-        $('#addSchedule #plotSubj').val('')
+        var selectedSem = $('#addSchedule #plotSem').val();
+        $('#addSchedule #plotSubj').val('');
         $('#addSchedule #plotSubj option').each(function() {
             $(this).show();
-        })
+        });
 
-        var college = $(this).find('option:selected').data('college');
-        var program = $(this).find('option:selected').data('program');
-        var yearlevel = $(this).find('option:selected').data('yearlevel');
+        var selectedCollege = $(this).find('option:selected').data('college');
+        var selectedProgram = $(this).find('option:selected').data('program');
+        var selectedYearLevel = $(this).find('option:selected').data('yearlevel');
 
-        console.log('college:', college);
-        console.log('program:', program);
-        console.log('yearlevel:', yearlevel);
+        console.log('college:', selectedCollege);
+        console.log('program:', selectedProgram);
+        console.log('yearlevel:', selectedYearLevel);
 
+        // Filter subjects based on the selected criteria
         $('#addSchedule #plotSubj option').each(function() {
+            var eachCollege = $(this).attr('data-college');
+            var eachProgram = $(this).attr('data-program');
+            var eachYearLevel = $(this).attr('data-yearlevel');
+            var eachSem = $(this).attr('data-sem');
 
-            eachcollege = $(this).attr('data-college');
-            eachprogram = $(this).attr('data-program');
-            eachYearLevel = $(this).attr('data-yearlvl');
-            eachSem = $(this).attr('data-sem');
-
-            console.log('eachcollege:', eachcollege);
-            console.log('eachprogram:', eachprogram);
+            console.log('eachCollege:', eachCollege);
+            console.log('eachProgram:', eachProgram);
             console.log('eachYearLevel:', eachYearLevel);
             console.log('eachSem:', eachSem);
 
-            if (eachYearLevel === "first year") {
-                eachYearLevel = 1;
-            } else if (eachYearLevel === "second year") {
-                eachYearLevel = 2;
+            // Convert year level text to numeric value
+            if (eachYearLevel === "first year") eachYearLevel = 1;
+            else if (eachYearLevel === "second year") eachYearLevel = 2;
+            else if (eachYearLevel === "third year") eachYearLevel = 3;
+            else if (eachYearLevel === "fourth year") eachYearLevel = 4;
 
-            } else if (eachYearLevel === "third year") {
-                eachYearLevel = 3;
-
-            } else if (eachYearLevel === "fourth year") {
-                eachYearLevel = 4;
-            }
-
-            if (program === eachcollege && yearlevel === eachYearLevel && college != "COLLEGE OF ARTS AND SCIENCES" && selectedSem == eachSem) {
+            // Filter subjects based on program, year level, and semester
+            if (selectedProgram === eachProgram && selectedYearLevel == eachYearLevel && selectedCollege != "COLLEGE OF ARTS AND SCIENCES" && selectedSem == eachSem) {
                 $(this).show();
             } else {
                 $(this).hide();
-                // condition only for cas
-                if (yearlevel === eachYearLevel && eachcollege && typeof eachcollege === 'string' && eachcollege.includes("COLLEGE OF ARTS AND SCIENCES") && college === "COLLEGE OF ARTS AND SCIENCES" && selectedSem == eachSem) {
-                    // console.log("String contains the substring.");
+
+                // Additional condition for College of Arts and Sciences
+                if (selectedYearLevel == eachYearLevel && eachProgram && typeof eachProgram === 'string' && eachCollege.includes("COLLEGE OF ARTS AND SCIENCES") && selectedCollege === "COLLEGE OF ARTS AND SCIENCES" && selectedSem == eachSem) {
                     $(this).show();
                 }
-                // end condition only for cas
             }
-
         });
-
     });
 </script>
+
 <script>
     // editing
     $(document).on('change', '#addSchedule #plotYear', function() {

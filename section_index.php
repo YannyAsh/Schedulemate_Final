@@ -5,6 +5,7 @@ include 'include/header.php';
 $program = $_SESSION["program"];
 ?>
 
+
 <!-- Start of the contents -->
 <div class="container-fluid px-4">
     <div class="row g-3 my-2">
@@ -107,11 +108,11 @@ $program = $_SESSION["program"];
                             }
                             ?>
                         </tbody>
+
                     </table>
                 </div>
             </div>
         </div>
-        
         <!-- Add Modal HTML -->
         <div id="addSection" class="modal fade">
             <div class="modal-dialog">
@@ -119,7 +120,7 @@ $program = $_SESSION["program"];
 
                     <form method="POST" action="section_all_process.php">
                         <input type="hidden" name="secID">
-                        <input type="hidden" name="secStatus" value="0"> <!-- Always set to "0" for active status -->
+                        <input type="hidden" name="secStatus" value="1"> <!-- Always set to "1" for active status -->
 
                         <div class="modal-header">
                             <h5 class="modal-title">Add New Section</h5>
@@ -178,7 +179,7 @@ $program = $_SESSION["program"];
 
                     <form method="POST" action="section_all_process.php">
                         <input type="hidden" name="secID" id="secID" value="<?php echo $secID; ?>">
-                        <input type="hidden" name="secStatus" value="0"> <!-- Always set to "0" for active status -->
+                        <input type="hidden" name="secStatus" value="1"> <!-- Always set to "1" for active status -->
 
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Section</h5>
@@ -205,7 +206,7 @@ $program = $_SESSION["program"];
 
                             <div class="form-group">
                                 <label style="font-weight: bold;">Section Name</label>
-                                <input type="text" name="secName" id="secName" class="form-control" required">
+                                <input type="text" name="secName" id="secName" class="form-control" required value="<?php echo $secName ?>">
                             </div>
 
                             <div class="form-group">
@@ -229,7 +230,7 @@ $program = $_SESSION["program"];
         </div>
 
 
-        <!-- Change Status Modal HTML DE-ACTIVE-->
+        <!-- Change Status Modal HTML -->
         <div id="statusSection" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -255,7 +256,7 @@ $program = $_SESSION["program"];
             </div>
         </div>
 
-        <!-- Change Status Modal HTML IN-ACTIVE-->
+        <!-- Change Status Modal HTML -->
         <div id="statusSectionActivate" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -385,17 +386,7 @@ $program = $_SESSION["program"];
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
-        var table = $('#myTable').DataTable({
-            "rowCallback": function(row, data, index) {
-                if (index % 2 == 0) {
-                    $(row).removeClass('myodd myeven');
-                    $(row).addClass('myodd');
-                } else {
-                    $(row).removeClass('myodd myeven');
-                    $(row).addClass('myeven');
-                }
-            }
-        });
+        var table = $('#myTable').DataTable();
 
         // Loop through each table row
         table.rows().every(function() {

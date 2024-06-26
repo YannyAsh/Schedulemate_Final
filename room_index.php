@@ -59,7 +59,7 @@ $college = $_SESSION["college"];
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table id="myTable" class="table table-stripped">
+                    <table id="myTable" class="table-striped">
                         <thead>
                             <tr>
                                 <th>No.</th>
