@@ -63,8 +63,6 @@ $result_professor = mysqli_query($conn, $stmnt);
                             <thead>
                                 <th>Subject</th>
                                 <th>Room</th>
-                                <th>Time</th>
-                                <th>Day</th>
                                 <th>Edit</th>
                             </thead>
                             <tbody>
@@ -78,27 +76,6 @@ $result_professor = mysqli_query($conn, $stmnt);
                                     <tr>
                                         <td><?= $row['subCode'] . '-' . $row['subDesc'] ?></td>
                                         <td><?= $row['roomBuild'] . '-' . $row['roomNum'] ?></td>
-
-                                        <?php
-                                        $start_time = date('h:i A', strtotime($row['start_time']));
-                                        $end_time = date('h:i A', strtotime($row['end_time']));
-                                        $timeDetails = $start_time . ' - ' . $end_time;
-                                        $day = array(
-                                            1 => 'Monday',
-                                            2 => 'Tuesday',
-                                            3 => 'Wednesday',
-                                            4 => 'Thursday',
-                                            5 => 'Friday',
-                                            6 => 'Saturday',
-                                            7 => 'Sunday'
-                                        );
-                                        // Get the specific day
-                                        if (array_key_exists($row['day'], $day)) {
-                                            $dayDetails = $day[$row['day']];
-                                        }
-                                        ?>
-                                        <td><?= $timeDetails ?></td>
-                                        <td><?= $dayDetails ?></td>
                                         <td>
                                             <?php
                                             if ($_SESSION['college'] == 'cas' && $row['subType'] != 'major') {
@@ -450,7 +427,10 @@ $result_professor = mysqli_query($conn, $stmnt);
                             </div>
                         </div>
                         <?php
-                        $stmnt = "SELECT * FROM tb_scheduled as scheduled LEFT JOIN tb_day_time as day_time ON scheduled.id = day_time.sched_id where scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " ";
+                        $stmnt = "SELECT DISTINCT scheduled.id FROM tb_scheduled as scheduled 
+                                  LEFT JOIN tb_day_time as day_time ON scheduled.id = day_time.sched_id 
+                                  WHERE scheduled.status = 1 AND scheduled.id = " . $_GET['schedId'] . " 
+                                  ";
                         $result_sched = mysqli_query($conn, $stmnt);
                         ?>
                         <?php if (mysqli_num_rows($result_sched) > 0) : ?>

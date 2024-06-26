@@ -167,19 +167,17 @@ if(isset($_POST['plotProf'])){
     $whereClause = array(
         'id' => $schedule_edit_id,
     );
-    echo '<pre>';
-    print_r($data2);
-    print_r($data);
+
     if($db->updateData2($data, $data2, $whereClause)){
         echo "<script>
             alert('Schedule Edited Successfully');
             window.location.href='../schedule_index.php';
         </script>";
     } else {
-        /* echo "<script>
+        echo "<script>
             alert('Failed to edit schedule.');
             window.location.href='../schedule_index.php';
-        </script>"; */
+        </script>";
     }
 }else{
     echo "<script>
