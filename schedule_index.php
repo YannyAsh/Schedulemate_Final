@@ -367,7 +367,6 @@ $college = json_encode($college);
                                                         </div>
                                                     </div>
                                                 <?php endforeach; ?>
-
                                             </div>
                                             <button type="button" class="btn btn-danger remove-btn" disabled>Remove</button>
                                             <button type="button" id="addbtn" class="btn btn-primary mt-1 add-btn">Add rows</button>
@@ -385,6 +384,7 @@ $college = json_encode($college);
                 </div>
             </div>
         </div>
+        
         <!-- Custom modal for confirmation -->
         <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">

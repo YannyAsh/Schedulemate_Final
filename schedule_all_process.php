@@ -21,10 +21,7 @@ if (isset($_POST['sched_add_new'])) {
     $plotSection = $_POST["plotSection"];
     $plotRoom = $_POST["plotRoom"];
     $plotProf = $_POST["plotProf"];
-    // echo"<pre>";
-    // var_dump($plotYear);
-    // echo"</pre>";
-    // die;
+    
 
     for ($i = 1; $i < count($subCode); $i++) {
         $stmt = $conn->prepare("INSERT INTO tb_plotting (plotYear, plotSem, plotSubj, plotSection, plotRoom, plotProf) VALUES (?, ?, ?, ?, ?, ?)");
