@@ -456,10 +456,15 @@ class DatabaseHandler
             // Execute the update for tb_scheduled
             $stmt->execute();
 
-            // Prepare the insert/update statement for tb_day_time
+            // Delete existing day_time records for the given sched_id
+            $deleteSql = "DELETE FROM tb_day_time WHERE sched_id = :sched_id";
+            $deleteStmt = $this->pdo->prepare($deleteSql);
+            $deleteStmt->bindValue(':sched_id', $sched_id);
+            $deleteStmt->execute();
+
+            // Prepare the insert statement for tb_day_time
             $dayTimeSql = "INSERT INTO tb_day_time (sched_id, day, start_time, end_time, status)
-                        VALUES (:sched_id, :day, :start_time, :end_time, :status)
-                        ON DUPLICATE KEY UPDATE start_time = VALUES(start_time), end_time = VALUES(end_time), status = VALUES(status) WHERE sched_id = :sched_id";
+                        VALUES (:sched_id, :day, :start_time, :end_time, :status)";
             $dayTimeStmt = $this->pdo->prepare($dayTimeSql);
 
             // Execute for each combination of times and days
@@ -687,7 +692,8 @@ class DatabaseHandler
                 WHERE tb_scheduled.school_yr = '$year' 
                 AND tb_scheduled.semester = '$sem' 
                 AND tb_scheduled.section_id = '$section'
-                AND tb_scheduled.id = '$schedId'";
+                AND tb_scheduled.id = '$schedId'
+                GROUP BY tb_scheduled.id";
         $stmt = $this->pdo->prepare($qry);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
