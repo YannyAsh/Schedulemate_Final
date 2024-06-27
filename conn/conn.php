@@ -399,9 +399,7 @@ class DatabaseHandler
             foreach ($whereConditions as $whereKey => $whereValue) {
                 $stmt->bindValue(':where_' . $whereKey, $whereValue);
             }
-            echo '<pre>';
-            print_r($data);
-            die();
+
             $stmt->execute();
             return true;
         } catch (PDOException $e) {
