@@ -303,12 +303,12 @@ class DatabaseHandler
             error_reporting(E_ALL);
     
             // Uncomment this line to check for schedule conflicts
-            // $checker = $this->checkDataSchedule($data); // fetching data if there is a conflict schedule
+            $checker = $this->checkDataSchedule($data); // fetching data if there is a conflict schedule
             // if there is a conflict schedule true return false;
-            // if ($checker) {
-            //     return false;
-            // }
-    
+             if ($checker) {
+                 return false;
+            }
+
             $datasched = [
                 'room_id' => $data['room_id'],
                 'prof_id' => $data['prof_id'],
@@ -494,15 +494,16 @@ class DatabaseHandler
     public function checkDataSchedule($data = array())
     {
         try {
-            //room restrictions
+            // Room restrictions
             $stmt = $this->pdo->prepare("SELECT COUNT(*) as count 
-                                        FROM tb_scheduled_2 
-                                        WHERE status = 1 
-                                        AND (
-                                            (room_id = :room_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day) 
-                                            OR (prof_id = :prof_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day)
-                                            OR (section_id = :section_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time and day = :day)
-                                        )");
+                        FROM tb_scheduled as scheduled
+                        LEFT JOIN tb_day_time AS day_time ON scheduled.id = day_time.sched_id
+                        WHERE scheduled.status = 1 
+                        AND (
+                            (room_id = :room_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time AND day = :day) 
+                            OR (prof_id = :prof_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time AND day = :day)
+                            OR (section_id = :section_id AND school_yr = :school_yr AND semester = :semester AND start_time <= :end_time AND end_time >= :start_time AND day = :day)
+                        )");
             $stmt->bindParam(':room_id', $data['room_id'], PDO::PARAM_STR);
             $stmt->bindParam(':semester', $data['semester'], PDO::PARAM_STR);
             $stmt->bindParam(':school_yr', $data['school_yr'], PDO::PARAM_STR);
